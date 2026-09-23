@@ -1,6 +1,8 @@
 # Takekit Pipeline (09-jev port)
 
-The DaVinci Resolve / editor-reels video editing pipeline used for the **09-jev** guinea pig is **copied** into this repo under `pipeline/`. Logic was **not** rewritten — scripts, presets, and skill docs are a structural port from `ai-content-agent` so the Claude Code adapter can run without depending on that other repo path for the prototype.
+The editor-reels video editing pipeline used for the **09-jev** guinea pig lives in this repo under `pipeline/`. Scripts, presets, and skill docs are a structural port from `ai-content-agent` so the agent adapters can run without depending on that other repo path.
+
+> **DaVinci Resolve was removed from the pipeline on 2026-09-23.** Trim, background matte (Robust Video Matting), frame capture and the final export run headless in [`pipeline/video/headless/`](../pipeline/video/headless/README.md) — no GUI, N jobs in parallel, 09-jev look preserved. Resolve/Fusion-only scripts stay in `video/resolve/` marked as legacy. See [DEV_SPEC_MVP.md §3.5 / §12](./DEV_SPEC_MVP.md).
 
 ## Layout
 
@@ -15,11 +17,12 @@ pipeline/                          ← TAKEKIT_PIPELINE_ROOT / Claude Code cwd
 └── video/
     ├── estilo-creator.md
     ├── projects/09-jev/           ← briefing + edit JSON (no giant media)
-    └── resolve/
+    ├── headless/                  ← trim, matte (RVM), palco_b, compose, frame, batch — no Resolve
+    └── resolve/                   ← kit (legacy folder name): docs, presets, styles, engines
         ├── DEFAULT.md             ← 09-jev style lock
         ├── WORKFLOW.md
         ├── FORMATOS.md, API-NOTES.md, BEHAVIORS.md, FUSION.md, SCENES.md, …
-        ├── pipeline/              ← tighten_cuts, caption_jobs, build_timeline, …
+        ├── pipeline/              ← tighten_cuts, caption_jobs, map_sfx_cues, … (build_timeline = legacy)
         ├── engine/                ← captions, palco_b_composite, sfx_prep, …
         ├── motion/                ← scaffold / render (no node_modules)
         ├── presets/, styles/, profiles/
@@ -53,6 +56,10 @@ Scripts are invoked from that cwd as in the source repo, e.g.:
 
 ```bash
 python3 video/resolve/pipeline/storyboard_html.py --project video/projects/09-jev
+bash video/headless/setup.sh                                   # once: .venv + RVM model
+.venv/bin/python video/headless/trim.py    --project video/projects/09-jev
+.venv/bin/python video/headless/palco_b.py --project video/projects/09-jev
+.venv/bin/python video/headless/compose.py --project video/projects/09-jev
 ```
 
 ## Engine default
@@ -61,4 +68,4 @@ python3 video/resolve/pipeline/storyboard_html.py --project video/projects/09-je
 
 ## What was omitted
 
-Large binaries were not ported: project `exports/*.mp4`, raw `.mov`, bake/overlay frame dumps, filmburn packs, background loops, music files, `node_modules`. See `pipeline/video/resolve/assets/OMITTED.md` and `pipeline/video/projects/09-jev/README.md`. For a full Resolve edit with media, use or symlink assets from the original ai-content-agent checkout.
+Large binaries were not ported: project `exports/*.mp4`, raw `.mov`, bake/overlay frame dumps, filmburn packs, background loops, music files, `node_modules`. See `pipeline/video/resolve/assets/OMITTED.md` and `pipeline/video/projects/09-jev/README.md`. For a real edit with media, point `TAKEKIT_ASSETS` at the original ai-content-agent `video/resolve/assets` (music bed, filmburns) and use the source footage from that checkout.

@@ -47,8 +47,9 @@ Direção declarada sem preview não é resultado validado; teste técnico não 
 O kit [Parallax](resolve/references/parallax-kit/README.md) tem **look aprovado pelo usuário em
 16/09/2026**, validado no preview `parallax-kit/preview/parallax-kit-v1.mp4`, para uso nos próximos
 vídeos: sem novo vídeo de validação e sem gate de aprovação. O que ainda não existe é uso em vídeo
-entregue nem promoção do preset no catálogo. Ele entra como **motion #1 do motor de motion em
-Fusion**; os próximos motions seguem o mesmo contrato, em vez de virarem scripts soltos por vídeo.
+entregue nem promoção do preset no catálogo. Ele nasceu como **motion #1 do motor de motion em
+Fusion**; com o Resolve fora do pipeline (23/09/2026), usar exige portar o contrato para uma camada
+headless (Remotion/PIL) em vez de virar script solto por vídeo.
 Comparar o resultado renderizado com o look aprovado antes de alterar seus parâmetros.
 
 Captions podem coexistir com B-roll se o layout permitir; resolver concorrência em vez de impor

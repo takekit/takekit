@@ -1,7 +1,12 @@
-# Edição no DaVinci Resolve
+# Kit de edição (docs, presets, estilos e motores)
+
+> O DaVinci Resolve foi removido do pipeline em 23/09/2026. A montagem, a máscara do palco B, o
+> export e a captura rodam em [../headless](../headless/README.md). As seções deste README que falam
+> de rodar no Resolve (launcher, Fusion, `build_timeline.py`) são legado; captions, motion e SFX
+> continuam valendo.
 
 Default do creator: explicação ilustrada / palco A/B/C, fechado no 09-jev. Ver `DEFAULT.md`.
-Canvas B/C em Remotion (`motion/`); Fusion para o resto. Captions palco preservadas.
+Canvas B/C em Remotion (`motion/`). Captions palco preservadas.
 
 Antes de cortes ou acabamento, ler o contrato de montagem em `WORKFLOW.md`, §3: roteiro obrigatório,
 fala sem respiros entre cortes, seleção e inspeção nativas, verificação da timeline real.

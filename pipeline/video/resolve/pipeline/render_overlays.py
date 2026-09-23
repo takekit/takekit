@@ -2,7 +2,8 @@
 """render_overlays — gera dependências externas (captions/ingestão/áudio; UI PIL legada) de um vídeo a partir de <projeto>/edit/renders.json.
 
 Cada entrada é um comando de engine com saída; roda em paralelo (N processos) e pula o que já existe
-e é mais novo que os inputs (`--force` refaz tudo). Depois disso, `build_timeline.py` monta no Resolve.
+e é mais novo que os inputs (`--force` refaz tudo). Depois disso, `video/headless/compose.py` monta o export
+(o `build_timeline.py` montava no Resolve; legado).
 
 renders.json:
 {

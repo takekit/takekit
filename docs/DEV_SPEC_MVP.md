@@ -4,7 +4,11 @@
 **Escopo:** fechar o fluxo *thread → chat → CI → pipeline 09-jev → preview mp4*, com persistência, config e erros.  
 **NÃO é produto completo** — é o caminho mínimo pra um Short “cobaia” sair no player da direita.
 
-Documentos relacionados: [SPEC.md](./SPEC.md) (produto), [HARNESS.md](./HARNESS.md) (adapters), [PIPELINE.md](./PIPELINE.md) (skill portada).
+Documentos relacionados: [SPEC.md](./SPEC.md) (produto), [HARNESS.md](./HARNESS.md) (adapters), [PIPELINE.md](./PIPELINE.md) (skill portada), [pipeline headless](../pipeline/video/headless/README.md).
+
+> **Atualização 23/09/2026 — DaVinci Resolve REMOVIDO do pipeline.** Trim, máscara do fundo, captura
+> de frame e export rodam headless (FFmpeg + Robust Video Matting), sem GUI e com N jobs em paralelo,
+> mantendo o visual do 09-jev. Detalhes em §3.5 e registro em §12.
 
 ---
 
@@ -17,7 +21,7 @@ Documentos relacionados: [SPEC.md](./SPEC.md) (produto), [HARNESS.md](./HARNESS.
 | Engine HTTP | `engine/` | Express `:8787`; store **in-memory**; `ProjectRunner` + adapters |
 | Adapter Claude Code | `engine/src/adapters/claude-code.ts` | `claude -p` + `--add-dir`; **ainda sem** `--model opus`; `previewPath` sempre `null` |
 | Codex / Grok Build / OpenCode | `engine/src/adapters/*` | Stubs (throw) |
-| Pipeline 09-jev | `pipeline/` | Skill + `video/resolve` **copiados** (não reescritos) |
+| Pipeline 09-jev | `pipeline/` | Skill + kit `video/resolve` (docs, presets, motores) + **`video/headless`** (FFmpeg + RVM). **Resolve removido** em 23/09/2026 (§3.5) |
 | Preview API | `GET /api/threads/:id/preview` | Serve arquivo se `thread.previewPath` existir |
 
 **Lacunas do MVP (este doc fecha):** descoberta do mp4 de saída; persistência JSON; config CI/modelo; `--model opus` no default; erro no chat sem travar UI; player funcional com o export real.
@@ -157,15 +161,29 @@ claude -p "<prompt>" \
 
 `cwd` = `pipelineRoot` (`TAKEKIT_PIPELINE_ROOT`, default in-repo `pipeline/`).
 
-### 3.5 Pipeline (não reescrever)
+### 3.5 Pipeline headless (Resolve removido)
 
-O CI deve seguir a skill. Scripts relevantes já em:
+O CI segue a skill `editor-reels`, que agora roda tudo por linha de comando. **O DaVinci Resolve
+não faz mais parte do pipeline** (nem Fusion, nem o MCP do Resolve): nada abre GUI, e cada job só
+escreve no próprio projeto, então N vídeos rodam em paralelo.
 
-- `pipeline/video/resolve/pipeline/` (`tighten_cuts`, captions, etc.)
-- `pipeline/video/resolve/engine/`
-- `pipeline/video/resolve/motion/`
+| Função | Antes (Resolve) | Agora (`pipeline/video/headless/`) |
+|--------|-----------------|------------------------------------|
+| Trim da fala | `AppendToTimeline` dos ranges do `cuts.json` | `trim.py` — FFmpeg, um passe, frame exato, microfade de 4 ms por emenda → `edit/aroll.mov` |
+| Máscara do fundo (palco B) | Efeito DepthMap renderizado no Resolve | `matte.py`/`palco_b.py` — **Robust Video Matting** (ONNX, CPU) + `palco_b_composite.py` → `hostB_<u>.mov` |
+| Captura de frame | `capture_frame.py` (still do Resolve) | `frame.py` — FFmpeg, seek preciso (frame, `hh:mm:ss:ff` ou segundos) |
+| Export | Render do Resolve | `compose.py` — FFmpeg empilha palcos A/B/C + captions + filmburn (Screen) + SFX + cama ducked, −14 LUFS/−1 dBTP, H.264 1080×1920@30 |
+| N jobs | Um projeto aberto por vez | `batch.py --jobs N` (e cada job do engine é um processo independente) |
 
-MVP **não** exige desacoplar Resolve/headless além do que a skill já faz. Sucesso = mp4 em `exports/` + linha `TAKEKIT_PREVIEW=`.
+Sem mudança: `tighten_cuts.py`, `caption_jobs.py` + `captions_palco.py`, `motion/` (Remotion),
+`map_sfx_cues.py` + `sfx_prep.py` — já não dependiam do Resolve.
+
+Dependências: `ffmpeg`/`ffprobe` no PATH e `bash pipeline/video/headless/setup.sh` (venv
+`pipeline/.venv` com numpy, pillow, onnxruntime; modelo `rvm_mobilenetv3_fp32.onnx` em
+`~/.cache/takekit/models/`, sha256 conferido). Cama e filmburn continuam fora do repo
+(`assets/OMITTED.md`): `TAKEKIT_ASSETS=<ai-content-agent>/video/resolve/assets`.
+
+Sucesso continua = mp4 em `exports/` + linha `TAKEKIT_PREVIEW=`.
 
 ### 3.6 Descoberta do preview (`previewPath`)
 
@@ -307,7 +325,9 @@ Ordem sugerida:
 6. **UI** — refetch após job; cache-bust no `<video>`; opcional form de input path na create thread; settings mínimos.
 7. **Docs** — uma linha no README apontando este arquivo + HARNESS.
 
-**Não tocar:** lógica interna dos scripts em `pipeline/video/resolve/**` (só invocar).
+**Não tocar:** lógica interna dos scripts em `pipeline/video/resolve/**` (só invocar). Exceção
+registrada: `engine/palco_b_composite.py` ganhou `--thresh` (alfa do RVM, default 128) no lugar
+do limiar fixo de luma do DepthMap.
 
 ---
 
@@ -316,8 +336,11 @@ Ordem sugerida:
 - Implementar de verdade Codex / Grok Build / OpenCode.
 - SaaS, multi-usuário, auth, DB remota.
 - Editar timeline frame a frame.
-- Reescrever pipeline / remover Resolve do legado além do que a skill já faz.
-- Paralelismo polido de N jobs (um job por thread por vez basta).
+- ~~Remover Resolve do pipeline~~ — **feito em 23/09/2026** (§3.5, §12). Continua fora: portar os
+  recursos que só existiam no Resolve/Fusion (punch/shake, intro zoom, splits do `build.json` dos
+  formatos 03/04).
+- Fila/limite de N jobs dentro do engine (o pipeline já roda N em paralelo via `batch.py`; o engine
+  dispara um processo por thread).
 - Bundle automático do engine dentro do Tauri (pode continuar dois processos no MVP).
 - Upload de vídeo pela UI (path local absoluto basta).
 
@@ -333,6 +356,10 @@ Ordem sugerida:
 - [ ] Matar e subir o engine: threads/mensagens voltam do `~/.takekit/threads/`.
 - [ ] Forçar falha (binário inexistente): chat mostra erro; UI responde a novos inputs.
 - [ ] Selecionar stub executor: erro amigável no chat, app vivo.
+- [x] Pipeline sem Resolve: `trim.py` → `palco_b.py` → `compose.py` gera o 09-jev completo sem GUI,
+  batendo com o `09-jev-v3.mp4` (§12).
+- [x] 3 vídeos em paralelo com `batch.py --jobs 3`, cada um no próprio projeto, sem interferência
+  (throughput numa máquina ≈ sequencial; ver §12).
 
 ---
 
@@ -341,6 +368,7 @@ Ordem sugerida:
 - Root: `pipeline/` (`TAKEKIT_PIPELINE_ROOT`)
 - Skill: `pipeline/.agents/skills/editor-reels/SKILL.md`
 - Default estilo: `pipeline/video/resolve/DEFAULT.md`
+- Pipeline headless (sem Resolve): `pipeline/video/headless/README.md`
 - Detalhes: [PIPELINE.md](./PIPELINE.md)
 
 ---
@@ -348,3 +376,35 @@ Ordem sugerida:
 ## 11. Nota pro implementador
 
 Priorize **caminho feliz cobaia** com um mp4 curto local. Não perfectione adapters stubs. Persistência e descoberta de preview são o que destravam o demo; o resto é polish.
+
+---
+
+## 12. Registro — Resolve removido (23/09/2026)
+
+**Decisão:** o DaVinci Resolve sai do pipeline. Motivos: exigia GUI aberta, um projeto por vez
+(impedia N jobs em paralelo) e o DepthMap dependia do Resolve Studio.
+
+**Validação** com o 09-jev real (`IMG_8187.mov`, mesmos cortes, canvases e captions do v3; host do
+palco B refeito com RVM), comparando os 988 frames com `exports/09-jev-v3.mp4` (render do Resolve):
+
+| | PSNR médio | SSIM médio |
+|---|---|---|
+| Palco A | 47,2 dB | 0,992 |
+| Palco B (host RVM) | 34,6 dB | 0,992 |
+| Palco B (controle: hosts DepthMap do v3 no compositor novo) | 40,6 dB | |
+| Palco C | 47,9 dB | 0,999 |
+| Total | 42,5 dB | 0,995 |
+
+- Trim frame-exato: cada frame do v3 casa com o mesmo índice do `aroll.mov` (42 dB, só compressão).
+- Filmburns (gancho + trocas marcadas): nenhum frame com diferença de luminância média > 2.
+- Máscara RVM × DepthMap: IoU 0,94–0,99 no recorte; visualmente igual (cabelo vazando do card).
+- Áudio: −14,1 LUFS (v3 −14,5), true peak −1,0 dBTP; loudness de 3 s com correlação 0,994 com o v3.
+- Tempos no M4 (10 núcleos), 33 s de vídeo: trim 24 s, palco B 112 s (8 beats), export 55 s.
+- Paralelo: 3 cópias do 09-jev com `batch.py --jobs 3` terminaram juntas em 688 s, isoladas e
+  equivalentes entre si. Numa máquina só o total fica perto do sequencial (cada etapa já usa todos
+  os núcleos); o ganho é não haver fila de GUI. Throughput maior = mais máquinas/GPU.
+
+**Legado (não usar em edição nova):** `pipeline/build_timeline.py`, `pipeline/capture_frame.py`,
+`pipeline/apply_broll_parallax.py`, `scripts/Edit/legendas_launcher.py`, `engine/palco_layout.py`,
+`engine/fusion_motion.py`, `engine/native_scenes.py`, `API-NOTES.md`, `FUSION.md`, `SCENES.md` —
+todos marcados no topo. Nada foi apagado.

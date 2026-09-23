@@ -11,10 +11,12 @@ Pipeline humano: **entender → storyboard → material → fala → composiçã
 | [resolve/FORMATOS.md](resolve/FORMATOS.md) | YAP e outros formatos; explicação ilustrada = palco A/B/C (default 19/09) |
 | `projects/<slug>/briefing.md` | Conteúdo, objetivo, materiais e restrições; [modelo](resolve/references/briefing-template.md) |
 | `projects/<slug>/edit/plan.json` | Estado/storyboard da edição; [modelo](resolve/references/plan-template.json) |
-| [resolve/](resolve/README.md) | Galeria, motores e documentação técnica sob demanda |
+| [headless/](headless/README.md) | Trim, máscara (RVM), export e captura sem Resolve; N jobs em paralelo |
+| [resolve/](resolve/README.md) | Galeria, motores e documentação técnica sob demanda (nome da pasta é histórico) |
 
 Fontes originais são imutáveis. Derivados em `edit/`, previews em `preview/` ou `exports/`.
 Briefings, planos e referências textuais podem ser versionados; mídia pesada permanece local.
-O banco do Resolve contém timelines/comps atuais: plano/manifesto não substitui sua inspeção.
+O estado atual da montagem é o do projeto (`edit/cuts.json`, `edit/aroll.json`, `edit/compose*.json`,
+`exports/`); o DaVinci Resolve saiu do pipeline em 23/09/2026 e o banco dele não é mais fonte.
 Manter estado existente de projetos antigos sem quebrar scripts consumidores. Não exigir um
 novo HANDOVER.md ou review.md além do plano.

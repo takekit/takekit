@@ -1,5 +1,9 @@
 # Repertório de comportamentos de edição
 
+> Construções descritas aqui em Fusion/Resolve são registro de como o recurso foi feito; o Resolve
+> saiu do pipeline em 23/09/2026. Para reusar um desses recursos, gerar a camada equivalente
+> (PIL/FFmpeg/Remotion) e entrar pelo `edit/compose.json` ([../headless](../headless/README.md)).
+
 ## Direção acordada com o Oldaque
 
 Captions seguem o formato: explicação ilustrada usa as duas famílias + hold em

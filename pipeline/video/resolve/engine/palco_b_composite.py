@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Palco B fora do Fusion: card arredondado + recorte duro da pessoa, 50% de baixo.
 
-A máscara (DepthMap) já é boa. O Fusion amolecia no LumaKeyer/EffectMask.
-Aqui o mapa vira alfa binário e o layout é PIL.
+A máscara vem do RVM (video/headless/matte.py; o DepthMap do Resolve foi removido).
+O Fusion amolecia no LumaKeyer/EffectMask. Aqui o alfa vira binário e o layout é PIL.
+No fluxo normal quem chama é video/headless/palco_b.py; direto:
 
     python3 engine/palco_b_composite.py \\
         --rgb  dir/rgb_%04d.png \\
@@ -27,18 +28,18 @@ CARD = (24, 960, 1032, 936)  # x, y, w, h — metade de baixo
 RADIUS = 72
 # Recorte cabeça+ombro no frame 1080x1920. Menos zoom que o close-up do Fusion.
 SRC_CROP = (0, 60, 1080, 1280)
-THRESH = 72  # luma do DepthMap; abaixo disso é fundo
+THRESH = 128  # alfa do RVM (0..255); abaixo disso é fundo. O DepthMap legado usava 72.
 
 
 def load_rgb(path: Path) -> Image.Image:
     return Image.open(path).convert("RGB").resize((W, H), Image.Resampling.LANCZOS)
 
 
-def hard_matte(path: Path) -> Image.Image:
+def hard_matte(path: Path, thresh: int = THRESH) -> Image.Image:
     im = Image.open(path).convert("L").resize((W, H), Image.Resampling.BILINEAR)
     a = np.array(im)
-    # corte duro: a máscara do DepthMap já separa pessoa/fundo
-    bin_ = np.where(a >= THRESH, 255, 0).astype(np.uint8)
+    # corte duro: o alfa já separa pessoa/fundo
+    bin_ = np.where(a >= thresh, 255, 0).astype(np.uint8)
     m = Image.fromarray(bin_, "L")
     # 1px de fecha buraco, sem blur (não amolece o recorte)
     m = m.filter(ImageFilter.MaxFilter(3))
@@ -70,10 +71,10 @@ def place_host(src: Image.Image) -> Image.Image:
     return canvas
 
 
-def composite_frame(rgb_path: Path, matte_path: Path) -> Image.Image:
+def composite_frame(rgb_path: Path, matte_path: Path, thresh: int = THRESH) -> Image.Image:
     rgb = load_rgb(rgb_path)
     host = place_host(rgb)
-    matte_full = hard_matte(matte_path)
+    matte_full = hard_matte(matte_path, thresh)
     # matte segue o mesmo crop/scale/posição do host
     matte_rgb = Image.merge("RGB", (matte_full, matte_full, matte_full))
     matte_placed = place_host(matte_rgb).getchannel("R")
@@ -92,7 +93,8 @@ def composite_frame(rgb_path: Path, matte_path: Path) -> Image.Image:
     return out
 
 
-def encode(frames: list[Image.Image], dest: Path) -> None:
+def encode(frames, dest: Path) -> None:
+    """frames: lista ou gerador (o palco_b.py manda gerador para não segurar tudo na RAM)."""
     dest.parent.mkdir(parents=True, exist_ok=True)
     cmd = ["ffmpeg", "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgba",
            "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-",
@@ -109,7 +111,8 @@ def encode(frames: list[Image.Image], dest: Path) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--rgb", required=True, help="padrão rgb_0000.png")
-    ap.add_argument("--matte", required=True, help="padrão matte_0000.png (DepthMap)")
+    ap.add_argument("--matte", required=True, help="padrão matte_0000.png (alfa do RVM)")
+    ap.add_argument("--thresh", type=int, default=THRESH, help="corte do alfa (0..255)")
     ap.add_argument("--frames", type=int, required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--preview", type=int, default=0)
@@ -118,7 +121,7 @@ def main() -> None:
     for i in range(a.frames):
         rgb = Path(a.rgb % i)
         mat = Path(a.matte % i)
-        im = composite_frame(rgb, mat)
+        im = composite_frame(rgb, mat, a.thresh)
         frames.append(im)
         if i == a.preview:
             Path(a.out).with_suffix(".png").write_bytes(b"")

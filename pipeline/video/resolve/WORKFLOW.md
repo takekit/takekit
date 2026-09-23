@@ -57,11 +57,12 @@ Tempos iniciais são provisórios; reconciliar com a fala montada antes de compo
 
 ### A. Seleção
 
-1. Confrontar roteiro aprovado com gravação. Índice default: Whisper word-level
-   (`audio-16k` + timestamps). Transcrição nativa do DaVinci só se Whisper falhar ou o
-   usuário pedir. Timestamps de ASR **não são cortes finais** — a palavra chega com ar
+1. Confrontar roteiro aprovado com gravação. Índice: Whisper word-level
+   (`audio-16k` + timestamps); a transcrição nativa do DaVinci saiu com o Resolve.
+   Timestamps de ASR **não são cortes finais** — a palavra chega com ar
    na cabeça. Depois de escolher as unidades, apertar cada range no waveform
-   (`pipeline/tighten_cuts.py`, RMS). Só então `AppendToTimeline`. Sem esse passo o
+   (`pipeline/tighten_cuts.py`, RMS). Só então montar a fala com `video/headless/trim.py`
+   (FFmpeg) → `edit/aroll.mov`. Sem esse passo o
    clipe nasce com respiro interno, mesmo com gaps zero entre clipes.
 2. Escolher a melhor execução de cada unidade, retirar tentativas concorrentes e falsos começos.
    Registrar fonte/in-out escolhidos e cobertura no plano; detalhar alternativas apenas quando
@@ -72,11 +73,11 @@ Tempos iniciais são provisórios; reconciliar com a fala montada antes de compo
    e pendência para o usuário; continuar trabalho independente. Emenda autorizada atualiza a
    referência do projeto, sem exigir nova confirmação do mesmo pedido.
 
-### B. Cortes nativos
+### B. Cortes (FFmpeg, sem Resolve)
 
-- Inspecionar projeto/timeline reais e preservar trabalho existente antes de refazer cortes.
-  Footage original é imutável; experimentos em timeline duplicada/identificada. Não reconstruir
-  edição atual por manifesto antigo nem substituir a montagem por concatenação externa.
+- Inspecionar `cuts.json`, `aroll.json` e `aroll.mov` atuais e preservar trabalho existente antes
+  de refazer cortes. Footage original é imutável; experimentos numa cópia identificada do
+  `cuts.json`. Não reconstruir edição atual por manifesto antigo.
 - Padrão oficial para vídeos curtos: **fala dinâmica, sem sobras, esperas ou respiros entre falas**,
   inclusive dentro dos takes. Pausa intencional é exceção explícita do usuário. Preservar fonemas
   e articulação; não acelerar a voz por padrão nem impor cauda/tolerância fixa em milissegundos.
@@ -84,11 +85,11 @@ Tempos iniciais são provisórios; reconciliar com a fala montada antes de compo
   pico pode ser ruído. Cortar ar/preparação até o ataque real da palavra e encerrar no fim do fonema.
   Ouvir palavras vizinhas à emenda; restaurar articulação se necessário, sem recolocar o respiro.
   Microfade corrige clique sem sobrepor sílabas. Remoção automática de silêncio é só primeira passagem.
-- Usar Edit/Cut ou operações confirmadas na API instalada. Para a receita de delete+reinsere,
-  ler as restrições em [API-NOTES.md](API-NOTES.md) antes de executar; UI quando não couber.
-  Não apagar por índice antigo após ripple nem repetir operação que falhou sem mudar a hipótese.
-- Após cada lote, reler fonte, origem, duração, posição, vínculos V+A e tracks afetadas. Conferir
-  fps/retime; reconciliar tempos de B-roll, captions e hosts. Zero gaps e sucesso da API não são aceite.
+- Borda se ajusta no `cuts.json` (frames, fim exclusivo) e a fala se remonta com `trim.py`: a
+  montagem é determinística e refazer não acumula erro. Não repetir o que falhou sem mudar a hipótese.
+- Após cada lote, conferir o relatório do `trim.py` (unidade → frames na fonte e na timeline),
+  duração total e fps; reconciliar tempos de B-roll, captions e hosts. Zero gaps e sucesso do
+  script não são aceite.
 
 ### C. Verificação da fala
 
@@ -108,21 +109,20 @@ Recursos em escada — parar no primeiro que resolve a função pedida:
 
 1. **Galeria** ([GALLERY.md](presets/GALLERY.md), gerada do registro; `presets.py list`): recurso
    pronto e aprovado para aquela função.
-2. **Scripts do repo** (`engine/`, `pipeline/`, `motion/`): `tighten_cuts`, `palco_b_composite`,
-   `caption_jobs` + `captions_palco`, `motion/scaffold` + `motion/render`, `map_sfx_cues`,
-   `build_timeline`. Caminho já testado não se reescreve. Ver [DEFAULT.md](DEFAULT.md).
-3. **MCP oficial do Resolve**: timeline, cortes, comps Fusion, conexão de nós, captura e medição
-   no projeto aberto — a mão na API durante a edição.
-4. **Fusion nativo próprio**: última opção. Montar o grafo e validar num trecho curto antes de
-   replicar. Ver [FUSION.md](FUSION.md). Acervos de terceiros ficam fora do processo: reels
-   resolvem com capacidade nativa.
+2. **Scripts do repo** (`../headless/`, `engine/`, `pipeline/`, `motion/`): `trim`, `palco_b`,
+   `compose`, `frame`, `tighten_cuts`, `caption_jobs` + `captions_palco`, `motion/scaffold` +
+   `motion/render`, `map_sfx_cues`. Caminho já testado não se reescreve. Ver [DEFAULT.md](DEFAULT.md).
+3. **Camada nova no projeto**: última opção. Gerar a camada (`.mov` com alfa, PIL/FFmpeg/Remotion)
+   ou o áudio que falta e entrar pelo `edit/compose.json`; validar num trecho curto antes de
+   replicar. Acervos de terceiros ficam fora do processo. Resolve, MCP do Resolve e Fusion foram
+   removidos em 23/09/2026 ([FUSION.md](FUSION.md) e [API-NOTES.md](API-NOTES.md) são legado).
 
 Ler [BEHAVIORS.md](BEHAVIORS.md) para o comportamento dos recursos escolhidos. O agente decide
 layout, hierarquia, foco, timing e combinações; presets são pontos de partida. Movimentos e
 transições seguem o perfil definido na entrevista, modulados pelo formato e pelo contexto do trecho.
 
 Canvas B/C em Remotion no kit ([motion/README.md](motion/README.md)): skills de motion, faixa
-travada. Fusion para o que o kit não cobre (host, câmera, comps fora do canvas). Captions palco
+travada. Fora do canvas (host, câmera), camada própria em PIL/FFmpeg ou Remotion. Captions palco
 pelo motor `captions_palco.py`. SFX pelos cues do beat (`pipeline/map_sfx_cues.py`).
 YAP usa captions neutras e título durante todo o vídeo; não herda chroma/hero-word automaticamente.
 [SCENES.md](SCENES.md) documenta apenas o helper opcional. `energetic`/`quiet` são defaults técnicos
@@ -138,18 +138,21 @@ arbitrária. Níveis/presets são pontos de partida, medição e audição verif
   e som coerentes. Captions e título não disputam o rosto ou a prova. O formato acordado é reconhecível.
 - **Técnica:** conferir grafo/inputs, início, acomodação, sustentação e saída; abrir capturas reais
   e assistir movimento com som. Medir desempenho no trecho quando um efeito custar demais.
-  Usar captura do Resolve ou frames de preview nativo; não simular a timeline num compositor externo.
+  Capturar com `video/headless/frame.py` sobre o export (ou um `compose.py --draft`): o compositor
+  é o próprio export, então o que se captura é o que se entrega.
 - Rever fala/sincronismo do §3C no resultado final. Um still não valida movimento, áudio ou cortes.
   Comparar os aspectos relevantes com a referência aprovada; mudança intencional não é regressão.
-- Exportar pelo Resolve, vertical 1080×1920@30 por padrão, respeitando formato/fps acordados.
+- Exportar com `video/headless/compose.py`, vertical 1080×1920@30 por padrão, respeitando
+  formato/fps acordados.
   Setup alternativo só com motivo: master 2160×3840 com footage 4K e pedido do cliente; 60 fps
   quando o material de origem (screen recording/animação) for a 60 fps.
   Contrato de entrega: H.264, 8–12 Mbps (vertical) / 16–20 Mbps (horizontal), AAC 256k; máster
   externo via ffmpeg `-c:v copy` quando necessário.
-  Medir áudio final: referência atual −14 LUFS integrado e true peak ≤ −1 dBTP. Não limpar toda a
-  fila de renders. Sem nova aprovação obrigatória por adaptação.
-- Entregar arquivo, projeto/timeline e pendências reais. Registrar aprovação estética por aspecto
-  separadamente de teste técnico e portabilidade. Não declarar aprovado porque uma API retornou sucesso.
+  Medir áudio final: referência atual −14 LUFS integrado e true peak ≤ −1 dBTP (o `compose.py`
+  masteriza e imprime a medição). Sem nova aprovação obrigatória por adaptação.
+- Entregar arquivo, spec (`edit/compose.resolved.json` ou `compose.json`) e pendências reais.
+  Registrar aprovação estética por aspecto separadamente de teste técnico e portabilidade. Não
+  declarar aprovado porque um script retornou sucesso.
 
 ## 6. Estado e aprendizado
 
@@ -160,9 +163,9 @@ como conferidos. O plano é interno, sem entrega/aprovação obrigatória. Resum
 não exigir HANDOVER.md e review.md paralelos.
 
 Planos antigos podem alimentar scripts próprios: preservar seus campos/contratos. Integrar o
-estado existente sem sobrescrever dados nem migrar em massa. `build.json`, jobs de captions e
-exports `.comp` são artefatos de execução, não outro briefing. Builder é opcional; exportar comp
-não cria seu host nem comprova rebuild. Reconciliar timeline viva antes de usar manifestos.
+estado existente sem sobrescrever dados nem migrar em massa. `compose.json`, jobs de captions e
+`build.json`/`.comp` legados são artefatos de execução, não outro briefing. Reconciliar o
+`aroll.json` atual antes de usar manifestos antigos.
 
 Guardar decisões locais no projeto. Preferências gerais explícitas atualizam o perfil do creator.
 Promover recurso à galeria quando tiver qualidade/utilidade reutilizável; registrar origem,

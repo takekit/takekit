@@ -47,10 +47,11 @@ cláusula falada
 
 - **A** — crop ombros/cabeça, já fechado. Caption no peito. Câmera quieta. Respiro curto entre B/C.
 - **B** — canvas ~50% em cima; host embaixo no card arredondado, **cabeça vaza do card**.
-  Receita reproduzível (`engine/palco_b_composite.py`, `presets/host-bottom-split.json`):
-  DepthMap do Fusion só como máscara → threshold duro em Python → card (z=0) +
-  pessoa (z=+1) na metade de baixo. O LumaKeyer do Fusion amolece o recorte; não usar
-  pra este palco. Overlay do canvas é o gráfico por cima do bake.
+  Receita reproduzível (`../headless/palco_b.py` → `engine/palco_b_composite.py`,
+  `presets/host-bottom-split.json`): alfa do RVM (Robust Video Matting) só como máscara →
+  threshold duro em Python → card (z=0) + pessoa (z=+1) na metade de baixo. Nada de keyer
+  suave: amolece o recorte. Overlay do canvas é o gráfico por cima do host.
+  (Até 23/09/2026 a máscara vinha do DepthMap do Resolve; removido.)
 - **C** — some o host. O frame é o objeto da frase.
 
 **Ritmo.** Shot 0,9–4,8 s, moda ~2 s. Trocar de palco cedo: o gancho de referência faz B→A→C
