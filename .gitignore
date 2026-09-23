@@ -18,3 +18,6 @@ pipeline/**/*.mp4
 pipeline/**/*.mov
 pipeline/**/*.MOV
 pipeline/**/exports/
+
+# Tauri / Rust
+**/src-tauri/target/

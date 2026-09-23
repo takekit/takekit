@@ -6,9 +6,10 @@ AI-first video editing harness — múltiplos projetos de vídeo em paralelo, or
 
 ```
 takekit/
-├── apps/harness/   # Vite + React UI (threads + chat + preview)
+├── apps/harness/   # Vite + React UI + Tauri 2 desktop shell
+│   └── src-tauri/  # Rust bridge (spawn CI CLIs, local fs)
 ├── engine/         # Node orchestrator + Claude Code adapter
-├── pipeline/       # (reservado) etapas headless futuras
+├── pipeline/       # etapas headless (editor-reels / resolve / 09-jev)
 ├── styles/         # (reservado) presets portáteis (ex.: 09-jev)
 ├── docs/
 │   ├── SPEC.md     # produto
@@ -16,12 +17,11 @@ takekit/
 └── README.md
 ```
 
-Pipeline de edição **não** vive neste repo: o engine aponta para o checkout local de
-`ai-content-agent` (default `video/projects/09-jev` + editor-reels / `DEFAULT.md`).
+Desktop shell is **Tauri 2** (not Electron). The React/Vite UI under `apps/harness` is unchanged; Tauri wraps it and exposes local `spawn_ci` / fs commands for CI CLIs and video files. The engine Node HTTP API can stay for browser-dev; Tauri is the desktop bridge.
 
 ## Como rodar (dev)
 
-Terminal 1 — engine:
+Terminal 1 — engine (browser / HTTP path):
 
 ```bash
 cd engine
@@ -30,7 +30,7 @@ npm run dev
 # http://127.0.0.1:8787  →  GET /api/health
 ```
 
-Terminal 2 — harness UI:
+Terminal 2 — harness UI (browser only):
 
 ```bash
 cd apps/harness
@@ -39,11 +39,20 @@ npm run dev
 # http://127.0.0.1:5173  (proxy /api → engine)
 ```
 
-Requisitos opcionais para jobs reais: Claude Code CLI no `PATH` (`claude` / `claude -p`).
+Desktop (Tauri 2 shell — preferred for local CI spawn / fs):
+
+```bash
+cd apps/harness
+npm install
+npm run tauri dev
+# starts Vite + opens Takekit desktop window
+```
+
+Requisitos: Rust/cargo no `PATH` (ex.: `~/.cargo/bin`). Opcionais para jobs reais: Claude Code CLI (`claude` / `claude -p`).
 
 Variáveis úteis: ver `engine/.env.example` e [docs/HARNESS.md](docs/HARNESS.md).
 
 ## Status
 
-Scaffold: UI + API + adapter Claude Code. Ainda **não** fecha o fluxo completo
+Scaffold: UI + API + adapter Claude Code + Tauri 2 desktop wrapper. Ainda **não** fecha o fluxo completo
 thread → chat → CI → pipeline → preview de vídeo. Detalhes em [docs/HARNESS.md](docs/HARNESS.md).

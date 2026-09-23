@@ -8,7 +8,7 @@ This document covers **CI / coding-agent adapters**. Product layout lives in [SP
 
 | Path | Role |
 |------|------|
-| `apps/harness` | Vite + React + TypeScript UI (dark mode). Left: threads. Center: chat. Right: toggleable timeline/preview (**play only**). |
+| `apps/harness` | Vite + React + TypeScript UI (dark mode) wrapped by **Tauri 2** desktop shell (`src-tauri/`). Left: threads. Center: chat. Right: toggleable timeline/preview (**play only**). |
 | `engine` | Node/TypeScript HTTP API + `ProjectRunner` + pluggable `Executor` adapters. |
 | `pipeline/` | In-repo copy of editor-reels + `video/resolve` (09-jev). See [PIPELINE.md](./PIPELINE.md). Not a rewrite of script logic. |
 
@@ -23,6 +23,34 @@ This document covers **CI / coding-agent adapters**. Product layout lives in [SP
                                                                     (editor-reels /
                                                                      resolve / 09-jev)
 ```
+
+
+## Desktop shell (Tauri 2)
+
+The desktop wrapper is **Tauri 2**, not Electron. React/Vite under `apps/harness` stays identical; only the native shell changes.
+
+| Path | Role |
+|------|------|
+| `apps/harness/src-tauri/` | Rust host: window, plugins (`tauri-plugin-shell`, `tauri-plugin-fs`), invoke commands |
+| `apps/harness` (Vite) | Same web UI; `npm run tauri dev` loads `devUrl` and wraps it |
+
+Run:
+
+```bash
+cd apps/harness
+npm run tauri dev
+```
+
+Rust invoke commands (desktop bridge for local CI / video files; engine Node HTTP can still be used in browser-dev):
+
+| Command | Purpose |
+|---------|---------|
+| `spawn_ci(command, args, cwd?)` | Run Claude Code / Codex / Grok Build / OpenCode (or any local CLI) |
+| `read_file(path)` | Read a text file |
+| `write_file(path, contents)` | Write a text file (creates parent dirs) |
+| `list_dir(path)` | List directory entry names |
+
+Capabilities enable shell execute/spawn and fs read/write scoped for local project/video paths. Identifier: `com.takekit.app`, product name **Takekit**.
 
 ## Executor interface
 
@@ -104,7 +132,7 @@ In-memory store only (scaffold). No secrets in repo — use env / `.env` locally
 
 **Works now**
 
-- Installable harness + engine
+- Installable harness + engine + Tauri 2 desktop shell
 - Dark UI layout (threads / chat / right preview toggle)
 - Mock + live threads; chat → job → Claude Code spawn
 - Pipeline path wiring (env-overridable)
