@@ -1,0 +1,94 @@
+{
+  "_doc": "Hero word + encaixe cumulativo. Palavra-herói grande, trecho anterior alinhado à esquerda em cima, posterior à direita embaixo. Cada palavra entra no seu slot fixo no timing do áudio. v6 (12/09/2026).",
+  "font": "~/Library/Fonts/instatic/InstrumentSans-Bold-static.ttf",
+  "hero_size": 150,
+  "small_size": 58,
+  "tracking_hero": -3,
+  "tracking_small": -1,
+  "word_gap_hero": 26,
+  "word_gap_small": 14,
+  "line_gap": 6,
+  "max_width": 1000,
+  "color": [
+    255,
+    255,
+    255,
+    255
+  ],
+  "shine_text": [
+    238,
+    238,
+    238,
+    255
+  ],
+  "shadow": {
+    "dx": 3,
+    "dy": 6,
+    "blur": 7,
+    "alpha": 190
+  },
+  "glow": {
+    "blur": 26,
+    "alpha": 110
+  },
+  "y_above": 900,
+  "y_low": 1585,
+  "case": "sentence",
+  "lead": 5,
+  "in_frames": 16,
+  "rise_px": 44,
+  "out_frames": 5,
+  "ease_k": 6.0,
+  "motion_blur": 1.0,
+  "focus_blur": 7.0,
+  "shine": {
+    "dur": 14,
+    "delay": 2,
+    "band": 0.28,
+    "gain": 1.0,
+    "bloom": 10
+  },
+  "flicker": {
+    "pattern": [
+      0.0,
+      1.0,
+      0.25,
+      1.0,
+      0.1,
+      0.85,
+      1.0,
+      0.45,
+      1.0
+    ]
+  },
+  "bounce": {
+    "over_scale": 1.1,
+    "over_px": 10,
+    "settle": 10
+  },
+  "jitter": {
+    "on": false,
+    "fps": 12,
+    "px": 1.5,
+    "rot": 0.6
+  },
+  "fx_default": "bounce",
+  "fx_rules": {
+    "shine": {
+      "digits": true,
+      "words": "mil milhão milhões dólares dólar reais real pagando paga pagar ganha ganhar lucro dinheiro grana recompensa prêmio bônus valor"
+    },
+    "flicker": {
+      "words": "enganar engana golpe risco perigo cuidado roubar rouba invade invadir vaza vazar ataque hack hackear erro problema nunca pare atenção alerta"
+    }
+  },
+  "passage_words": "a o e é de da do das dos em no na nos nas um uma uns umas para pra por com sem que se ao aos à às os as te teu tua seu sua ele ela isso esse essa este esta lá aqui",
+  "y_auto": 1380,
+  "auto": {
+    "gap_frames": 12,
+    "max_words": 4,
+    "max_chars": 22,
+    "hold_frames": 40,
+    "y_mode": "auto"
+  }
+}

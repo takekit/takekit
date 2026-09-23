@@ -1,0 +1,58 @@
+{
+  "_doc": "Estado operacional unico da edicao (WORKFLOW.md secao 6): formato, perfil, storyboard, selecao/material, verificacoes e pendencias. Preencher progressivamente; nao pre-preencher resultado como conferido. As unidades de fala seguem o contrato da secao 3A e a situacao de cada uma e o que a auditoria 3C confronta. Pausa nao e campo deste arquivo: pausa so por pedido explicito do usuario. formato: id em FORMATOS.md (yap, explicacao-ilustrada, ...). tratamento: vazio = default do formato; explicacao-ilustrada default e palco-abc (FORMATOS.md). storyboard.palco: A host fechado / B host embaixo / C full grafico — so exigido em explicacao-ilustrada. storyboard.caption: seguir (1-3 palavras no ataque) ou segurar (hold empilhado, tela != fala). storyboard.marca: id em assets/brands/ quando o canvas cita produto (grok, codex, chatgpt, claude); vazio se nao houver.",
+  "project": "",
+  "timeline": "",
+  "fps": 30,
+  "size": [1080, 1920],
+  "source": "",
+  "total_frames": 0,
+  "status": "pendente",
+  "formato": "explicacao-ilustrada",
+  "tratamento": "palco-abc",
+  "perfil_estilo": "video/estilo-creator.md",
+  "storyboard": [
+    {
+      "id": "b01",
+      "funcao": "",
+      "palco": "",
+      "caption": "",
+      "marca": "",
+      "visual_previsto": "",
+      "material_necessario": "",
+      "motivo": ""
+    }
+  ],
+  "material": [
+    {
+      "id": "m01",
+      "origem": "",
+      "arquivo_local": "",
+      "trecho": "",
+      "uso": "",
+      "som_no_asset": null
+    }
+  ],
+  "unidades": [
+    {
+      "id": "u01",
+      "texto_previsto": "",
+      "tomadas_candidatas": [
+        {"fonte": "", "intervalo": "", "motivo": ""}
+      ],
+      "origem_escolhida": "",
+      "texto_montado": "",
+      "situacao": "pendente",
+      "emendas": [
+        {"com": "u00", "palavra_na_fronteira": "", "conferido_por": ""}
+      ]
+    }
+  ],
+  "verificacao": {
+    "playback_1x_voz_isolada": false,
+    "emendas_ouvidas": false,
+    "fragmentos_conferidos": false,
+    "cobertura_do_roteiro": false,
+    "divergencias_abertas": []
+  },
+  "pendencias": []
+}

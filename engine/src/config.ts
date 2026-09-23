@@ -1,12 +1,17 @@
-import { resolve } from "node:path";
+import { resolve, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+/** In-repo copy of the 09-jev / editor-reels pipeline (skill + video/resolve). */
+const IN_REPO_PIPELINE = resolve(HERE, "../../pipeline");
 
 /**
- * External pipeline root — do NOT copy ai-content-agent into this repo.
- * Default points at the local personal_repositories checkout used as guinea pig.
+ * Pipeline root for Claude Code cwd / --add-dir.
+ * Must contain `.agents/skills/editor-reels` and `video/resolve/` (skill relative
+ * paths are rooted here). Override with TAKEKIT_PIPELINE_ROOT if needed.
  */
 export const PIPELINE_ROOT = resolve(
-  process.env.TAKEKIT_PIPELINE_ROOT ??
-    "/Users/oldaquerios/dev/myGitHub/personal_repositories/ai-content-agent",
+  process.env.TAKEKIT_PIPELINE_ROOT ?? IN_REPO_PIPELINE,
 );
 
 /** Default guinea-pig project (style 09-jev). */

@@ -1,0 +1,149 @@
+{
+ "uid": "u07",
+ "palco": "B",
+ "frames": 36,
+ "intent": "As opções existem e estão na tela: a lista se forma item por item (um chip por batida interna) e continua viva, em deriva, no frame do corte.",
+ "hero": "chip_04_humano (a fila fecha nele; o papel de herói passa de chip a chip a cada 7 frames: 01 no f0, 02 no f7, 03 no f14, 04 do f21 ao corte)",
+ "objects": [
+  {
+   "drift": "até f36: y -10 px (residual ~0.28 px/frame), escala +0.006. É a camada ambiente que impede o frame de congelar no tail.",
+   "enter": "já existe no f0, sem fade. Spline monotônica (Fritsch-Carlson), origem no centro (540,371): y (f0,0)(f10,-6)(f36,-10); escala (f0,1.000)(f36,1.006). Ease-out contínuo, termina no corte.",
+   "exit": "held to cut (sem saída, f36 é o último frame)",
+   "h": 494,
+   "id": "lane_drift",
+   "notes": "Todas as coordenadas dos chips são locais ao pai. Se o pai não for construído, os chips ficam rígidos e o tail vira hold morto.",
+   "role": "ambient",
+   "w": 800,
+   "what": "Transform pai da coluna: contém os 4 chips (bbox em repouso x140..940, y124..618). Não desenha nada; é o que garante que nenhum chip pare depois de entrar.",
+   "x": 140,
+   "y": 124
+  },
+  {
+   "drift": "mesma spline depois do assentamento (f5): x -14 px e y -9 px até f36 (~0.45 px/frame), escala +0.004; a função só termina no corte, não no pouso.",
+   "enter": "vem de x-150 px / y+26 px (borda esquerda, um pouco de baixo), spline: placa x (f-4,-150)(f0,+16)(f5,0)(f36,-14); placa y (f-4,+26)(f0,-5)(f5,0)(f36,-9); escala (f-4,0.982)(f0,1.006)(f5,1.000)(f36,1.004); alfa (f-4,0)(f-1,0.72)(f3,1). Rótulo com 1 f de atraso (skid interno): x (f-3,-46)(f1,+7)(f6,0)(f36,-2). Caret scaleY (f0,0)(f2,1.18)(f5,1.0). No f0 já está EM VOO, no ápice do overshoot: x+16, y-5, alfa ~0.8.",
+   "exit": "held to cut",
+   "h": 104,
+   "id": "chip_01_financeiro",
+   "notes": "Herói de f0 a f6 (único chip com movimento rápido nessa janela), depois rebaixado a apoio por contraste de movimento. Nenhum destaque de cor: os 4 chips são idênticos no estado final.",
+   "role": "support",
+   "w": 800,
+   "what": "Pill branca #FFFFFF 800x104 r=52 (sombra 0 4px 14px rgba(28,26,24,.07), hairline 1px rgba(28,26,24,.10)) com caret tinta 6x56 r=3 em x=176 (centro vertical) e rótulo 'financeiro' Hetrixo ExtraBold 40, letter-spacing -0.5, tinta #1C1A18, caixa de texto em x=210 com centro vertical no meio do pill.",
+   "x": 140,
+   "y": 124
+  },
+  {
+   "drift": "após f12: x -16 px, y -10 px até f36 (~0.45 px/frame), escala +0.004, contínuo até o corte.",
+   "enter": "vem de x-150 px / y+26 px; placa x (f3,-150)(f7,+16)(f12,0)(f36,-16); placa y (f3,+26)(f7,-5)(f12,0)(f36,-10); escala (f3,0.982)(f7,1.006)(f12,1.000)(f36,1.004); alfa (f3,0)(f6,0.72)(f10,1); rótulo x (f4,-46)(f8,+7)(f13,0)(f36,-2.6); caret scaleY (f7,0)(f9,1.18)(f12,1.0).",
+   "exit": "held to cut",
+   "h": 104,
+   "id": "chip_02_suporte",
+   "notes": "Entra 7 f (233 ms) depois do chip 01: é o segundo item da fila, não um novo assunto. Nada nele pisca ou troca de cor.",
+   "role": "support",
+   "w": 800,
+   "what": "Mesma pill branca 800x104 com caret tinta e rótulo 'suporte' Hetrixo ExtraBold 40 em x=210, tinta #1C1A18.",
+   "x": 140,
+   "y": 254
+  },
+  {
+   "drift": "após f19: x -18 px, y -11 px até f36, escala +0.004; nunca para.",
+   "enter": "vem de x-150 px / y+26 px; placa x (f10,-150)(f14,+16)(f19,0)(f36,-18); placa y (f10,+26)(f14,-5)(f19,0)(f36,-11); escala (f10,0.982)(f14,1.006)(f19,1.000)(f36,1.004); alfa (f10,0)(f13,0.72)(f17,1); rótulo x (f11,-46)(f15,+7)(f20,0)(f36,-3.2); caret scaleY (f14,0)(f16,1.18)(f19,1.0).",
+   "exit": "held to cut",
+   "h": 104,
+   "id": "chip_03_urgente",
+   "notes": "Terceiro item. Sem estado de alerta (nada de vermelho/ouro): 'urgente' é só mais uma opção da lista; o vencedor é assunto do u08.",
+   "role": "support",
+   "w": 800,
+   "what": "Mesma pill branca 800x104 com caret tinta e rótulo 'urgente' Hetrixo ExtraBold 40 em x=210, tinta #1C1A18.",
+   "x": 140,
+   "y": 384
+  },
+  {
+   "drift": "após f26: x -20 px, y -12 px até f36 (~1.2 px/frame no fim), escala +0.004; é o elemento que ainda está claramente se movendo no corte.",
+   "enter": "vem de x-150 px / y+26 px; placa x (f17,-150)(f21,+16)(f26,0)(f36,-20); placa y (f17,+26)(f21,-5)(f26,0)(f36,-12); escala (f17,0.982)(f21,1.006)(f26,1.000)(f36,1.004); alfa (f17,0)(f20,0.72)(f24,1); rótulo x (f18,-46)(f22,+7)(f27,0)(f36,-4); caret scaleY (f21,0)(f23,1.18)(f26,1.0).",
+   "exit": "held to cut",
+   "h": 104,
+   "id": "chip_04_humano",
+   "notes": "Herói do f21 ao corte: última chegada da fila e o único chip cuja entrada termina perto do fim. Deriva ligeiramente maior que os apoios (herói recebe o movimento mais forte). Nada de ouro, nada de scale extra: o destaque vem só do movimento.",
+   "role": "hero",
+   "w": 800,
+   "what": "Mesma pill branca 800x104 com caret tinta e rótulo 'humano' Hetrixo ExtraBold 40 em x=210, tinta #1C1A18.",
+   "x": 140,
+   "y": 514
+  }
+ ],
+ "internal_beats": [
+  {
+   "event": "Corte no movimento: chip_01 (financeiro) já em voo, no ápice do overshoot (x+16, y-5, alfa ~0.8, escala 1.006). Frame nunca está vazio.",
+   "f": 0
+  },
+  {
+   "event": "Caret do chip_01 estala: scaleY 0 -> 1.18 (follow-through, 2 f depois da placa).",
+   "f": 2
+  },
+  {
+   "event": "chip_02 (suporte) começa a entrar, de x-150 / y+26, alfa 0. Stagger 7 f = 233 ms.",
+   "f": 3
+  },
+  {
+   "event": "chip_01 assentado (x0, y0, escala 1.000) e a partir daqui só deriva; começa o drift lento para x-14 / y-9.",
+   "f": 5
+  },
+  {
+   "event": "Ápice do chip_02 (+16 px). SFX click.",
+   "f": 7
+  },
+  {
+   "event": "chip_03 (urgente) começa a entrar.",
+   "f": 10
+  },
+  {
+   "event": "chip_02 assentado; caret do chip_02 em 1.0.",
+   "f": 12
+  },
+  {
+   "event": "Ápice do chip_03 (+16 px).",
+   "f": 14
+  },
+  {
+   "event": "chip_04 (humano) começa a entrar.",
+   "f": 17
+  },
+  {
+   "event": "chip_03 assentado.",
+   "f": 19
+  },
+  {
+   "event": "Ápice do chip_04: a fila fecha. SFX click. Último evento novo do beat.",
+   "f": 21
+  },
+  {
+   "event": "chip_04 assentado (caret em 1.0). Frame estabilizado: nenhuma ideia nova daqui até o corte.",
+   "f": 26
+  },
+  {
+   "event": "Último frame. Tudo em deriva: coluna sobe ~0.3 px/frame e escala rumo a 1.006; chips deslizam 0.45 px/frame (chip_04 ~1.2 px/frame) para a esquerda. Parado, não; congelado, nunca.",
+   "f": 35
+  }
+ ],
+ "sfx_cues": [
+  {
+   "kind": "snap",
+   "t_local_f": 0,
+   "why": "O 1º chip cruza o corte já no ápice do overshoot: o snap pontua a virada para o palco B e o primeiro item da fila no mesmo ataque."
+  },
+  {
+   "kind": "click",
+   "t_local_f": 21,
+   "why": "Último chip (humano) chega ao ápice e fecha a enumeração. Um tick curto de UI, nada mais: os chips 02 e 03 ficam em silêncio e o tail (f26-f35) é mudo."
+  }
+ ],
+ "risks": [
+  "O papel de herói passa de chip a chip (7 f cada). Como os 4 chips são idênticos em cor, quem não perceber o movimento lê 'nenhum herói'. O contraste tem de vir da velocidade (só o chip que chega se move rápido), nunca de cor ou de scale extra.",
+  "Corte no movimento exige que o bake do palco B (hostB_u07.mov) entre no corte seco: se Grok fizer fade-in do canvas, o chip_01 chega escondido e o beat abre vazio. Manter a chegada do chip_01 visível (assentamento no f5).",
+  "Tail de 10 frames (f26-f35, mais do que os 6-8 pedidos) vive só de deriva: 0.45 px/frame é quase imperceptível no celular. Se o corte parecer morto, aumentar lane_drift (y para -16 px, escala 1.010), nunca acrescentar um evento novo.",
+  "Cada chip tem 3 sub-elementos com atraso próprio (placa, rótulo +1 f, caret +4 f). Se o builder animar o chip como grupo chapado, vira exatamente o 'chip branco deslizando' que este beat substitui.",
+  "Branco #FFFFFF sobre creme #F4EFE6 é combinação de baixo contraste. Se lavar no render, aprofundar a sombra da pill (0 6px 18px rgba(28,26,24,.10)); não trocar por pill tinta, que competiria com o card do host logo abaixo.",
+  "Zero ouro no beat, de propósito: o ouro é do vencedor no u08. Se o diretor quiser pontuação cromática aqui, o lugar é o caret, e aí o u08 perde a exclusividade da cor.",
+  "Sem logo/brand PNG neste beat (não é beat de marca), então o logo-animation não se aplica e nenhum asset de marca foi tocado."
+ ]
+}

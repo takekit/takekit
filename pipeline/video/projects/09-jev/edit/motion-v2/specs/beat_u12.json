@@ -1,0 +1,233 @@
+{
+ "uid": "u12",
+ "palco": "B",
+ "frames": 56,
+ "intent": "Três modelos na bancada existem ao mesmo tempo e um deles é o escolhido agora: o evento do beat é a escolha (a placa que vira ink e recebe o ouro), não os logos.",
+ "hero": "tileChatGPT — placa ink no slot central, recorte em ouro e segmento ouro aceso no trilho logo abaixo",
+ "objects": [
+  {
+   "drift": "y −4px ao longo do tail f5→f56, somado no mesmo resolve() da entrada; nenhum frame parado",
+   "enter": "f0→f10: from y +10px e opacity 0, ease-out (Enter start 0, enter 10). Sem wipe, sem pop.",
+   "exit": "held to cut",
+   "h": 24,
+   "id": "eyebrow",
+   "notes": "x/y são a borda esquerda e o topo do bloco de texto. Textura do cabeçalho: casa do palco B, não informação.",
+   "role": "ambient",
+   "w": 134,
+   "what": "texto \"MODELO\" — Hetrixo ExtraBold 24px, uppercase, tracking 3.2, muted #5A544E",
+   "x": 80,
+   "y": 110
+  },
+  {
+   "drift": "y −4px e x +3px do f8 ao corte, mesma spline; a borda direita fica em x=1000",
+   "enter": "f3→f13: from y +10px, opacity 0 (Enter start 3, enter 10)",
+   "exit": "held to cut",
+   "h": 24,
+   "id": "counter",
+   "notes": "alinhado à direita em x=1000. Mesmo papel do \"3 OPÇÕES\" do u01 — contador do conjunto, não a escolha. Não trocar para \"1 ATIVO\" depois da escolha: seria a mesma ideia dita duas vezes.",
+   "role": "ambient",
+   "w": 280,
+   "what": "texto \"3 DISPONÍVEIS\" — Hetrixo 24px, tracking 3.2, uppercase, muted a 70% de opacidade",
+   "x": 720,
+   "y": 110
+  },
+  {
+   "drift": "y −4px do f8 ao corte, dentro do mesmo Enter",
+   "enter": "f2→f22: largura 0→920 (w = 920 × fadeIn(f,2,20)); a régua cresce enquanto os tiles caem",
+   "exit": "held to cut",
+   "h": 2,
+   "id": "headerRule",
+   "notes": "largura é o eixo que para em f22; a posição continua andando pela deriva. Único filete do cabeçalho — o trilho (y=560) é o segundo e não compete.",
+   "role": "ambient",
+   "w": 920,
+   "what": "hairline 1,5px rgba(28,26,24,0.10) que se desenha da esquerda para a direita",
+   "x": 80,
+   "y": 176
+  },
+  {
+   "drift": "y −4px e x +2px do f12 ao corte",
+   "enter": "f6→f18: from scaleY 0.35 e opacity 0 (Enter start 6, enter 12) — abre por altura, não por largura, para não repetir o desenho da régua",
+   "exit": "held to cut",
+   "h": 8,
+   "id": "track",
+   "notes": "só existe para a escolha ter onde ser marcada. Sem ele o segmento ouro flutua. Fica 32px abaixo da base da placa do vencedor.",
+   "role": "support",
+   "w": 920,
+   "what": "trilho do seletor: 920×8, raio 4, rgba(28,26,24,0.08) — o slot onde as três placas pousam",
+   "x": 80,
+   "y": 560
+  },
+  {
+   "drift": "y −5px e x +2px do f35 ao corte — anda colado na placa do vencedor, mesma direção",
+   "enter": "f30→f40: largura 0→272 em ease-out; cresce centrado no slot (left = 540 − w/2 em cada frame, então a borda esquerda vai de 540 a 404)",
+   "exit": "held to cut",
+   "h": 8,
+   "id": "seg",
+   "notes": "é o \"recebe o sim\". Mesmo motivo do tick ouro do u01, agora funcional: marca o slot escolhido no trilho.",
+   "role": "support",
+   "w": 272,
+   "what": "segmento ouro #F4B400, 8px de altura, raio 4, preenchendo o slot do vencedor (272px)",
+   "x": 404,
+   "y": 560
+  },
+  {
+   "drift": "y −6px, x +2px, scale +0.004 do f12 ao corte, mesma spline da entrada",
+   "enter": "f6→f18: from y +44px, scale 0.94, opacity 0, ease 'pop' (overshoot ~2% só na placa); o recorte faz wipe esquerda→direita f13→f20 (clipPath inset(0 X% 0 0), X de 100→0)",
+   "exit": "held to cut; recua a partir do f28 (11f): y +9px, opacidade →0.52, recorte crossfade ink→mudo",
+   "h": 300,
+   "id": "tileClaude",
+   "notes": "borda esquerda/topo. Caixa do recorte 152×152 em (140, 278); label centralizado em x=216, topo y=452, bloco 272×30. Perdedor nunca compete: contraste cai por cor, não por tamanho.",
+   "role": "support",
+   "w": 272,
+   "what": "placa branca 272×300 raio 30, hairline 1px rgba(28,26,24,0.14), sombra soft; recorte Claude em silhueta ink; label \"CLAUDE\"",
+   "x": 80,
+   "y": 230
+  },
+  {
+   "drift": "y −5px, x +5px, scale +0.004 do f16 ao corte (deriva maior em x = camada mais rasa, parallax sutil)",
+   "enter": "f10→f22: from y +44px, scale 0.94, opacity 0, ease 'pop'; recorte faz wipe f17→f24",
+   "exit": "held to cut; recua no f28 (11f): y +9px, opacidade →0.52, recorte ink→mudo",
+   "h": 300,
+   "id": "tileGrok",
+   "notes": "borda esquerda/topo. Caixa do recorte 152×152 em (788, 278); label centralizado em x=864, topo y=452.",
+   "role": "support",
+   "w": 272,
+   "what": "placa branca 272×300 raio 30 + hairline + sombra soft; recorte Grok em silhueta ink; label \"GROK\"",
+   "x": 728,
+   "y": 230
+  },
+  {
+   "drift": "y −8px, x −3px, scale +0.006 do f8 ao corte, mesma spline da entrada; a deriva nunca para, chega viva no corte",
+   "enter": "f2→f14: from y +44px, scale 0.94, opacity 0, ease 'pop'; recorte faz wipe esquerda→direita f9→f16 (sobrepõe o assentamento da placa = follow-through)",
+   "exit": "held to cut. No f28 vira: crossfade placa branca→ink em 9f (f28→f37), recorte crossfade ink→ouro em 9f, label ink→creme, sobe −14px, escala ×(1 + 0.05 × pop), sombra soft→lift",
+   "h": 300,
+   "id": "tileChatGPT",
+   "notes": "herói único. Slot central (centro 540) = simetria deliberada com os dois perdedores flanqueando; o hero é afirmado por contraste e altura, não por posição. O pop do estado é progress(frame,{start:28,enter:10,ease:'pop'}) — os 2% de overshoot da linguagem, só nesta placa. Caixa do recorte 152×152 em (464, 278); label centralizado em x=540, topo y=452.",
+   "role": "hero",
+   "w": 272,
+   "what": "placa 272×300 raio 30 com recorte ChatGPT 152×152 e label \"CHATGPT\"; nasce branca e vira ink #1C1A18 com o recorte em ouro",
+   "x": 404,
+   "y": 230
+  },
+  {
+   "drift": "herda a deriva do tileChatGPT (vive dentro do mesmo wrapper), então acompanha a placa até o corte",
+   "enter": "f36→f48: sweep(f,36,12) de 0→1; fora de [0,1] não desenha nada — a varredura passa e não deixa estado",
+   "exit": "sai do recorte no f48; nenhum resíduo no frame seguinte",
+   "h": 152,
+   "id": "shineChatGPT",
+   "notes": "camada do herói, não um segundo herói. Mesma geometria do recorte. Começa quando o ouro está fechando (f37) = overlapping action. Técnica única de logo deste beat (mask wipe/reveal no recorte + shine mascarado pelo alfa); nada de stroke draw-on nem morph.",
+   "role": "support",
+   "w": 152,
+   "what": "varredura branca de 26% de largura correndo por dentro do alfa do recorte do vencedor (gradiente linear 104°, mascarado pelo próprio PNG da marca)",
+   "x": 464,
+   "y": 278
+  }
+ ],
+ "internal_beats": [
+  {
+   "event": "eyebrow 'MODELO' parte do repouso e a régua do cabeçalho começa a desenhar (largura 0→920, 20f)",
+   "f": 0
+  },
+  {
+   "event": "tileChatGPT parte: y +44px, scale 0.94, opacidade 0 (ease pop, 12f)",
+   "f": 2
+  },
+  {
+   "event": "tileClaude parte (stagger 4f) e o trilho do seletor abre por altura (scaleY 0.35→1, 12f)",
+   "f": 6
+  },
+  {
+   "event": "recorte ChatGPT faz wipe esquerda→direita (7f) — resolve 2f depois da placa assentar",
+   "f": 9
+  },
+  {
+   "event": "tileGrok parte (stagger total 8f) — a entrada do grupo fecha aqui, nada novo entra depois",
+   "f": 10
+  },
+  {
+   "event": "recorte Claude wipe (7f)",
+   "f": 13
+  },
+  {
+   "event": "placa ChatGPT assenta no slot central",
+   "f": 14
+  },
+  {
+   "event": "recorte ChatGPT fecha o wipe",
+   "f": 16
+  },
+  {
+   "event": "recorte Grok wipe (7f)",
+   "f": 17
+  },
+  {
+   "event": "placa Claude assenta; trilho do seletor fechado",
+   "f": 18
+  },
+  {
+   "event": "recorte Claude fecha o wipe",
+   "f": 20
+  },
+  {
+   "event": "placa Grok assenta e a régua do cabeçalho fecha em 920px — os três estão na mesa (0,73 s de entrada)",
+   "f": 22
+  },
+  {
+   "event": "recorte Grok fecha; o grupo está completo",
+   "f": 24
+  },
+  {
+   "event": "ESCOLHA: a placa do ChatGPT começa a virar ink (9f), o recorte a virar ouro, o label a virar creme, a placa sobe 14px e dá um pop de 5%; Claude e Grok começam a recuar (11f) — opacidade →0.52, y +9px, recorte ink→mudo",
+   "f": 28
+  },
+  {
+   "event": "o segmento ouro começa a crescer do centro do slot do vencedor (0→272, 10f)",
+   "f": 30
+  },
+  {
+   "event": "o shine branco começa a atravessar o recorte do vencedor (12f)",
+   "f": 36
+  },
+  {
+   "event": "a placa do vencedor fecha em ink; o ouro do recorte está completo",
+   "f": 37
+  },
+  {
+   "event": "Claude e Grok fecham o recuo — os dois ficam em 0.52",
+   "f": 39
+  },
+  {
+   "event": "o segmento fecha no slot inteiro: última ideia nova do beat",
+   "f": 40
+  },
+  {
+   "event": "o shine sai do recorte e não deixa resíduo; a partir daqui o beat não introduz nada",
+   "f": 48
+  },
+  {
+   "event": "f48–f55: 8 frames de cauda — nenhuma ideia nova, só a deriva somada. y/x/scale das três placas, do trilho, do segmento e do cabeçalho continuam andando até o corte: o frame está assentado, não congelado",
+   "f": 48
+  }
+ ],
+ "sfx_cues": [
+  {
+   "kind": "click",
+   "t_local_f": 22,
+   "why": "a terceira placa assenta e o grupo de três fecha — uma pontuação para o grupo escalonado, não um som por tile"
+  },
+  {
+   "kind": "snap",
+   "t_local_f": 28,
+   "why": "a escolha cai: a placa vira ink e o recorte recebe o ouro; é o evento autoral do beat e o único snap do trecho"
+  }
+ ],
+ "risks": [
+  "Os PNGs de marca não estão na paleta (medido: chatgpt teal #74AA9C, claude laranja #D97757, grok preto; os três 1024² com alfa). O recorte entra como silhueta mascarada pelo próprio alfa em ink/mudo/ouro. Se o builder renderizar o PNG cru, a paleta quebra e o recorte do vencedor desaparece na placa ink.",
+  "Silhueta iguala o span mas não a massa: o nó do ChatGPT cobre 74,6% do quadrado contra 40,0% do Claude e 42,5% do Grok. A caixa igual de 152px é a escolha (paridade de span, densidades diferentes). Se em tela o ChatGPT parecer pré-escolhido antes do f28, reduzir a caixa dele para 136px em vez de escurecer os outros.",
+  "O brilho do vencedor fica silencioso por padrão (BEHAVIORS: shine em logo = silencioso). Não pedir hit em f36–f48 só porque a varredura passa.",
+  "Sombra suave das placas vaza ~44px além de x=80 e x=1000 (mesmo precedente do u01); as placas em si ficam exatamente na coluna de 920px, nada desce abaixo de y=568 e a faixa 700–960 fica intocada para a caption.",
+  "56f é curto: a escolha em f28 deixa 28f de cauda. Se o ataque de 'escolhe' cair antes do f24, adiantar a escolha para f22 e as entradas para f0/f4/f8 — nunca deixar a escolha cair antes da última placa assentar.",
+  "Não antecipar 'na hora' (velocidade/tempo) neste beat: u13 (número) e u14 (timer) carregam isso. Um quarto elemento ou uma aceleração no fim rouba o próximo beat.",
+  "Se o vencedor tiver de ser outro modelo (o plan.json marca chatgpt em b12), o beat se mantém: troca o slot central e a geometria não muda."
+ ]
+}

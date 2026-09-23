@@ -1,8 +1,8 @@
 # Takekit Harness — Architecture
 
-The harness is a **chat-orchestrated multi-project video editor** UI (Codex-app style) plus a thin **engine** that schedules agent runs against an external pipeline.
+The harness is a **chat-orchestrated multi-project video editor** UI (Codex-app style) plus a thin **engine** that schedules agent runs against the **in-repo pipeline**.
 
-This document covers **CI / coding-agent adapters**. Product layout and pipeline direction live in [SPEC.md](./SPEC.md).
+This document covers **CI / coding-agent adapters**. Product layout lives in [SPEC.md](./SPEC.md); the ported editing skill + Resolve scripts live in [PIPELINE.md](./PIPELINE.md).
 
 ## Pieces
 
@@ -10,7 +10,7 @@ This document covers **CI / coding-agent adapters**. Product layout and pipeline
 |------|------|
 | `apps/harness` | Vite + React + TypeScript UI (dark mode). Left: threads. Center: chat. Right: toggleable timeline/preview (**play only**). |
 | `engine` | Node/TypeScript HTTP API + `ProjectRunner` + pluggable `Executor` adapters. |
-| External pipeline | `ai-content-agent` (not copied). Default guinea pig: `video/projects/09-jev` + `video/resolve/DEFAULT.md` / editor-reels skill. |
+| `pipeline/` | In-repo copy of editor-reels + `video/resolve` (09-jev). See [PIPELINE.md](./PIPELINE.md). Not a rewrite of script logic. |
 
 ```
 ┌─────────────┐     HTTP /api/*      ┌──────────────┐     spawn      ┌─────────────────┐
@@ -19,7 +19,7 @@ This document covers **CI / coding-agent adapters**. Product layout and pipeline
 │  chat +     │   jobs / preview     │ ProjectRunner│                └────────┬────────┘
 │  preview)   │                      └──────────────┘                         │
 └─────────────┘                                                               ▼
-                                                                    ai-content-agent
+                                                                    takekit/pipeline
                                                                     (editor-reels /
                                                                      resolve / 09-jev)
 ```
@@ -37,7 +37,7 @@ interface Executor {
 
 interface ExecutorRequest {
   projectPath: string;   // video project dir
-  pipelineRoot: string;  // ai-content-agent root
+  pipelineRoot: string;  // takekit/pipeline (skill + video root)
   prompt: string;
   cwd?: string;
   signal?: AbortSignal;
@@ -72,7 +72,7 @@ If the binary is missing, the adapter **fails with a clear error** (no fake succ
 - `video/resolve/WORKFLOW.md`
 - the thread’s `projectPath`
 
-It does **not** reimplement FFmpeg/Resolve/captions scripts.
+It does **not** reimplement FFmpeg/Resolve/captions scripts — those live under `pipeline/video/resolve/`.
 
 ## Pluggable executors
 
@@ -112,7 +112,7 @@ In-memory store only (scaffold). No secrets in repo — use env / `.env` locally
 **Still missing for first guinea-pig video end-to-end**
 
 - Discovering / attaching real export as `previewPath` after a run
-- Headless pipeline steps inside Takekit (today agent must drive `ai-content-agent` scripts)
+- Headless pipeline steps inside Takekit (today agent must drive `pipeline/video/resolve` scripts)
 - Persistence (DB), multi-user, auth
 - Codex / Grok Build / OpenCode adapters (stubs registered)
 - Parallel job scheduling / cancellation UX

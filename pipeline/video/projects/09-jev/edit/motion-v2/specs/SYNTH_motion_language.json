@@ -1,0 +1,243 @@
+{
+ "motion_language": [
+  {
+   "choice": "ONE monotone cubic (Fritsch-Carlson) spline over explicit (frame,value) knots, sampled per frame, for every transform in every beat. Entrance and drift are the SAME knot list - never an ease-in followed by an ambient loop. Banned by construction: cubic-bezier, easeInOut/expo/back formulas, spring(), CSS transitions. The |m| <= 3*secant clamp means the only way an element moves is a knot list, and the only way it overshoots is an explicit apex knot.",
+   "property": "Easing family"
+  },
+  {
+   "choice": "BASE = 12f (0.400s) @30fps. Closed ladder, no other frame counts allowed: micro write-on 6f / chip-label-small plate 12f / plate-card-tile 16f / hero mark-number 20f / bar-counter value clock 40f / shine 13f (9f when duration < 45f) / halo breath 10f (6f when duration < 45f) / group stagger 4f (3f when the group has 4+ members) / micro-stagger 1f between the parts of ONE element (max 4 parts).",
+   "property": "Base timing unit"
+  },
+  {
+   "choice": "By element class, one number each: micro (rules, ticks, hairlines) 0px - write-on only; chip 42px rise; plate/card/tile 32px rise; hero mark/number 30px rise; lateral |x| <= 24px for any element narrower than 880px, 0px for anything full-width (>=880px at x=80 cannot drift in x and stay inside 80..1000). Direction: entrances come from BELOW (+y) or <=16px from a side. Never from above, never from off-frame. ONE named exception per piece: the throw (u10-stub, 516px lateral) - allowed only with an arc knot (y -15px at the apex), a >2% scale dip mid-flight and its own SFX.",
+   "property": "Entrance distance budget"
+  },
+  {
+   "choice": "Exactly ONE interior apex per property (the entrance apex), and at most ONE additional story extremum (u10 tension dip, u11 refusal flinch), which may not occur after 0.80 x duration. Magnitudes: <=2% scale, <=8px position, <=8deg rotation (rotation allowed ONLY on the two status stamps: u11 stamp, u13 seal). Zero overshoot on numbers, bars, money, cards, logos. The apex is an explicit knot, never a formula, and NO property may end its last segment on an apex - the tangent into the cut must be non-zero, always.",
+   "property": "Overshoot budget"
+  },
+  {
+   "choice": "Group stagger 4f top-to-bottom; 3f when the group has 4 or more siblings, so the group's reveal never exceeds 22f (0.73s). Micro-stagger 1f between the parts of one element (dot, title, bars). Those three numbers are the whole rhythm vocabulary: any beat using 5f, 6f or 7f stagger is out of language.",
+   "property": "Stagger"
+  },
+  {
+   "choice": "The last NEW event of a beat - an entrance, a state change, a shine, a value lock - must BEGIN no later than (duration - tail) with tail = max(8 frames, 0.15 x duration). After it, nothing new; every transform keeps drifting at a non-zero rate through the tail. A locked NUMBER is legal (a value may hold); a locked TRANSFORM is not.",
+   "property": "Hold discipline"
+  },
+  {
+   "choice": "Drift is a RATE, not a total: hero layer +0.40px/f x, -0.33px/f y, +0.0015 scale/f (~12px/s, -10px/s); support 0.6x; ambient 0.3x. All layers move in the SAME direction (parallax), never opposite. Floor 0.20px/f - below that a beat reads as frozen (this is what kills the current u13); ceiling 0.60px/f. At any instant exactly ONE element per beat may exceed 0.50px/f, and it must be the hero's own gesture or its shine.",
+   "property": "Drift rate"
+  },
+  {
+   "choice": "At most two soft light events per beat, exactly ONE of them travelling. (1) The shine: one white band (alpha 0.95), masked to the object's OWN alpha (acts on ink, silhouette never moves), left-to-right, 13f (9f compressed), band FWHM 140px (110px compressed), near-linear with a 2-frame ease-out, starting once the hero has settled (>=4f after the cut on beats < 45f, >=7f otherwise). Never on gold, never on cream, never as an overlay outside the mask. (2) 4-6f after it ends, a UNIFORM halo breath (10f, +0.10 alpha lift, +0.006 scale, no travel). No second sweep, no loop, no coloured glow, no card sheen.",
+   "property": "Light events"
+  },
+  {
+   "choice": "Dry cut only between beats. No wipe, no slide, no crossfade between palcos, no camera punch, no film-like dissolve. The ONLY crossfade in the piece is the state change (cream sheet -> ink block) on a single plate: 9f, u01 f34-f42 and u12 f28-f37, with the TYPE swapping on one frame inside it.",
+   "property": "Transition family"
+  },
+  {
+   "choice": "Two surfaces, no third. S1 sheet = cream #F4EFE6 fill + 1px rgba(28,26,24,0.14) hairline + plateShadow (0 10px 22px rgba(28,26,24,0.10)) - the default for every card, chip, tile and container on both stages. S2 block = ink #1C1A18 fill + plateLift (0 18px 38px rgba(28,26,24,0.16)) + cream type - exactly ONE per beat, and it is always the winner/hero surface. Outline = transparent + 1.5px hairline (slots, lanes, tracks). WHITE PLATES ARE BANNED on palco B and palco C; white is a type colour on ink only. Empty-slot fills are rgba(28,26,24,0.16) - never 0.08, which is only 1.28:1 on cream and disappears on a phone.",
+   "property": "Surfaces and elevation"
+  },
+  {
+   "choice": "ONE gold OBJECT per beat, and it always means the decision/winner. Gold is legal only ON INK: (a) a filled shape carrying ink type, (b) type on an ink plate, (c) a 2-6px rule or underline sitting <=12px directly under an ink label. Gold on cream (1.61:1) or gold on a 16% track (1.18:1) is invisible and is a bug, so every gold fill must live inside an ink surface (ink pill, ink card, ink rail). A handoff - gold draining off one object while another receives it - is allowed with <=3 frames of overlap (u11: the value drains f46-f51 as the stamp arrives f49).",
+   "property": "Gold budget"
+  },
+  {
+   "choice": "Frozen; no beat may invent a size. heroNumber 232 / bigNumber 132 (u11 -40%) / heroLabel 72 / cardTitle 56 / chipValue 52 / chipLabel 34 / smallCaps 24 with +0.14em tracking (the ONLY letterspaced role) / accent 62 (Alvito, one word, ASCII-only) / unit 88 / logoCaption 30 / microLabel 20 (absolute floor). Every number that changes value renders in NumericSlots: fixed 0.70em slots, glyph centred, because Hetrixo has no GSUB/tnum and '1' is 0.325em against '0' at 0.667em - natural advance crawls 2.05x sideways.",
+   "property": "Type scale"
+  },
+  {
+   "choice": "Linear, always, and only over the first 6f of a chip/label or 8f of a plate; clamped 0..1; never splined, never drifting. An element's fade completes and the transform carries the life from then on.",
+   "property": "Opacity"
+  },
+  {
+   "choice": "One camera wrapper per beat, one monotone spline, moving the whole graphic layer at the drift rate. Used only where the beat is long enough to need it (u13: x +0.30px/f, y -0.21px/f = a 57px push over 190f). No punch, no per-beat zoom, no frame rotation. Depth = three layers at 1.0 / 0.6 / 0.3 of the drift rate, all in the same direction. Any element of width >=880px has an x drift of 0.",
+   "property": "Camera and parallax"
+  },
+  {
+   "choice": "An element whose transform does not change for 2+ consecutive frames after its entrance, or whose velocity is 0 on the cut frame, is a defect - not a style choice. The spline must carry a non-zero tangent into the last frame of every beat. Additionally, no palco B beat may open on an empty frame: the first element's entrance began before the cut, so at f0 it is at s >= 0.55 and alpha >= 0.4 (implement as start = -5 on the first element).",
+   "property": "Frozen is a defect"
+  },
+  {
+   "choice": "Palco B: opaque content only in x 80..1000 / y 40..700; author every resting bottom <= 664 and keep every shadow/blur's outer edge <= 700; alpha 0 for every pixel below y=960 at EVERY frame including entry, apex and drift. Palco C: cream #F4EFE6 opaque full frame, all content y 80..1400, band y 1500..1750 quiet, nothing opaque below 1750. Eyebrow cap-top: palco B 96 (box top 92.6), palco C 124 (box top 120.6). Left edge of every text block: x=80 on BOTH stages, so a B->C->B cut never shifts the type.",
+   "property": "Stage bands"
+  }
+ ],
+ "shared_primitives": [
+  {
+   "api": "curve(points: readonly [frame,value][]): (f:number)=>number",
+   "behavior": "Exists in src/kit/curve.ts, keep verbatim. Sorts knots, builds secant tangents as the mean of adjacent secants, clamps |m|<=3*d within each interval, samples Hermite per frame. This IS the easing family - no other interpolation function may appear in a beat.",
+   "name": "curve"
+  },
+  {
+   "api": "settle(points, frames=2, span=0.12): Point[]",
+   "behavior": "Exists, keep. Prepends a 2-frame step covering 12% of the travel so the move starts from rest instead of from a cable. Only legal use: the first knot pair of an entrance that must start dead still; entrances that cut into motion (start=-5) skip it.",
+   "name": "settle"
+  },
+  {
+   "api": "progress(frame, {start=-5, enter=12, duration, ease:'enter'|'rise'|'pop'}): {s, tail, settled}",
+   "behavior": "REWRITE the 'pop' branch: it currently calls easeOutBack (1.70158*0.42), a formula outside the spline family. pop must become apex knots through the same curve(): [[0,0],[enter*0.6,0.90],[enter,1.02],[enter+6,1]]. 'enter' stays [[0,0],[enter*0.55,0.84],[enter,1]]; 'rise' stays [[0,0],[enter*0.5,0.62],[enter,1]]. tail stays one monotone spline from dStart=start+enter/2 to duration with knots [[dStart,0],[dStart+0.4L,0.28],[dEnd,1]] - its last secant is non-zero, which is what guarantees no velocity zero at the cut. Accepts start<0 (the cut-into-motion rule).",
+   "name": "progress"
+  },
+  {
+   "api": "resolve(frame, to:{x,y,scale,rotate}, from:{...}, {start, enter, ease, duration, driftRate:{x,y,scale}}): {x,y,scale,rotate,opacity,tail}",
+   "behavior": "CHANGE the drift from a total to a RATE: offset = driftRate * ((duration - frame)/30) seconds. A beat therefore declares px/second and every beat keeps the same physical speed regardless of length (the current token drift {x:6,y:-5} is a total, which is why a 57f beat moves at 0.10px/f and a 190f beat at 0.03px/f - both frozen). Sums from the same tail clock as the entrance, so the position never stops. Opacity is clamped and never drifts: opacity = clamp(lerp(from,to,s)) or explicit linear knots.",
+   "name": "resolve"
+  },
+  {
+   "api": "<Enter frame duration enter start from={{y:42,scale:0.97,opacity:0}} driftRate={MOTION.driftHero|driftSupport|driftAmbient} ease>children</Enter>",
+   "behavior": "The wrapper that applies resolve(). Every positioned element in every beat goes through it - a beat that hand-rolls a transform string is out of language. Default start = -5 for the beat's FIRST element, 0 for the rest.",
+   "name": "Enter"
+  },
+  {
+   "api": "NumericSlots({text, size, slot=0.70, color, edge:'right'|'center', style})",
+   "behavior": "MANDATORY for every changing value (u01 percentages, u08 94%, u11 -40%, u13 5 and 18, u14 0,50). Each glyph gets its own fixed 0.70em box, the glyph optically centred inside it; the comma takes a 0.35em box. Right-edge anchoring so a rising value grows leftward without moving its column. This is the single highest-risk bug in the piece: Hetrixo has no tnum, so natural advance makes a 1-digit to 2-digit transition change the block's width by 2.05x.",
+   "name": "NumericSlots"
+  },
+  {
+   "api": "useValue(frame, knots: Point[]): number  +  barPct(value, max): number",
+   "behavior": "Samples the value's OWN knot list with the same curve() - the counter's clock is independent of the wrapper's transform clock. Bar width is derived from the same number (one driver) so the number and the fill can never disagree.",
+   "name": "useValue"
+  },
+  {
+   "api": "BrandMark({brand:'jev'|'chatgpt'|'claude'|'grok', box, height?, tone='ink'|'cream'|'gold'|'muted', shine?, pad?, style})",
+   "behavior": "Draws the PNG TINTED FLAT: a div whose background is the tone, masked by the PNG's own alpha (WebkitMaskImage/maskImage = url(brand)), so teal #74AA9C and coral #D97757 never reach the frame. The same mask clips the shine child. pad insets a full-bleed mark so its rays are not cropped (claude needs 1.4x its apparent size, grok 0.90 aspect, chatgpt's squircle is full-bleed with a sharp bottom-right corner). Replaces the raw <Img> in ui.tsx.",
+   "name": "BrandMark"
+  },
+  {
+   "api": "<Shine t band=140 axis='x' alpha=0.95 softness=0.5 />",
+   "behavior": "The travelling band only (t = sweep(frame, start, 13)), drawn inside a caller-owned mask/clip so it can never paint outside the object. White only - the gold stop currently in u04 must be deleted. Outside t in [0,1] it renders nothing (no residue in the next frame).",
+   "name": "Shine"
+  },
+  {
+   "api": "breath(frame, {at, dur=10}): {alpha, scale}",
+   "behavior": "The uniform post-shine event: a single apex, +0.10 alpha and +0.006 scale on the object's own masked ink, no travel. This replaces u05's second shine sweep and u04's ring-as-second-event.",
+   "name": "Breath"
+  },
+  {
+   "api": "<Ring t d0 d1 alpha0=0.55 alpha1=0.15 stroke=2 color=gold />",
+   "behavior": "Concentric emit for u04 only: diameter on a monotone spline from d0 to d1, alpha draining linearly, stroke gold on the ink disc (9.4:1). It is the ambient layer - it may never exceed the drift ceiling's spirit (cap the final D so its bottom stays <= 664).",
+   "name": "Ring"
+  },
+  {
+   "api": "<Bar pct w h radius trackTone='cream'|'ink' fill />",
+   "behavior": "Exists; change the track default to rgba(28,26,24,0.16) and add rgba(244,239,230,0.16) for the ink surface. A gold fill is legal ONLY with trackTone='ink' (gold on a cream track is 1.18:1).",
+   "name": "Bar"
+  },
+  {
+   "api": "<Plate tone='cream'|'ink'|'outline' radius shadow='soft'|'lift'|'none'>",
+   "behavior": "Exists; DELETE 'white' from the tone union so a white plate cannot compile. cream = S1 sheet (cream fill + 1px rgba(28,26,24,0.14) + plateShadow), ink = S2 block (ink fill + plateLift, no border), outline = transparent + 1.5px hairline. This is the palette lock enforced by the type system instead of by discipline.",
+   "name": "Plate"
+  },
+  {
+   "api": "<Chip label value tone='sheet'|'block' meter={{pct, fill:'ink'|'gold'|'muted'}} w=920 h=96 />",
+   "behavior": "The decision row (u01, u07): 920x96, radius 26, label chipLabel 34 at x=116, value chipValue 52 right-aligned to x=964, meter an 8px bar flush inside the bottom edge (clipped by the radius). sheet = cream + hairline + muted; block = ink + cream type + gold meter. The winner is expressed by tone, not by an extra ring.",
+   "name": "Chip"
+  },
+  {
+   "api": "<Card tone='sheet'|'block' w=920 h header body footer />",
+   "behavior": "The container for u09/u10/u11 and the base of u08. DELETE the sheen prop - a white sweep on a light plate is invisible and a 5th event. u09/u10/u11 = sheet; u08 = block. Same internal padding (34/36) across the three cards so the swap reads as the same object.",
+   "name": "Card"
+  },
+  {
+   "api": "<Rule w t=6 color draw={{start,enter:6,apex:2}} />",
+   "behavior": "Write-on hairline: scaleX 0->1, origin left, 6f, one apex +2%, colour rgba(28,26,24,0.14). Micro class - no translation ever. Used by every header rule, dropline, divider and rail in the piece.",
+   "name": "Rule"
+  },
+  {
+   "api": "staggerStart(i, base, {count, offset=MOTION.stagger})",
+   "behavior": "Exists; add an explicit offset override and set offset=3 when count>=4. A beat may never pass a literal stagger of 5, 6 or 7.",
+   "name": "staggerStart"
+  },
+  {
+   "api": "stageGuard(stage:'B'|'C', props:{edges, driftX, fullWidth})",
+   "behavior": "Dev invariant check run on every beat: throws if a resting bottom > 664 (B) or > 1400 (C), if an element whose width >= 880 declares a non-zero x drift, if a shadow's outer edge crosses 700 (B), or if a property's final two knots are not strictly monotone. Makes the language a compile/run-time failure instead of a review note.",
+   "name": "stageGuard"
+  },
+  {
+   "api": "MOTION = {base:12, enter:12, enterPlate:16, enterHero:20, enterBig:20, micro:6, shine:13, shineShort:9, breath:10, stagger:4, stagger4:3, microStagger:1, apex:{scale:0.02, px:8, rot:8}, driftHero:{x:12,y:-10,scale:0.0015}, driftSupport:0.6x, driftAmbient:0.3x, travel:{micro:0,chip:42,plate:32,hero:30,lateral:24}, tail:(d)=>Math.max(8,0.15*d)}",
+   "behavior": "The current tokens are the source of the inconsistency: drift {x:6,y:-5,scale:0.006} is a frozen TOTAL, travel:26 collapses three element classes into one, and enterHero:18 / enterBig:24 are off the recon's 12/16/20 ladder. Replace wholesale. Beats read tokens only - no beat may hold a motion number of its own.",
+   "name": "tokens"
+  }
+ ],
+ "per_beat_fixes": [
+  {
+   "fix": "1) SURFACE: hero chip_01 is an S1 cream sheet until f34, then a 9f state crossfade (f34-f42) to the S2 ink block, the type swapping on one frame; chips 02/03 stay S1 sheets with muted label, muted value and a muted meter. The three white 920x164 cards are the exact defect the brief exists to fix (white on cream = 1.15:1) and are deleted. 2) GEOMETRY: rows 920x96 r26 at y=236/352/468 (gap 20, resting bottom 564 <= 664), replacing 920x164 at 120/308/496; label chipLabel 34 at x=116, value chipValue 52 in NumericSlots right-aligned to x=964, meter 8px flush at the chip's bottom edge. The hero's 84px value and the losers' 64px values are both off-scale (locked: 52). 3) ENTRANCE: +64px from ABOVE is double the chip budget and the wrong direction - use from={{y:42, scale:0.97}}, enter 12f, one apex +6px at f12, monotone settle; opacity linear over 6f and chip_01 starts at -5 so f0 is not empty. 4) APEXES: kill the y list [(0,-64),(10,+7),(15,-3),(56,+7)] - it has three extrema and the last one lands ON THE CUT, so Fritsch-Carlson clamps the tangent to zero on the final frame: that is the banned 'entrou e parou' sitting in beat 1. Use [[0,42],[12,-6],[20,-2],[56,+4]] with x drift 0 (a 920-wide chip cannot move in x). 5) RING: delete. A 3px gold stroke on a cream chip is 1.61:1 and a second gold object. 6) SHEEN: delete. A white band at 28% travelling 20px/f over the gold fill is a fourth event and breaks 'one element above 0.50px/f'. 7) STAGGER 5f -> 4f (chips at -5/+4/+8). 8) SFX: keep the snap at f12 (the hero's apex) and the click at f34 (the lock); DELETE the riser at f12 - a snap and a riser on the same frame is one event scored twice. 9) The meter fills INK while the chip is cream and turns GOLD exactly at the state change, so gold appears once and means 'decided'.",
+   "uid": "u01"
+  },
+  {
+   "fix": "1) LEFT EDGE: the whole panel moves from x=140 to x=80. The spec claims 140 mirrors u01's chips - u01 is at x=80, so every B->C->B cut currently shifts the type 60px, which the format forbids. 2) WIDTH: SIM/NÃO tracks 800 -> 920 (ends at 1000, not 940). 3) LABELS: SIM 148px and NÃO 112px both -> 72px (heroLabel). The recon locks SIM and NÃO at equal optical weight; the 24% size gap contradicts it. Difference is carried by colour only: SIM ink, NÃO muted, both at box top y=560 and y=880. 4) SURFACE: the SIM row becomes an S2 ink pill (920x92 r46) because a gold fill on cream is 1.61:1 and on a 16% track 1.18:1 - invisible. Inside the ink pill the track is rgba(244,239,230,0.16) and the fill is GOLD (9.3:1). NÃO stays a cream 920x72 r36 with a 16% track and a muted fill (5.1:1). 5) FILL TIMING: 0.012->0.600 in 12 frames is 45px/f peak, twice the reference (24px/f) and too fast to read on a 40f beat. Re-knot: f5 0.012, f12 0.25, f18 0.44, f24 0.58, f30 0.665, f39 0.740 (peak ~26px/f, decelerating into the cut, still moving). 6) ENTRANCE: group from y+32 (not 34) with ONE apex - replace [f6 1.015, f9 0.998, f14 1.004] (two apexes in eight frames) with [[0,0.930],[6,1.015],[14,1.000],[39,1.011]]. 7) The divider rule goes 800 -> 920 wide and 0.10 -> 0.14 alpha. 8) SFX: keep the f3 riser only; nothing locks in this beat, so there is no click.",
+   "uid": "u03"
+  },
+  {
+   "fix": "1) BUDGET: the beat is 32f and cannot hold an 18f hero enter + a 10f shine + a tail. Compress to the ladder: iris f0-f6, scale lands f12 (enter 12f), shine f14-f22 (9f, FWHM 110px), breath f24-f30 (6f). The shine then begins at f24-... verify: the last new event (the breath) begins at f24 = 32-8, exactly the tail floor. 2) SHINE COLOUR: delete the gold stop (transparent -> white 0.42 -> gold 0.30 -> transparent). Gold on an ink disc is a second gold object and the gold is already the ring; the shine is white only. 3) SCALE REVERSAL: the spec has scale peaking at 1.016 on f7 then decaying to 1.006 on f74 - the object ends smaller than its apex, and the reversal puts a zero tangent at f7. Use one monotone list [[0,0.92],[12,1.000],[31,1.012]] - the tail keeps growing. 4) RING: cap the final diameter at 560 (radius 280), not 600 (radius 300), so y max = 372+280 = 652 stays under the 664 resting floor, and drain the alpha to 0.12 by the cut. At 4.4px/f it is the beat's ambient layer, not a hero gesture. 5) OPACITY: at f0 alpha is 0, so the palco B overlay opens empty - start the group at -5 with alpha >= 0.4 (the iris is already opening). 6) Keep the disc D380 / mark box 320 (ink 165x240, 63% of the diameter - correct roundel proportion); fill the mark with cream via the PNG alpha as the mask, never the raw #171717 + magenta fringe. 7) SFX: keep the single click at f6.",
+   "uid": "u04"
+  },
+  {
+   "fix": "1) SCALE REVERSAL: [f7 1.016 -> f74 1.006] shrinks after its apex; replace with one monotone list [[0,0.88],[11,1.000],[74,1.012]]. 2) SECOND SWEEP: delete shine pass 2 (f44-f68, 25f). The reference allows exactly one travelling sweep plus one uniform halo breath; a second pass at 0.34 alpha is a loop. Replace it with a Breath on the mark's alpha, 10f, one apex, +0.10 lift, no travel. 3) SHINE PASS 1: 18f -> 13f, FWHM 160 -> 140px, alpha 0.85 -> 0.95, starting after the hero settles (f12, 12 frames after the cut - legal). 4) AMBIENT WASH: gold at 0.04 is not one of the three legal gold shapes and is invisible at that alpha; make it white at 0.05. 5) ENTRANCE: hero from y+30 (not 34), scale 0.88->1.00, enter 12f, opacity linear 6f, and the hero must be at alpha >= 0.4 on f0 (currently 0 -> the C canvas opens with a fade from nothing). support_lift 5f later from +32px, ambient_wash last from +24px - all three drift in the SAME direction at 1.0 / 0.6 / 0.3 of the rate. 6) MARK: render the OpenAI knot as an ink (#1C1A18) flat silhouette via the alpha mask - never the raw #74AA9C tile, which is the one chroma source in the piece. Keep the viewBox crop (1781 units at 312.5,312.5) or the mark renders at 74% of the box. 7) SFX: the single reveal at f11.",
+   "uid": "u05"
+  },
+  {
+   "fix": "1) OFF-FRAME ENTRANCE: the 150px lateral from x-150 = x-10, i.e. the chip starts outside the canvas, and it is 3.5x the locked chip budget. Use from={{y:42, x:24}} -> 0; nothing flies in from off-frame. 2) GEOMETRY: 4 chips at h=104/gap=26 -> 920x96 r26 at x=80, y=186/302/418/534, resting bottom 630 (drift -12 brings it to 618). Chips 920 wide must have x drift 0. 3) STAGGER 7f -> 3f (a 4-member group; the recon caps the group at 700ms). The group then completes at f21 and the beat keeps a 15-frame tail; at 7f it completed at f33 of 36 with no tail at all. 4) SURFACES: the four WHITE pills -> S1 cream sheets (cream + 1px hairline 0.14 + plateShadow). White on the bake's cream is 1.15:1 - the exact defect this beat replaces. No ink plate here: this list has no winner, the ink block belongs to u08, and the hero rotates on MOTION alone. 5) ONE DRIFT, NOT FOUR: the current tails (-14/-16/-18/-20px x) fan the stack into four speeds. Put the four chips in one lane (x 0, y -12px, scale +0.006 at the support rate) and give only the newest chip +4px of extra local drift as the hero. 6) Keep the caret's scaleY apex (0 -> 1.18 at +2f -> 1.0 at +5f) and the label's +1f micro-stagger - both on-language. 7) f0 must not be empty: chip_01 starts at -5 and is already at its apex ~0.8 alpha (the spec gets this right and it is the model for u01/u04/u09/u10/u12/u14). 8) SFX: keep the snap at f0 and the click at f21.",
+   "uid": "u07"
+  },
+  {
+   "fix": "1) SURFACE: the white 920x680 card becomes the S2 ink block. This is not cosmetic: the gold % on a cream card is 1.61:1 and a gold meter fill on a 16% track is 1.18:1 - both invisible. On ink they are 9.4:1 and 9.3:1. It also makes u08 literally the same surface as u01's winning chip enlarged - one system, and the strongest consistency win available in the piece. 2) PILL: an ink pill on an ink card vanishes; make FINANCEIRO a cream fill with ink type (15:1), h 76 -> 64, label 36 -> 34 (chipLabel). 3) COUNTER: 280px -> 232 (heroNumber), cream on the ink card, in NumericSlots (0.70em = 162.4px per digit; two digits = 324.8px centred on 540). The % unit goes 128px -> 88 (unit) in GOLD - on ink that is legal, and the % plus the meter fill count as ONE readout object. 4) APEXES: the card list [f7 dy-7, f14 0, f40 -9, f70 -16] has two extrema in 14 frames; replace with [[0,32],[7,-7],[20,-9],[70,-16]] (one apex at f7, strictly monotone into the cut) and scale [[0,0.972],[7,1.005],[70,1.012]]. 5) The card is 920 wide: x drift 0 (a +20px drift would push its right edge to 1020, outside the column); the children (tag +8px, meter +6px) carry the internal parallax. 6) TAG: 3.0% apex -> 2% (the locked overshoot budget). 7) VALUE TIMING: the lock at f64 leaves 6 frames; the tail floor is max(8, 0.15x71) = 11, so re-knot the value to lock at f58: f12:0, f18:20, f24:40, f31:62, f38:78, f46:88, f54:93, f58:94, and move the click to f58. 8) DELETE the speed blur (5px, f12-f26) - nothing else in the piece blurs, and it will read as a focus pull; if the digits strobe, stretch the first segment to f20 instead. 9) SFX: riser f12 + click f58.",
+   "uid": "u08"
+  },
+  {
+   "fix": "1) SURFACE: the white 920x376 plate becomes an S1 cream sheet (cream + 1px hairline 0.14 + lift shadow); white on cream is 1.15:1. 2) DELETE the plate sheen (an ink 5.5% band crossing the card f18-f44). It is a fifth event in a 48-frame beat, a dark sweep is not in the reference (the reference shine acts on the mark's own ink), and it competes with the tag. 3) HEADER GLYPH: drop the 34x28 envelope - it is the third 'inbox' signal after the tag's own text and the caption agent's word. Keep the three 6px dots as pure chrome. 4) ROWS: the dim to 0.45 takes the bars to rgba 0.045-0.08, below the legibility floor; dim to 0.60 instead. 5) TAG: 26px -> 24px (smallCaps is the only 24px role and the pill's 26 is off-scale); ink pill with GOLD type on ink is the beat's one gold, legal under (b). 6) GEOMETRY: plate 920x376 at (80,176), rows at 256/332/408 with a 116px inner edge, tag 134x46 at (830,271) - but reserve x 814..964 in every row's trail so the tag never covers row content, and the plate is 920 wide so its x drift is 0. 7) ENTRANCE: plate from +32 (not 30), rows from +42, tag from x+24 (not 30) with its <=2% apex; the preview bars' change to solid ink at f16-f26 is a STATE CHANGE, not an entrance - keep it, it is the beat's event. 8) The plate's alpha must be >= 0.4 on f0 (start -5). 9) SFX: the single snap at f24.",
+   "uid": "u09"
+  },
+  {
+   "fix": "1) DOUBLE GOLD: the slot's border turning 1.5px -> 2px GOLD is both a second gold object and a gold hairline on cream (1.61:1, invisible). The receipt becomes INK 2px; the gold stub stays the only gold, per the gold budget. 2) DELETE the stub's white shine (0.38, f19-f27): white on gold is 1.85:1 and the palette allows white only on ink. The receipt (ink border + the placeholder vanishing under the stub) is the payoff; the flight arc is the beat's one wow. 3) ENTRANCE: card from +32 (not +18); stub from +42 with its entrance apex; slot from x+16 / scale 0.98 (keep). 4) SCALE APEXES: [f9 1.0, f19 0.985, f27 1.0, f34 1.005] has three extrema; use [[0,0.972],[9,1.004],[20,0.988],[34,1.006]] - one entrance apex plus one tension dip, both before 0.8x35 = 28. 5) The throw exception is granted to the stub only (516px = 26.9% of W, under the 1/3 rule), and it keeps its arc knot (-15px at f17), its scale dip and its own snap. 6) SURFACE: the white 424x380 ticket becomes an S1 cream sheet, same radius 36 and padding 36 so its inner box stays x116..468. 7) GEOMETRY verified: stub seats at x636..988 inside the slot (620..996, 386..478) with an 8px inset; nothing descends below y=510 and the 700..960 band stays alpha 0. 8) SFX: keep the snap at f12 (the tear) and the click at f24 (the seat).",
+   "uid": "u10"
+  },
+  {
+   "fix": "1) STAMP POSITION: the gold 88px disc at centre x=940 leaves only 64px of it on the ink plate (border 960) and puts its low-contrast half on cream; move the centre to x=920 so 84 of 88px sit on ink. 2) The strike line's end moves 940 -> 920 so it stays welded to the stamp. 3) '0412' at muted 0.65 opacity computes to ~4.2:1; use full muted (6.52:1). 4) The value's gold drain (f46-f51) and the stamp's gold arrival (f49) overlap for 2 frames - inside the 3-frame handoff budget, keep it; it is the best gold move in the piece. 5) The stamp must carry the same rotate signature as u13's seal (-5deg -> 0 with the apex at the landing), so the two status stamps read as one object across palcos C and B. 6) Card is 920 wide: x drift 0; the plate (840, inside) drifts +6px and the strike/scan follows the SUM of card+plate or the stamp looks detached. 7) The scan/strike (68px/f) is the only motion above 0.5px/f - correct; the card, plate and rows stay on the support rate. 8) Busy-ness: 5 text chains in 67 frames. If legibility fails, delete u11_row2 first - never shrink the plate or the value. 9) FontGate is mandatory (the tabular -40% and its right edge at x=880 break without it). 10) SFX: riser f26 + snap f54.",
+   "uid": "u11"
+  },
+  {
+   "fix": "1) TRACK: gold-on-cream is 1.61:1 and gold-on-a-16%-track is 1.18:1 - both invisible. Make the 920x8 rail at y=560 INK (#1C1A18, full) and the chosen segment CREAM (15:1). 2) GOLD: the chosen tile's mark only. The mark becomes a flat GOLD silhouette via the alpha mask (never the raw #74AA9C / #D97757); the rail's segment is cream, so there is no second gold. 3) SURFACES: the three tiles are S1 cream sheets with ink marks; the chosen one crossfades to the S2 ink block (f28-f37) - the only crossfade in the piece besides u01's, with the mark crossfading ink->gold and the type inking on one frame. 4) ENTRANCE: tiles from y+32 (not 44); the hero's state pop goes 5% -> 2% (the locked apex budget) and u12 is the only beat allowed a pop, because it is a status change. 5) MARK MASS: keep the equal 152px box, but draw the ChatGPT tile's ink at 136 inside it - 74.6% ink coverage against Claude's 40.0% and Grok's 42.5% pre-selects the winner by mass before f28, which kills the story. 6) BrandMark is the enforcement point: all three marks masked to a flat tone on the cream sheets. 7) The 920-wide rail has x drift 0; the tiles (272 wide) may drift x +2/+5 and the chosen tile up to -3. 8) STAGGER 4f (tiles f2/f6/f10) with the 1f micro-stagger inside each tile - on language, keep. 9) The chosen tile rises 14px and the losers recede 9px at 0.52 opacity - keep, but the recession must not start before the state change completes at f37. 10) SFX: click f22 + snap f28.",
+   "uid": "u12"
+  },
+  {
+   "fix": "1) FROZEN TAIL: the camera drifts +6/-8px over 190 frames = 0.03px/f, and the elements +4/-5 - both far below the 0.20px/f floor the recon flags for this beat. Fix with ONE camera wrapper at the floor: x +0.30px/f (+57px over the beat) and y -0.21px/f (-40px). The eyebrow must be authored at y=140 (cap-top 143) so that at the cut its cap-top is 103 >= 80; the lockup stays inside x <= 1000. 2) TYPE: the 272px digits -> 232 (heroNumber) in NumericSlots (0.70em = 162.4px per digit). Re-lay the lockup: 162.4 (5) + 24 + 190 (connector) + 24 + 324.8 (18) + 24 + 152 (seal) = 901.2, x 80..981 - the 160px seal + 200px connector overflow the column at the locked size. 3) GOLD: the gold header tick becomes an INK 64x6 tick at 10px under the eyebrow's ink; the seal (gold plate + ink bars, legal case a) stays the beat's only gold. 4) SHINE: 22f -> 13f (f131-f144), then an optional Breath on the mark at f148-f158 (begins before 190-28.5 = 161, so it is legal). 5) EVENT ORDER: '18' f52-f72 collides with the connector f60-f80 and the seal f74. Re-time: '5' f30-f50, '18' f50-f68, connector f66-f78, seal f76-f86 with the apex at f82, matching the speech (cinco -> dezoito -> vezes). 6) The seal's rotate -6deg -> 0 is allowed under the status-stamp exception (<=8deg, one apex) and must match u11's stamp. 7) The plate: white -> S1 cream sheet; the ChatGPT icon at 64px must be INK via the alpha mask (it is currently the only off-palette pixel in the piece); '1' + the drawn cross stay muted. 8) The eyebrow moves from y=140 to the palco C cap-top lock (box top 120.6, cap-top 124), tick at y=150. 9) SFX: riser f28 + snap f82.",
+   "uid": "u13"
+  },
+  {
+   "fix": "1) NUMERIC SLOTS: 228px with 'tabular-nums' is impossible - Hetrixo has no tnum. Four slots at 0.70em = 162.4px each = 649.6px, which does not fit the declared 520px box; lay out the hero as digits (649.6) + a 0.18em space (41px) + the 's' (88px) = 735.6 total, centred as one block on x=540 -> x 172..908. 2) UNIT: 84px -> 88px (unit), muted, on the digits' baseline. 3) GOLD SEAL: a 4px bar 32px below the ink bottom is a floating gold hairline at 1.61:1. Make it 400x6 with its top 10px under the digits' ink bottom - legal case (c), an underline welded to ink. 4) GOLD TICK: 23px under the eyebrow's ink and gold = invisible; the header motif is ink, so the tick becomes INK 64x6 at 10px under the ink (matching u13). Gold is the seal only, one object per beat. 5) ENTRANCE DIRECTION: from y-48 (above) is banned; enter from +30 with scale 0.92 -> 1.00, enter 20f (hero), apex at the landing, then drift y +0.33px/f in the SAME direction (down) so there is no reversal. 6) VALUE: the knots [[4,1.00],[14,0.86],[24,0.74],[34,0.63],[42,0.545],[48,0.50],[56,0.50]] pass the tail rule (the lock begins at f48 = 57-9) - keep, and render 0,50 in slots so the hundredths do not crawl. 7) The seal's 38-frame width draw is a second long motion under the hero; shorten to 22f (f26-f48) and keep the 400 -> 416 tail so the last 9 frames are alive. 8) The 920x1.5 rule at x=80 with NO x drift is the frame's anchor - keep it exactly as specified. 9) f0 must not be empty: the readout starts at -5 with alpha >= 0.4. 10) SFX: click f4 (the counter starts) + click f48 (the lock).",
+   "uid": "u14"
+  }
+ ],
+ "consistency_violations": [
+  "ENTRANCE DISTANCE has 11 different values across 12 beats (18, 26, 30, 32, 34, 44, 48, 64, 150) against a locked ladder of 0/24/30/32/42. The same class of object differs by 3.5x: u01's chip falls 64px, u10's card 18px, u07's chip flies 150px. LOCK: micro 0, chip 42, plate 32, hero 30, lateral <=24.",
+  "ENTRANCE DIRECTION is split: u01, u08, u13 and u14 enter from ABOVE (+64, +64, +64, -48) while u07, u09, u10, u11 and u12 enter from BELOW. Consecutive beats move the same class of element in opposite directions, so the piece reads as two hands. LOCK: from below, or <=16px from a side.",
+  "STAGGER uses four rhythms for one gesture (a list of siblings): 5f (u01), 7f (u07), 4f (u09/u11/u12), 1f (u10). With a 12f enter, u07's 7f x 3 takes 33 of 36 frames and leaves no tail. LOCK: 4f, 3f for 4+ members, 1f micro inside one element.",
+  "APEX COUNT is unbounded: u03 has two extrema in eight frames (f6 1.015 / f9 0.998 / f14 1.004), u10 has three (f9, f19, f27), u08 has three (f7, f14, f40), u01 has three (f10, f15, f56). Each interior extremum is a frame of zero velocity. LOCK: one entrance apex plus at most one story extremum before 0.80 x duration.",
+  "VELOCITY ZERO ON THE CUT: u01's chip y list [(0,-64),(10,+7),(15,-3),(56,+7)] ends on a local maximum at f56 - the very last frame of the beat - so Fritsch-Carlson clamps the tangent toward zero exactly at the cut. That is the banned 'entrou e parou', shipped in beat 1. LOCK: the last segment of every property is strictly monotone with a non-zero tangent.",
+  "WHITE PLATES ON CREAM in 7 of 12 beats: u01 (three white chips), u07 (four white pills), u08 (white card), u09/u10 (white cards), u12 (white tiles), u13 (white plate). White on cream is 1.15:1 - no edge at all - which is the literal 'chip branco estatico' defect the brief exists to fix. LOCK: S1 cream sheet or S2 ink block, never white.",
+  "GOLD ON CREAM, six instances, all effectively invisible (1.61:1, and 1.18:1 on a 16% track): u01's bar fill and winner ring, u03's SIM fill, u08's meter fill and %, u12's track segment, u14's tick and seal. These are structural, not cosmetic - the fix changes geometry (an ink pill/card/rail behind the gold), not just the hex. LOCK: gold only on ink.",
+  "HERO MARKING uses four different grammars for 'this one won': u01 a gold ring + gold fill + gold value + a sheen on a white card; u12 an ink crossfade + a gold mark + a gold track segment; u08 size alone; u07 motion alone. LOCK: the winner is always the S2 ink surface with one gold readout, and u01's f34 state change is the same gesture as u12's f28.",
+  "TYPE SCALE has seven sizes for the chip-value role alone: 84 and 64 (u01), 132 (u11), 280 (u08), 228 (u14), 272 (u13), 148/112 (u03), against the locked 232/132/72/56/52/34/24. u03's 148-vs-112 also directly contradicts the recon's 'equal optical weight for SIM and NAO'.",
+  "TABULAR FIGURES are claimed by u08, u11, u13 and u14 but Hetrixo has no GSUB table and no tnum feature ('1' = 0.325em against '0' = 0.667em). Four beats will crawl horizontally as their values change width - the single most likely visual bug in the piece. NumericSlots is not optional.",
+  "LEFT EDGE: u03 puts its whole panel at x=140 and explicitly claims it mirrors u01's chips at x=140 - u01 is at x=80. The format requires the same left edge on both stages, so every B->C->B cut shifts the type 60px.",
+  "EYEBROW PLACEMENT disagrees by 64px across beats: u12 at y=110, u13 at y=140, u14 at y=76, against the locked cap-top band (palco B 96, palco C 124).",
+  "LAST-IDEA-IN-THE-LAST-FIFTH: u05 (shine 2 ends at 0.91 of the beat), u08 (the value locks at 0.90), u11 (0.85), u13 (0.80), u14 (0.84). Five beats introduce a new idea in the final fifth, leaving 6-8 frames of tail against a floor of max(8, 0.15 x duration).",
+  "SHINE LENGTH: 10f (u04), 18f (u05 pass 1), 25f (u05 pass 2), 8f (u10), 22f (u13), 12f (u12), plus u01's 20px/f sheen instead of a shine. The locked shine is 13f (9f compressed), exactly one per beat, masked to the object's own ink.",
+  "TRACK ALPHA for the same 'empty slot' idea: 0.08 (u03, u12), 0.12 (u01, u03 SIM), 0.18 (u09), cream 0.16 (u01's ink chip). The recon's own fallback (raise to 0.16) should be the single value.",
+  "CHIP/CARD HEIGHT for the same role: u01 164, u07 104, u09 76, u12 300, against the measured reference pill of 94px. Only u07 is close.",
+  "PALCO B FRAME 0 IS EMPTY in u01, u04, u09, u10, u12 and u14 (first element at alpha 0). u07 explicitly designs the opposite ('corte no movimento, chip_01 ja no apice do overshoot, alfa ~0.8') and is the correct model. LOCK: the first element starts at -5, so f0 is at s >= 0.55 and alpha >= 0.4.",
+  "SFX DENSITY: u01 fires a snap at f10 and a riser at f12 - two cues two frames apart, one event scored twice; u08's riser at f12 resolves into a click 52 frames later and is the only cue for two thirds of the beat. u05 and u03 have one cue each, u07/u09/u10/u12/u13/u14 have two. [risco] u01's riser must be cut, or the piece teaches the viewer that a snap and a riser mean the same thing.",
+  "[risco] progress()'s 'pop' branch calls easeOutBack (1.70158 * 0.42) - a formula outside the spline family. Three beats depend on it (u09's tag, u11's stamp, u12's state change) and any one of them will land with a springy ease that contradicts the language. It must be rewritten as apex knots through curve() BEFORE the first render, or the delivered piece will contain two easing families.",
+  "[risco] THE PALCO B FLOOR against a continuous entrance-plus-drift spline: the drift adds y and the entrances now come from below, so an element authored to rest at 664 crosses 700 during its own motion, and the lift shadow (38px blur, 18px offset) extends past it. Author resting bottoms at <= 610 for anything with a lift shadow, and sample the rendered PNG's alpha at f0, the apex and the last frame as the brief demands. Any blur or shadow painted under StageB is clipped, but a shadow reaching y=700..960 sits in the caption agent's band.",
+  "[risco] u13 is 190 frames. At the locked 0.20px/f floor it needs ~38px+ of cumulative motion or it reads as a still, which is why it is the only beat that gets a camera push (+57/-40px). If that camera is rejected, u13 needs a second soft event around f150 or it will ship as a frozen frame - the recon flags this exact beat by name.",
+  "[risco] chatgpt/logo.png (teal #74AA9C, 2.30:1) and claude/logo.png (coral #D97757, 2.73:1) are the only chroma in the kit and are both full-bleed. If BrandMark's alpha-mask tint is skipped, u05, u12 and u13 put large low-contrast chroma on cream - the loudest and least legible thing in the frame at once.",
+  "[risco] The Alvito file named in the brief (fontspring-demo-alvitonovacomp-bold.otf) is UPRIGHT (italicAngle 0.0) and its DEMO subset is ASCII-only. No beat currently specifies an accent word, so the safest delivery is to load no Alvito at all; if an accent is added it must use -bolditalic.otf and an ASCII word (na hora / setup / inbox), or it will read as a second condensed bold and any accented character will render tofu.",
+  "[risco] The state-change crossfade is the piece's only crossfade (u01 f34-f42, u12 f28-f37). If the TYPE crossfades with the plate instead of swapping on one frame, it reads as a dissolve between two texts rather than a selection; keep the plate crossfade 9f and the type swap 1f.",
+  "[risco] Beat budget: u04 (32f) and u07 (36f) cannot hold a 20f hero enter plus a 13f shine plus an 8f tail. The compressed ladder (chip 12f, shine 9f, breath 6f) is mandatory there, and if it still does not fit the shine is cut - never the drift.",
+  "[risco] Verification before the batch render: alpha 0 for every pixel below y=960 on all 9 palco B beats (sample the PNG at f0, mid and last), exact frame counts against cuts.json (57/40/32/75/36/71/48/35/67/56/190/57), no system fallback in any frame (the @remotion/fonts delayRender gate stays), and no transform that is identical on two consecutive frames after its entrance."
+ ]
+}

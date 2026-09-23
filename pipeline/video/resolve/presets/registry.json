@@ -1,0 +1,417 @@
+{
+  "_doc": "Registro único de presets. Toda vez que um efeito é APROVADO num vídeo, entra aqui (presets.py add). `presets.py list` mostra o catálogo; `presets.py table` regenera a tabela em `presets/GALLERY.md` (entre os marcadores presets:start/end). Nunca editar a tabela à mão.",
+  "presets": [
+    {
+      "id": "caption/hero-lockin",
+      "kind": "caption",
+      "file": "styles/hero-lockin.json",
+      "engine": "engine/captions_engine.py",
+      "menu": "Legendas - hero-lockin",
+      "status": "approved",
+      "created": "2026-09-12",
+      "approved_in": [
+        "01-muse-split (teste v6)"
+      ],
+      "summary": "Palavra-herói 150px + escada; encaixe cumulativo; ease expo + motion blur + desfoque; shine/flicker/bounce por classe",
+      "preview": null,
+      "notes": "Falta: inverted cutout (precisa compositor externo). Tamanho do herói e y ainda em avaliação. Legado desde 14/09 (default virou trendy-stack-chroma)."
+    },
+    {
+      "id": "camera/intro-zoomout",
+      "kind": "camera",
+      "file": "presets/intro-zoomout.json",
+      "engine": null,
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-12",
+      "approved_in": [
+        "02-muse-v2"
+      ],
+      "summary": "Zoom 1.40→1.00 em 18f + blur 6→0, motion blur; comp Fusion no 1º clipe",
+      "preview": null,
+      "notes": ""
+    },
+    {
+      "id": "fx/filmburn-hook",
+      "kind": "hook",
+      "file": "presets/filmburn-hook.json",
+      "engine": null,
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-12",
+      "approved_in": [
+        "02-muse-v2"
+      ],
+      "summary": "Film burn real (ITC 11) em Screen, pico no frame 0, 18f + SFX burn",
+      "preview": null,
+      "notes": ""
+    },
+    {
+      "id": "sfx/filmburn",
+      "kind": "sfx",
+      "file": "assets/sfx/filmburn_yt_l2pxVBGIxSs.wav",
+      "engine": null,
+      "menu": null,
+      "status": "deprecated",
+      "created": "2026-09-12",
+      "approved_in": [
+        "02-muse-v2"
+      ],
+      "summary": "SFX de film burn (0.6s) extraído de short; normalizado -16 LUFS",
+      "preview": null,
+      "notes": "Removido 12/09: overlays de film burn baixados já trazem som; não adicionar SFX extra."
+    },
+    {
+      "id": "camera/punch",
+      "kind": "camera",
+      "file": "presets/punch.json",
+      "engine": null,
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-12",
+      "approved_in": [
+        "02-muse-v2"
+      ],
+      "summary": "Punch-in 1.14 / out em 7f, pivot rosto (0.5,0.64), motion blur; comp Fusion por clipe",
+      "preview": null,
+      "notes": ""
+    },
+    {
+      "id": "camera/shake",
+      "kind": "camera",
+      "file": "presets/shake.json",
+      "engine": null,
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-12",
+      "approved_in": [
+        "02-muse-v2"
+      ],
+      "summary": "Shake 12f amplitude 0.014 decaindo, no Transform.Center; junto do punch em palavra de choque",
+      "preview": null,
+      "notes": ""
+    },
+    {
+      "id": "layout/split-top-bottom",
+      "kind": "ui",
+      "file": "presets/split-top-bottom.json",
+      "engine": null,
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-12",
+      "approved_in": [
+        "02-muse-v2"
+      ],
+      "summary": "Split apresentador/material: Tilt 210+Crop 752 no A-roll; B-roll 16:9 Zoom 1.58 Tilt -1595; emenda 4px; Ken Burns p/ imagem",
+      "preview": null,
+      "notes": ""
+    },
+    {
+      "id": "ui/notification",
+      "kind": "ui",
+      "file": "presets/ui-overlays.json",
+      "engine": null,
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-12",
+      "approved_in": [
+        "02-muse-v2"
+      ],
+      "summary": "notificação pill c/ logo oficial, botões, desce do topo c/ blur",
+      "preview": null,
+      "notes": "Legado externo do 02; novos motions em Fusion."
+    },
+    {
+      "id": "ui/counter",
+      "kind": "ui",
+      "file": "presets/ui-overlays.json",
+      "engine": null,
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-12",
+      "approved_in": [
+        "02-muse-v2"
+      ],
+      "summary": "counter ouro US$ 0→130.000 ease-out + label",
+      "preview": null,
+      "notes": "Legado externo do 02; novos motions em Fusion."
+    },
+    {
+      "id": "ui/card-page",
+      "kind": "ui",
+      "file": "presets/ui-overlays.json",
+      "engine": null,
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-12",
+      "approved_in": [
+        "02-muse-v2"
+      ],
+      "summary": "card de página c/ linha escondida revelada em ouro + tail; A-roll dim+blur; callback 0.45",
+      "preview": null,
+      "notes": "Legado externo do 02; novos motions em Fusion."
+    },
+    {
+      "id": "text/cta-serif",
+      "kind": "ui",
+      "file": "presets/ui-overlays.json",
+      "engine": null,
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-12",
+      "approved_in": [
+        "02-muse-v2"
+      ],
+      "summary": "pergunta de CTA em Playfair Italic + 'comenta aqui' ouro + notificação",
+      "preview": null,
+      "notes": "Legado externo do 02; novos motions em Fusion."
+    },
+    {
+      "id": "sfx/map-v1",
+      "kind": "sfx",
+      "file": "presets/ui-overlays.json",
+      "engine": null,
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-12",
+      "approved_in": [
+        "02-muse-v2"
+      ],
+      "summary": "Mapa histórico de eventos selecionados → SFX; sem pop por palavra e sem som obrigatório por movimento",
+      "preview": null,
+      "notes": ""
+    },
+    {
+      "id": "music/ducked-bed",
+      "kind": "sfx",
+      "file": "presets/ui-overlays.json",
+      "engine": null,
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-12",
+      "approved_in": [
+        "02-muse-v2"
+      ],
+      "summary": "Música −18 dB + sidechain ratio 6, fades e comprimento exato",
+      "preview": null,
+      "notes": ""
+    },
+    {
+      "id": "sfx/library-peu",
+      "kind": "sfx",
+      "file": "assets/sfx/catalog.json",
+      "engine": null,
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-12",
+      "approved_in": [
+        "02-muse-v2"
+      ],
+      "summary": "Biblioteca de SFX por categoria (taxonomia do Peu) + ganhos relativos; Mixkit só fallback",
+      "preview": null,
+      "notes": ""
+    },
+    {
+      "id": "audio/voice-master",
+      "kind": "sfx",
+      "file": "presets/ui-overlays.json",
+      "engine": null,
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-12",
+      "approved_in": [
+        "02-muse-v2"
+      ],
+      "summary": "Voz: compressor leve + loudnorm -14 LUFS + limiter -1 dBTP em track própria; master TP -1",
+      "preview": null,
+      "notes": ""
+    },
+    {
+      "id": "caption/trendy-stack",
+      "kind": "caption",
+      "file": "styles/trendy-stack.json",
+      "engine": "engine/captions_trendy.py",
+      "menu": "Legendas - trendy-stack",
+      "status": "draft",
+      "created": "2026-09-14",
+      "approved_in": [],
+      "summary": "Escada diagonal c/ leading negativo: Poppins Bold (big/mid/small) + Playfair Italic 800 verde c/ glow no herói; entrada no lugar blur->nítido 5f; saída blur+fade top->bottom. Ref. Envato Trendy Titles",
+      "preview": null,
+      "notes": "Variante sem chroma; usar quando o tom do vídeo não combinar com aberração cromática."
+    },
+    {
+      "id": "caption/trendy-stack-chroma",
+      "kind": "caption",
+      "file": "styles/trendy-stack-chroma.json",
+      "engine": "engine/captions_trendy.py",
+      "menu": "Legendas - trendy-stack-chroma",
+      "status": "approved",
+      "created": "2026-09-14",
+      "approved_in": [
+        "03-claude-limite (preview 14/09)"
+      ],
+      "summary": "trendy-stack + aberração cromática na entrada/saída: R chega primeiro (+22px), G, B por último (-22px); rampa 2f por canal, stagger 1f; saída inversa. Ref. Envato 'Chromatic Version'",
+      "preview": null,
+      "notes": "Aprovado no 03. Não é o default da explicação ilustrada (09-jev / palco). Usar só se o vídeo pedir este tratamento. Cor do destaque: ouro #F4B400."
+    },
+    {
+      "id": "library/brainstorm-reels",
+      "kind": "other",
+      "file": "assets/packs/brainstorm-academy/README.md",
+      "engine": null,
+      "menu": null,
+      "status": "draft",
+      "created": "2026-09-15",
+      "approved_in": [],
+      "summary": "Pack local: 10 fundos, 3 guias, 15 SFX; fontes e presets Adobe de referência. Uso no Resolve ainda não validado.",
+      "preview": null,
+      "notes": ""
+    },
+    {
+      "id": "motion/smooth-camera",
+      "kind": "camera",
+      "file": "presets/motion-smooth.json",
+      "engine": "engine/fusion_motion.py",
+      "menu": null,
+      "status": "draft",
+      "created": "2026-09-16",
+      "approved_in": [],
+      "summary": "Câmera por spline amostrada: entrada que desacelera dentro da deriva, pan lateral com base de zoom que cobre o deslocamento, punch ancorado em palavra-herói (quemso alinhado).",
+      "preview": null,
+      "notes": "Base de zoom = 1 + 2|pan| + respiro: pan nunca abre borda vazia. Fritsch–Carlson, sem overshoot."
+    },
+    {
+      "id": "motion/card-chip",
+      "kind": "ui",
+      "file": "presets/motion-smooth.json",
+      "engine": "engine/fusion_motion.py",
+      "menu": null,
+      "status": "draft",
+      "created": "2026-09-16",
+      "approved_in": [],
+      "summary": "Card de b-roll: canto contínuo (squircle, n≈5, ~20% do lado menor) + sombra suave do alfa + entrada/deriva; chip de título/CTA: placa arredondada com o Text+ aprovado por cima, no mesmo item.",
+      "preview": null,
+      "notes": "Recorte e placa foram ASSADOS na mídia no 05 (bake_look.py). A limitação citada antes ('API 21.1 não liga máscara por script') está SUPERADA: máscara e EffectMask conectam por script, ver API-NOTES.md 'Atualização 16/09, kit parallax'. Caminho nativo preferível; bake é legado."
+    },
+    {
+      "id": "motion/broll-parallax",
+      "kind": "macro",
+      "file": "presets/broll-parallax.json",
+      "engine": "pipeline/apply_broll_parallax.py",
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-16",
+      "approved_in": [
+        "preview parallax-kit-v1 (16/09)"
+      ],
+      "summary": "Kit Fusion nativo: B-roll horizontal, vertical ou quadrado, grid Brainstorm, cantos arredondados, sombra e parallax. Uso: references/parallax-kit/README.md.",
+      "preview": "references/parallax-kit/preview/parallax-kit-v1.mp4",
+      "notes": "Look aprovado pelo usuário em 16/09/2026 pelo preview, sem gate de validação (ver estilo-creator.md). Ainda sem uso em vídeo entregue; kind segue 'macro' até o motor de motion host reclassificar. É o motion #1 do host."
+    },
+    {
+      "id": "caption/palco-face",
+      "kind": "caption",
+      "file": "styles/palco-face.json",
+      "engine": "engine/captions_palco.py",
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-18",
+      "approved_in": [
+        "09-jev"
+      ],
+      "summary": "Palco A: 1-3 palavras numa linha, peito, sem tetris",
+      "preview": null,
+      "notes": "Default de caption no palco A desde 19/09 (09-jev)."
+    },
+    {
+      "id": "caption/palco-canvas",
+      "kind": "caption",
+      "file": "styles/palco-canvas.json",
+      "engine": "engine/captions_palco.py",
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-18",
+      "approved_in": [
+        "09-jev"
+      ],
+      "summary": "Palco B/C: Hetrixo no canvas, 1-3 palavras, faixa quieta da caption",
+      "preview": null,
+      "notes": "Default de caption nos palcos B/C desde 19/09 (09-jev). Y B=700, C=1580."
+    },
+    {
+      "id": "caption/palco-hold",
+      "kind": "caption",
+      "file": "styles/palco-hold.json",
+      "engine": "engine/captions_palco.py",
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-18",
+      "approved_in": [
+        "09-jev"
+      ],
+      "summary": "CTA hold comment + keyword ouro radial",
+      "preview": null,
+      "notes": "Default de hold no CTA desde 19/09 (09-jev). Keyword vem do vídeo."
+    },
+    {
+      "id": "layout/host-bottom-split",
+      "kind": "ui",
+      "file": "presets/host-bottom-split.json",
+      "engine": null,
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-18",
+      "approved_in": [
+        "09-jev"
+      ],
+      "summary": "Palco B: canvas em cima, host no card embaixo",
+      "preview": null,
+      "notes": "Default do palco B desde 19/09 (09-jev). Receita: engine/palco_b_composite.py."
+    },
+    {
+      "id": "kit/brands",
+      "kind": "other",
+      "file": "assets/brands/catalog.json",
+      "engine": null,
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-18",
+      "approved_in": [
+        "09-jev"
+      ],
+      "summary": "Slot de marcas PNG+alfa para o canvas",
+      "preview": null,
+      "notes": ""
+    },
+    {
+      "id": "motion/canvas-kit",
+      "kind": "macro",
+      "file": "motion/README.md",
+      "engine": "motion/render.py",
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-19",
+      "approved_in": [
+        "09-jev"
+      ],
+      "summary": "Canvas B/C Remotion: skills de motion, faixa travada (B 180–620 / C 200–1400), caption intocável",
+      "preview": null,
+      "notes": ""
+    },
+    {
+      "id": "sfx/palco-cues",
+      "kind": "sfx",
+      "file": "pipeline/map_sfx_cues.py",
+      "engine": null,
+      "menu": null,
+      "status": "approved",
+      "created": "2026-09-19",
+      "approved_in": [
+        "09-jev"
+      ],
+      "summary": "kind snap/click/whoosh/riser/reveal → catálogo; tempo local do beat",
+      "preview": null,
+      "notes": ""
+    }
+  ]
+}

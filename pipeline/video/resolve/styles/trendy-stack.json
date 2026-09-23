@@ -1,0 +1,66 @@
+{
+  "_doc": "Trendy stack (ref. Envato 'Trendy Titles', 14/09/2026). Palavras empilhadas em escada diagonal com leading negativo: sans geométrica bold (grande/média/pequena) + 1 palavra de destaque em serifa itálica colorida com glow. Cada palavra surge NO LUGAR (sem translação): blur pesado -> nítido + fade, no timing do áudio. Saída em blur+fade escalonado de cima pra baixo. Cor do destaque: ouro da marca (#F4B400, brand.accent) por padrão; verde da ref era #00FB3F. accent_weight = eixo wght da Playfair Italic (400-900).",
+  "engine": "captions_trendy.py",
+  "font_sans": "assets/fonts/Poppins-Bold.ttf",
+  "font_accent": "assets/fonts/PlayfairDisplay-Italic.ttf",
+  "size": {
+    "big": 168,
+    "mid": 120,
+    "small": 84,
+    "accent": 150
+  },
+  "tracking": {
+    "sans": -3,
+    "accent": -2
+  },
+  "max_width": 960,
+  "color_sans": [
+    255,
+    255,
+    255,
+    255
+  ],
+  "color_accent": [
+    244,
+    180,
+    0,
+    255
+  ],
+  "shadow": {
+    "dx": 2,
+    "dy": 5,
+    "blur": 8,
+    "alpha": 170
+  },
+  "glow_accent": {
+    "blur": 26,
+    "alpha": 230
+  },
+  "y_above": 900,
+  "y_low": 1585,
+  "y_auto": 1380,
+  "case": "sentence",
+  "lead": 3,
+  "in_frames": 5,
+  "blur_in": 22,
+  "out_frames": 4,
+  "out_stagger": 2,
+  "blur_out": 16,
+  "ease_k": 6.0,
+  "passage_words": "a o e é de da do das dos em no na nos nas um uma uns umas para pra por com sem que se ao aos à às os as te teu tua seu sua ele ela isso esse essa este esta lá aqui ou",
+  "auto": {
+    "gap_frames": 12,
+    "max_words": 4,
+    "max_chars": 24,
+    "hold_frames": 40,
+    "y_mode": "auto"
+  },
+  "accent_weight": 800,
+  "pack": {
+    "gap": 6,
+    "word_gap": 0.22,
+    "indent": 0.08,
+    "accent_overshoot": 0.18,
+    "min_drop": 0.55
+  }
+}

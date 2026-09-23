@@ -1,0 +1,255 @@
+{
+  "_doc": "Cortes provisórios a partir do Whisper (índice). Bordas reais = waveform no Resolve (§3B). Frames a 30 fps, end exclusivo. Takes falsos de 'lista as opções' (25.1–27.5 e 32.5–38.7) ficam de fora.",
+  "source": "IMG_8187.mov",
+  "fps": 30,
+  "cuts": [
+    {
+      "id": "u01",
+      "src": [
+        136,
+        193
+      ],
+      "texto": "A sua IA agora decide sozinha",
+      "src_asr": [
+        125,
+        193
+      ],
+      "drop_head_f": 11,
+      "drop_tail_f": 0
+    },
+    {
+      "id": "u02",
+      "src": [
+        193,
+        223
+      ],
+      "texto": "E não é textão",
+      "src_asr": [
+        193,
+        223
+      ],
+      "drop_head_f": 0,
+      "drop_tail_f": 0
+    },
+    {
+      "id": "u03",
+      "src": [
+        223,
+        263
+      ],
+      "texto": "É sim ou não",
+      "src_asr": [
+        223,
+        263
+      ],
+      "drop_head_f": 0,
+      "drop_tail_f": 0
+    },
+    {
+      "id": "u04",
+      "src": [
+        363,
+        395
+      ],
+      "texto": "O Jev acabou de sair",
+      "src_asr": [
+        348,
+        395
+      ],
+      "drop_head_f": 15,
+      "drop_tail_f": 0
+    },
+    {
+      "id": "u05",
+      "src": [
+        395,
+        470
+      ],
+      "texto": "Do cara que ajudou a inventar o ChatGPT",
+      "src_asr": [
+        395,
+        470
+      ],
+      "drop_head_f": 0,
+      "drop_tail_f": 0
+    },
+    {
+      "id": "u06",
+      "src": [
+        524,
+        561
+      ],
+      "texto": "E ele não gera texto",
+      "src_asr": [
+        509,
+        561
+      ],
+      "drop_head_f": 15,
+      "drop_tail_f": 0
+    },
+    {
+      "id": "u07",
+      "src": [
+        1206,
+        1242
+      ],
+      "texto": "Então você lista as opções",
+      "src_asr": [
+        1194,
+        1242
+      ],
+      "drop_head_f": 12,
+      "drop_tail_f": 0
+    },
+    {
+      "id": "u08",
+      "src": [
+        1242,
+        1313
+      ],
+      "texto": "e ele devolve a decisão com a probabilidade",
+      "src_asr": [
+        1242,
+        1314
+      ],
+      "drop_head_f": 0,
+      "drop_tail_f": 1
+    },
+    {
+      "id": "u09",
+      "src": [
+        1460,
+        1508
+      ],
+      "texto": "Com isso você classifica email",
+      "src_asr": [
+        1446,
+        1508
+      ],
+      "drop_head_f": 14,
+      "drop_tail_f": 0
+    },
+    {
+      "id": "u10",
+      "src": [
+        1538,
+        1573
+      ],
+      "texto": "Encaminha um chamado",
+      "src_asr": [
+        1537,
+        1573
+      ],
+      "drop_head_f": 1,
+      "drop_tail_f": 0
+    },
+    {
+      "id": "u11",
+      "src": [
+        1647,
+        1714
+      ],
+      "texto": "Checa se a outra IA inventou um desconto",
+      "src_asr": [
+        1642,
+        1715
+      ],
+      "drop_head_f": 5,
+      "drop_tail_f": 1
+    },
+    {
+      "id": "u12",
+      "src": [
+        1786,
+        1842
+      ],
+      "texto": "E escolhe qual modelo usar na hora",
+      "src_asr": [
+        1771,
+        1842
+      ],
+      "drop_head_f": 15,
+      "drop_tail_f": 0
+    },
+    {
+      "id": "u13",
+      "src": [
+        2073,
+        2263
+      ],
+      "texto": "Na Vercel ficou de 5 a 18 vezes mais rápido do que usar o classificador do ChatGPT",
+      "src_asr": [
+        2059,
+        2263
+      ],
+      "drop_head_f": 14,
+      "drop_tail_f": 0
+    },
+    {
+      "id": "u14",
+      "src": [
+        2432,
+        2489
+      ],
+      "texto": "Responde em menos de meio segundo",
+      "src_asr": [
+        2429,
+        2489
+      ],
+      "drop_head_f": 3,
+      "drop_tail_f": 0
+    },
+    {
+      "id": "u15",
+      "src": [
+        2489,
+        2548
+      ],
+      "texto": "E a saída é de graça",
+      "src_asr": [
+        2489,
+        2548
+      ],
+      "drop_head_f": 0,
+      "drop_tail_f": 0
+    },
+    {
+      "id": "u16",
+      "src": [
+        2623,
+        2645
+      ],
+      "texto": "Você quer o setup?",
+      "src_asr": [
+        2612,
+        2645
+      ],
+      "drop_head_f": 11,
+      "drop_tail_f": 0
+    },
+    {
+      "id": "u17",
+      "src": [
+        2783,
+        2859
+      ],
+      "texto": "Comenta JEV aqui embaixo que eu te mando o link direto",
+      "src_asr": [
+        2779,
+        2862
+      ],
+      "drop_head_f": 4,
+      "drop_tail_f": 3
+    }
+  ],
+  "criterion": {
+    "index": "whisper",
+    "border": "rms",
+    "thresh_db": -40.0,
+    "pad_frames": 1,
+    "drop_head_total_f": 120,
+    "drop_tail_total_f": 5
+  },
+  "timeline_frames": 988,
+  "timeline_seconds": 32.93
+}

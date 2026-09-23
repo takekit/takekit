@@ -1,0 +1,170 @@
+{
+ "uid": "u14",
+ "palco": "B",
+ "frames": 57,
+ "intent": "O número é o tempo: um contador correndo para baixo trava em 0,50 s — a resposta sai em menos de meio segundo.",
+ "hero": "O mostrador vivo: dígitos Hetrixo ExtraBold 228px correndo de \"1,00\" a \"0,50\" com a unidade \"s\" em mudo — o único elemento grande, escuro e de alto contraste do frame.",
+ "objects": [
+  {
+   "drift": "y −3, x +1.5 em f13→f56 no mesmo relógio da entrada (camada ambiente, 3px no total)",
+   "enter": "f8, 10f: de y +10 / opacity 0, sem scale, sem overshoot (wrapper Enter)",
+   "exit": "held to cut",
+   "h": 24,
+   "id": "eyebrow",
+   "notes": "x/y são a borda esquerda/topo. O eyebrow nomeia a CLASSE do mostrador (família do \"DECISÃO AUTOMÁTICA\" do u01 e do \"MEDIDO NA VERCEL\" do u13); não é o objeto da frase.",
+   "role": "ambient",
+   "w": 380,
+   "what": "Eyebrow \"TEMPO DE RESPOSTA\" — Hetrixo ExtraBold 24px, uppercase, letterSpacing 3.2, muted #5A544E",
+   "x": 80,
+   "y": 76
+  },
+  {
+   "drift": "x +2, y −3 em f11→f56, mesma spline",
+   "enter": "f6, 10f: scaleX 0→1 com origem à esquerda + opacity 0→1 (desenha a largura, não aparece como bloco)",
+   "exit": "held to cut",
+   "h": 5,
+   "id": "tick",
+   "notes": "borda esquerda. Entra 2 frames depois da partida do contador, para o header não competir com o herói no frame 0.",
+   "role": "ambient",
+   "w": 64,
+   "what": "Traço ouro 64×5, raio 3, #F4B400, sob o eyebrow",
+   "x": 80,
+   "y": 118
+  },
+  {
+   "drift": "só y −3 em f23→f56; x fica cravado em 80",
+   "enter": "f14, 18f: width 0→920 com origem à esquerda, opacity fixa 0.9",
+   "exit": "held to cut",
+   "h": 1.5,
+   "id": "rule",
+   "notes": "É o elemento mais parado do frame DE PROPÓSITO: é a âncora do olho (o \"hold a anchor\" do skill), não um segundo evento. x cravado porque, com 920 de largura, qualquer drift horizontal sairia do workbox 80..1000.",
+   "role": "ambient",
+   "w": 920,
+   "what": "Filete hairline 920×1.5px, rgba(28,26,24,0.10), fechando a coluna 80..1000",
+   "x": 80,
+   "y": 142
+  },
+  {
+   "drift": "y +7, x +3, scale +0.005 em f9→f56, no MESMO relógio da entrada e NA MESMA DIREÇÃO (continua afundando) — entrada e deriva leem como uma descida contínua, sem inversão de sentido",
+   "enter": "f0, 18f (MOTION.enterHero): de y −48 / scale 0.92 / opacity 0, ease 'enter' — desacelera, ZERO overshoot (número não leva pop)",
+   "exit": "held to cut",
+   "h": 216,
+   "id": "readout",
+   "notes": "x/y/w/h são a caixa fixa de 520px (borda esquerda/topo); o texto fica centrado nela, então o centro ótico do herói é x=540 o beat inteiro, independente da largura dos glifos. Canal do VALOR é spline monotônica separada, em segundos: [[4,1.00],[14,0.86],[24,0.74],[34,0.63],[42,0.545],[48,0.50],[56,0.50]] — desacelera para os últimos centésimos ficarem legíveis e para o lock ser um assentamento, nunca um congelamento. Valor exibido: 1,00 / 0,86 / 0,74 / 0,63 / 0,55 / 0,53 / 0,51 / 0,50.",
+   "role": "hero",
+   "w": 520,
+   "what": "Contador ao vivo: Hetrixo ExtraBold 228px, tabular-nums, letterSpacing −3, ink #1C1A18; o texto corre \"1,00\" → \"0,50\" (vírgula pt-BR, 2 casas) e trava em \"0,50\" a partir de f48",
+   "x": 280,
+   "y": 324
+  },
+  {
+   "drift": "x +6, y +7 — o y é EXATAMENTE o drift do herói para a linha de base nunca quebrar; os 6px em x são o movimento próprio da camada secundária (0.6x)",
+   "enter": "f12, 12f: de x +14 / opacity 0, sem scale",
+   "exit": "held to cut",
+   "h": 84,
+   "id": "unit",
+   "notes": "x/y/w/h são a caixa de 84px de line-height. O ink do \"s\" é ~45×42 com a base em y≈514, nivelada com a base dos dígitos (fundo da caixa = 540 − 9px). Ajustar a caixa da unidade em ±10px se as métricas da fonte pedirem, nunca o número.",
+   "role": "support",
+   "w": 90,
+   "what": "Unidade \"s\" — Hetrixo ExtraBold 84px, muted #5A544E (é ela que faz o número ser um timer, não um dígito solto)",
+   "x": 800,
+   "y": 447
+  },
+  {
+   "drift": "a largura continua crescendo 400→416 (esquerda 340→332) até f56 — o selo ainda abre ~2px/frame no corte",
+   "enter": "f10, 38f: width 0→400 crescendo DO CENTRO (borda esquerda viaja 540→340, a direita 540→740); trava no frame exato em que o contador lê 0,50",
+   "exit": "held to cut",
+   "h": 4,
+   "id": "seal",
+   "notes": "y fica cravado em 546: a vida do selo é a largura, não o eixo vertical. x é a borda esquerda NO POUSO. O gap entre a base dos dígitos (514) e o selo é ~32px — lê como selo, não como sublinhado de texto. O selo é a pontuação do pouso E o que mantém os últimos 8 frames vivos sem ideia nova.",
+   "role": "support",
+   "w": 400,
+   "what": "Selo ouro 400×4, raio 2, #F4B400, centrado em x=540, logo abaixo do mostrador",
+   "x": 340,
+   "y": 546
+  }
+ ],
+ "internal_beats": [
+  {
+   "event": "mostrador cai no canvas (de y −48, scale 0.92, opacity 0) — herói entra",
+   "f": 0
+  },
+  {
+   "event": "contador começa a correr em 1,00 (canal do valor, spline própria)",
+   "f": 4
+  },
+  {
+   "event": "traço ouro do header desenha da esquerda",
+   "f": 6
+  },
+  {
+   "event": "eyebrow \"TEMPO DE RESPOSTA\" entra em fade",
+   "f": 8
+  },
+  {
+   "event": "selo ouro começa a crescer a partir de x=540",
+   "f": 10
+  },
+  {
+   "event": "unidade \"s\" entra 14px à direita do lugar",
+   "f": 12
+  },
+  {
+   "event": "filete hairline desenha a coluna de 920",
+   "f": 14
+  },
+  {
+   "event": "entrada do mostrador resolvida — ele JÁ está derivando para baixo",
+   "f": 18
+  },
+  {
+   "event": "unidade assentada; contador lê 0,74",
+   "f": 24
+  },
+  {
+   "event": "filete totalmente desenhado (920)",
+   "f": 32
+  },
+  {
+   "event": "contador lê 0,59 — os centésimos já caem ~1 por frame, legíveis",
+   "f": 38
+  },
+  {
+   "event": "contador lê 0,53 — o pouso fica visível antes de acontecer",
+   "f": 44
+  },
+  {
+   "event": "contador trava em 0,50 e o selo fecha em 400 de largura — o evento único do beat",
+   "f": 48
+  },
+  {
+   "event": "começa a cauda: só deriva, nenhuma ideia nova até o corte",
+   "f": 49
+  },
+  {
+   "event": "corte — o mostrador ainda afunda (7px de curso) e o selo ainda abre (416)",
+   "f": 56
+  }
+ ],
+ "sfx_cues": [
+  {
+   "kind": "click",
+   "t_local_f": 4,
+   "why": "partida do contador: é o frame em que o número começa a correr, o par sonoro do início do evento (cortar se o ataque da voz em 'Responde' já cobrir a partida)"
+  },
+  {
+   "kind": "click",
+   "t_local_f": 48,
+   "why": "o timer PARA em 0,50 e o selo ouro fecha — é o único evento que o corte precisa pontuar; o clique do fim é o que faz o número ser um timer de verdade"
+  }
+ ],
+ "risks": [
+  "Cobertura de glifos do Hetrixo ExtraBold: a vírgula pt-BR e o 's' precisam existir na fonte. Conferir no still do f6; se a vírgula faltar, desenhar o separador como um quadrado de 12px (nunca cair para fonte de sistema).",
+  "O contador desacelerando é estilização (timer real é linear). Se os stills lerem como 'um número' e não como 'um timer', o conserto é o ritmo dos centésimos + a unidade 's' — NUNCA acrescentar um segundo elemento de tempo (barra de trilho, escala de ticks).",
+  "O valor congelar em 0,50 a partir de f48 não pode virar hold morto: os 8 últimos frames precisam mostrar o mostrador ainda afundando e o selo ainda abrindo. Conferir 49–56 como movimento, não como still.",
+  "O alinhamento ótico entre a unidade de 84px e os dígitos de 228px depende de métricas de fonte (line-height). Tunar a caixa da unidade em ±10px; o critério observável é a base do 's' nivelada com a base dos dígitos, e o número não se mexe.",
+  "O selo desenhando por 38 frames é um segundo medidor embaixo do herói. Se no f24 ele competir com os dígitos, achatar a primeira metade da curva do selo mantendo o lock no f48 — não encolher o selo.",
+  "Sem asset de marca: plan.json b14 tem marca vazia. O contador é o objeto inteiro do beat; não entrar logo, mascote nem placa branca — a placa branca estática é exatamente o defeito que este beat substitui.",
+  "Palco B: todo elemento dentro de x 80..1000 e y 40..700, e a faixa 700..960 essencialmente vazia (caption do Grok). O filete ocupa 920 de largura cravado em x=80 e o selo abre até 416 centrado — nenhum dos dois pode ganhar drift horizontal. Amostrar os stills em f6 e f56 para confirmar alfa 0 abaixo de y=960 e a faixa de caption livre."
+ ]
+}

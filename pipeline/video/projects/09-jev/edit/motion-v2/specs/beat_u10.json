@@ -1,0 +1,239 @@
+{
+ "uid": "u10",
+ "palco": "B",
+ "frames": 35,
+ "intent": "The request is not merely read, it is routed: a gold \"chamado\" stub tears off the ticket and lands in the queue slot, so \"encaminha\" is a gesture, not a label.",
+ "hero": "u10-stub — the gold #F4B400 ticket stub carrying the word \"chamado\", the only saturated object in the frame, travelling the full width and landing in the slot",
+ "objects": [
+  {
+   "drift": "x -6px, y -5px, scale +0.004 accumulated f0->f34, folded into the SAME curve as the entrance (kit resolve(): tail runs from enter*0.5 to frame 34), so velocity never reaches zero after the settle. 0.24px/frame at the cut.",
+   "enter": "f0, 9f enter, from {y:+18px, scale:0.972, opacity:0} — a short drop-and-settle, no bounce. Same from-state as u10-stub so the tear-off still reads as one object during f0-f9.",
+   "exit": "held to cut (cut is dry; the card is the last frame's anchor)",
+   "h": 380,
+   "id": "u10-card",
+   "notes": "x,y = top-left. Inner padding 36px -> inner box x116..468. NOT the kit Card component (its 58px title and 920 default width do not fit a 424px ticket) — use Plate + custom body. z=0 (behind stub and rail).",
+   "role": "support",
+   "w": 424,
+   "what": "White ticket plate (r36, hairline border rgba(28,26,24,.14), lift shadow) — the source document. Container for the dot, the 4 skeleton bars and the perforation; it is the biggest mass but has the lowest contrast, so the eye enters here and is handed to the gold stub.",
+   "x": 80,
+   "y": 130
+  },
+  {
+   "drift": "y -2px f2->f34 on the same spline as the entrance",
+   "enter": "f2, 8f enter, from {y:+9px, opacity:0}",
+   "exit": "held to cut",
+   "h": 40,
+   "id": "u10-card-dot",
+   "notes": "Circle centre = (136,186), matches the vertical centre of u10-skel-title. Child of u10-card -> inherits the card transform.",
+   "role": "ambient",
+   "w": 40,
+   "what": "40px outline circle (rgba ink .14, 1.5px) — the sender avatar of the request, no glyph, no letter",
+   "x": 116,
+   "y": 166
+  },
+  {
+   "drift": "y -2px f3->f34 on the same spline",
+   "enter": "f3, 8f enter, from {y:+9px, opacity:0} — staggered 1 frame after the dot, top-to-bottom",
+   "exit": "held to cut",
+   "h": 16,
+   "id": "u10-skel-title",
+   "notes": "Slightly darker than the body bars: this is the hierarchy cue that reads as 'a document', not a loading spinner.",
+   "role": "ambient",
+   "w": 220,
+   "what": "Muted bar w220 h16 r8, rgba(28,26,24,.18) — the request's subject line, drawn as a skeleton bar so no invented copy enters the canvas",
+   "x": 172,
+   "y": 178
+  },
+  {
+   "drift": "y -2px f4->f34, same spline",
+   "enter": "f4, 8f enter, from {y:+9px, opacity:0}",
+   "exit": "held to cut",
+   "h": 14,
+   "id": "u10-skel-2",
+   "notes": "Stagger continues 1f apart (f3/f4/f5/f6) — inside the kit's 4f stagger unit, group resolves by f14.",
+   "role": "ambient",
+   "w": 340,
+   "what": "Muted bar w340 h14 r7, rgba(28,26,24,.10)",
+   "x": 116,
+   "y": 236
+  },
+  {
+   "drift": "y -2px f5->f34, same spline",
+   "enter": "f5, 8f enter, from {y:+9px, opacity:0}",
+   "exit": "held to cut",
+   "h": 14,
+   "id": "u10-skel-3",
+   "notes": "",
+   "role": "ambient",
+   "w": 280,
+   "what": "Muted bar w280 h14 r7, rgba(28,26,24,.10)",
+   "x": 116,
+   "y": 268
+  },
+  {
+   "drift": "y -2px f6->f34, same spline",
+   "enter": "f6, 8f enter, from {y:+9px, opacity:0}",
+   "exit": "held to cut",
+   "h": 14,
+   "id": "u10-skel-4",
+   "notes": "Last of the group; nothing new enters the card after this.",
+   "role": "ambient",
+   "w": 200,
+   "what": "Muted bar w200 h14 r7, rgba(28,26,24,.10)",
+   "x": 116,
+   "y": 300
+  },
+  {
+   "drift": "scaleX creeps 1.0 -> 1.012 across f15->f34 on the same spline (origin left); inherits the card transform",
+   "enter": "f6, 9f enter, scaleX 0.35 -> 1.0 from origin left + opacity 0 -> 0.9. It DRAWS left-to-right (reads as a cut line) instead of fading.",
+   "exit": "held to cut",
+   "h": 2,
+   "id": "u10-perf",
+   "notes": "The tear line stays behind after the stub leaves — that residue is what makes the stub read as torn, not as a moved chip. It also distinguishes this card from the u09 inbox card and the u11 invoice card.",
+   "role": "ambient",
+   "w": 352,
+   "what": "Dashed perforation, 2px, dash 12px / gap 10px (18 dashes over 352px), rgba(28,26,24,.22) — the tear line of the ticket",
+   "x": 116,
+   "y": 372
+  },
+  {
+   "drift": "X +520px / Y +2px / scale 1.005 / rotate -0.5deg relative to the seat, all accumulated f0->f34 and inseparable from the entrance (never flat, so the Fritsch-Carlson curve never forces a zero tangent)",
+   "enter": "ONE spline for the entire beat (see notes) — it enters WITH the ticket, creeps under tension, tears off at f12, arcs, seats in the slot, and keeps creeping to the cut. Seat x=116 (flush with the card's inner right edge 468).",
+   "exit": "held to cut inside the slot",
+   "h": 76,
+   "id": "u10-stub",
+   "notes": "Exact knots (local frames, offsets from the seat x116/y394): X = curve([[0,0],[9,-2],[12,-7],[17,300],[23,500],[28,516],[34,520]]); Y = curve([[0,18],[9,1],[12,-1],[17,-15],[22,-4],[26,1],[30,1.5],[34,2]]); SCALE = curve([[0,0.972],[9,1.0],[19,0.985],[27,1.0],[34,1.005]]); ROTATE = curve([[0,0.5],[10,0],[16,-0.9],[22,0.3],[28,-0.2],[34,-0.5]]). Travel = 516px = 26.9% of 1920 (under the 1/3 rule) and is broken by the 15px arc + the scale dip + the flutter. Opacity 0->1 across f0..f6 (entrance of the ticket), then 1. Final box x636..988 with the scale — inside x1=1000. transform-origin center. z=2 (above the card, the rail and the slot glyph).",
+   "role": "hero",
+   "w": 352,
+   "what": "Gold #F4B400 plate, r26, w352 h76: leading ink bar 8x34 r4, 20px gap, then 'chamado' in Hetrixo ExtraBold 34px ink — the object of the sentence, and the only saturated object on the canvas",
+   "x": 116,
+   "y": 394
+  },
+  {
+   "drift": "x -3px, y -2px f4->f34 on the same spline; PLUS the border morph: stroke colour rgba(28,26,24,.14)->#F4B400 and 1.5->2px across f23->f27 (4f, ease-out, part of the receipt — no scale pop)",
+   "enter": "f4, 10f enter, from {x:+16px, scale:0.98, opacity:0} — arrives from the right, i.e. from the direction of the destination, one beat after the ticket",
+   "exit": "held to cut",
+   "h": 92,
+   "id": "u10-slot",
+   "notes": "8px larger than the stub on every side so the stub sits inset when it lands. The gold switch completes at f27, which is the last new idea in the beat; f27-f34 carries drift only.",
+   "role": "support",
+   "w": 376,
+   "what": "Outline plate r26, transparent fill, border 1.5px rgba(28,26,24,.14) -> 2px #F4B400 — the queue position the ticket is forwarded into",
+   "x": 620,
+   "y": 386
+  },
+  {
+   "drift": "x -3px, y -2px f7->f34 (it is inside the slot's frame, so it travels with it)",
+   "enter": "f7, 8f enter, from {opacity:0, scale:0.9}",
+   "exit": "no designed exit — the stub's leading edge covers it at ~f18, and an opaque object hiding a placeholder is the correct 'slot filled' read",
+   "h": 14,
+   "id": "u10-slot-glyph",
+   "notes": "z=1, behind u10-stub. Keeping the exit undesigned saves an event in a 35-frame beat.",
+   "role": "ambient",
+   "w": 150,
+   "what": "Muted bar w150 h14 r7, rgba(28,26,24,.10), centred in the slot — the empty placeholder of the queue position",
+   "x": 735,
+   "y": 425
+  },
+  {
+   "drift": "x -4px, y -3px f16 (enter*0.5) -> f34 on the same spline as the write-on",
+   "enter": "f12, 8f width write-on 0 -> 116px (curve [[12,0],[16,78],[20,116]]) with opacity 0 -> 0.9 across f12..f16 — it draws exactly as the stub leaves",
+   "exit": "held to cut",
+   "h": 2,
+   "id": "u10-rail",
+   "notes": "y431 = the shared centreline of the stub and the slot (centre 432). The stub arcs 15px above it in flight, so it crosses over its own route line — that overlap is the depth cue, not a collision.",
+   "role": "support",
+   "w": 116,
+   "what": "2px hairline rgba(28,26,24,.14) bridging the ticket's right edge to the slot's left edge — the routing path",
+   "x": 504,
+   "y": 431
+  },
+  {
+   "drift": "moves with the stub (child of u10-stub)",
+   "enter": "f19, 8f sweep() 0 -> 1, peaking at f23 exactly on the touchdown; no state left after f27",
+   "exit": "ends f27, no state",
+   "h": 76,
+   "id": "u10-shine",
+   "notes": "The only light event in the beat. Replaces the kit Card 'sheen', which is invisible on a white plate. Keep the gradient band narrow (shineWidth 0.26) so it reads as product finish, not as a logo shine.",
+   "role": "ambient",
+   "w": 352,
+   "what": "One white sweep (max alpha 0.38) clipped to the stub's r26 rect — the finish of the landing",
+   "x": 116,
+   "y": 394
+  }
+ ],
+ "internal_beats": [
+  {
+   "event": "Ticket plate enters (from y+18, scale 0.972, opacity 0) — the document lands; the stub enters with it as one object",
+   "f": 0
+  },
+  {
+   "event": "Card internals begin to stagger: dot (f2), title bar (f3), body bars (f4, f5, f6) — one frame apart, top to bottom",
+   "f": 2
+  },
+  {
+   "event": "Destination slot enters from the right (x+16, scale 0.98) — the queue position now exists before anything travels",
+   "f": 4
+  },
+  {
+   "event": "Perforation draws left-to-right (scaleX 0.35 -> 1.0); the ticket is now legible as a tear-off",
+   "f": 6
+  },
+  {
+   "event": "Slot placeholder bar fades in — the destination is 'empty' and waiting",
+   "f": 7
+  },
+  {
+   "event": "TEAR: the stub reaches its 7px left pull-back and launches — the single gesture of the beat; the rail begins to write on across the gap",
+   "f": 12
+  },
+  {
+   "event": "Stub at the apex of the 15px arc, 300px travelled (58% of the route) — the throw reads as weight, not as a slide",
+   "f": 17
+  },
+  {
+   "event": "Shine begins its pass on the stub",
+   "f": 19
+  },
+  {
+   "event": "Stub crosses the seat line (y offset returns through 0) and the slot's border starts turning gold — landing and receipt are one event",
+   "f": 23
+  },
+  {
+   "event": "Stub seats inside the slot (98% of x travel, inset in the queue position)",
+   "f": 26
+  },
+  {
+   "event": "Slot border fully gold (2px) AND the shine pass completes — the last new idea of the beat",
+   "f": 27
+  },
+  {
+   "event": "Drift only from here: card -6/-5px, stub +520px on its spline, slot -3/-2px, rail -4/-3px, perforation scaleX creeping",
+   "f": 30
+  },
+  {
+   "event": "CUT — settled frame: every element still moving on its own continuous spline, none frozen, no motion arriving",
+   "f": 34
+  }
+ ],
+ "sfx_cues": [
+  {
+   "kind": "snap",
+   "t_local_f": 12,
+   "why": "The stub tears off the perforation: percussive onset on the gesture's first frame, so the tear is heard and not only seen. Under the voice, short, low level."
+  },
+  {
+   "kind": "click",
+   "t_local_f": 24,
+   "why": "The stub seats in the slot and the border turns gold — the payoff of the beat, landing under the word 'chamado'. A short UI click, not a whoosh: the travel already reads visually and this format does not mark canvas motion with transition sound."
+  }
+ ],
+ "risks": [
+  "Busy-ness: 35 frames carry 4 events (ticket in, slot in, tear-off, receipt). If it plays as noise, drop the f12 snap first, then the rail write-on — never the arc, which is what makes the travel read as a throw instead of a slide.",
+  "The gold switch completes at f27, i.e. 7 frames before the cut; if that still reads as a late new idea, move the border morph to f21->f25 (before the touchdown) so the frame is fully settled by f27.",
+  "The stub's 520px x-drift after landing pushes it 4px off-centre inside the slot. Invisible at 1080 wide, but if the slot is tightened, land the stub at 512 and let the drift carry it to 520 rather than resizing the slot.",
+  "The shine and the gold border are two light events in 4 frames. Keep the shine at <=0.38 alpha and 8 frames; if it competes with the border, cut the shine — the border is the one that carries meaning.",
+  "The perforation is the only thing that makes the card read as a ticket rather than a skeleton loader. If the dashes render muddy at this scale, widen the dash to 14/10 and raise it to rgba(28,26,24,.26) rather than deleting it.",
+  "Palco B compliance is structural (StageB clips at y=960), but verify the still at f6 by sampling alpha: the lowest content is the card at y=510, so the reserved caption band y=700..960 must be 100% alpha 0."
+ ]
+}

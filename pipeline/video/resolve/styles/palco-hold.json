@@ -1,0 +1,33 @@
+{
+  "_doc": "Hold de CTA: comment cursiva atrás + keyword sans ouro radial na frente. Sombra da keyword cai na linha de trás. Tela ≠ fala. Keyword vem do vídeo.",
+  "engine": "captions_palco.py",
+  "layout": "hold",
+  "caption_config": "styles/caption-style-config.json",
+  "font_sans": "assets/fonts/hetrixotypeface-extrabold.otf",
+  "font_script": "assets/fonts/fontspring-demo-alvitonovacomp-bolditalic.otf",
+  "font_accent": "assets/fonts/fontspring-demo-alvitonovacomp-bolditalic.otf",
+  "size": { "sans": 88, "accent": 82 },
+  "tracking": { "sans": -2, "script": -1, "accent": -1 },
+  "max_width": 900,
+  "color_sans": [255, 255, 255, 255],
+  "color_accent": [255, 255, 255, 255],
+  "stroke": null,
+  "shadow": { "dx": 0, "dy": 6, "blur": 9, "alpha": 199 },
+  "glow_accent": { "blur": 0, "alpha": 0 },
+  "y": 1080,
+  "case": "preserve",
+  "lead": 1,
+  "in_frames": 4,
+  "out_frames": 4,
+  "blur_in": 0,
+  "blur_out": 0,
+  "ease_k": 6.0,
+  "passage_words": "",
+  "auto": {
+    "gap_frames": 999,
+    "max_words": 8,
+    "max_chars": 40,
+    "hold_frames": 40,
+    "y_mode": "hold"
+  }
+}

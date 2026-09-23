@@ -1,0 +1,1698 @@
+{
+  "id": "brainstorm-academy-reels",
+  "author": "Mateus Ferreira / Brainstorm Academy",
+  "imported": "2026-09-15",
+  "source_directory": "/Users/oldaquerios/Downloads/pack-de-edicao-de-reels-by-brainstorm-academy",
+  "source_url": null,
+  "license_note": "Transcrição fornecida declara pack gratuito para uso; não acompanha termo individual de licença dos arquivos. Não inferir licença de redistribuição.",
+  "status": "catalogado; não aplicado nem aprovado esteticamente no Resolve",
+  "assets": [
+    {
+      "id": "brainstorm/background-01",
+      "kind": "background",
+      "source_file": "Backgrounds/Background 01.mp4",
+      "file": "backgrounds/brainstorm-academy/background-01.mp4",
+      "bytes": 52284793,
+      "sha256": "4473d14cef503f7bf3c287b3c00e1f24301cad7485933f4519a1e9f78e15b5a2",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "pix_fmt": "yuv420p",
+            "r_frame_rate": "30/1"
+          }
+        ],
+        "format": {
+          "duration": "10.000000"
+        }
+      },
+      "description": "grid escuro",
+      "has_alpha": false,
+      "has_audio": false,
+      "visual_check": "frame a 2s inspecionado; movimento/loop no Resolve pendente",
+      "preview": "packs/brainstorm-academy/previews/background-01.jpg"
+    },
+    {
+      "id": "brainstorm/background-02-alpha",
+      "kind": "background",
+      "source_file": "Backgrounds/Background 02 Alpha.mov",
+      "file": "backgrounds/brainstorm-academy/background-02-alpha.mov",
+      "bytes": 325643956,
+      "sha256": "4509afbc3d8d95df7893903c584c869c7931427aace010deae1c75e1267302fb",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "prores",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "pix_fmt": "yuva444p12le",
+            "r_frame_rate": "30/1"
+          },
+          {
+            "codec_type": "data",
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "10.000000"
+        }
+      },
+      "description": "grid com transparência",
+      "has_alpha": true,
+      "has_audio": false,
+      "visual_check": "frame a 2s inspecionado; movimento/loop no Resolve pendente",
+      "preview": "packs/brainstorm-academy/previews/background-02.jpg"
+    },
+    {
+      "id": "brainstorm/background-03",
+      "kind": "background",
+      "source_file": "Backgrounds/Background 03.mp4",
+      "file": "backgrounds/brainstorm-academy/background-03.mp4",
+      "bytes": 51868899,
+      "sha256": "da6cbabf863b229b1b63ab19f5dadfa83c5a350b9e897e3013297b7e2840a2c8",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "pix_fmt": "yuv420p",
+            "r_frame_rate": "30/1"
+          }
+        ],
+        "format": {
+          "duration": "10.000000"
+        }
+      },
+      "description": "grid claro",
+      "has_alpha": false,
+      "has_audio": false,
+      "visual_check": "frame a 2s inspecionado; movimento/loop no Resolve pendente",
+      "preview": "packs/brainstorm-academy/previews/background-03.jpg"
+    },
+    {
+      "id": "brainstorm/background-04",
+      "kind": "background",
+      "source_file": "Backgrounds/Background 04.mp4",
+      "file": "backgrounds/brainstorm-academy/background-04.mp4",
+      "bytes": 44035871,
+      "sha256": "a189adfa420d2dbddee07a83db7b554cf3ce15b4ad905c425ab3120235baa291",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "pix_fmt": "yuv420p",
+            "r_frame_rate": "30/1"
+          }
+        ],
+        "format": {
+          "duration": "10.000000"
+        }
+      },
+      "description": "textura de papel",
+      "has_alpha": false,
+      "has_audio": false,
+      "visual_check": "frame a 2s inspecionado; movimento/loop no Resolve pendente",
+      "preview": "packs/brainstorm-academy/previews/background-04.jpg"
+    },
+    {
+      "id": "brainstorm/background-05",
+      "kind": "background",
+      "source_file": "Backgrounds/Background 05.mp4",
+      "file": "backgrounds/brainstorm-academy/background-05.mp4",
+      "bytes": 52196419,
+      "sha256": "c0f7e2b4dffffe47690cfcd1b747daab93b48cafe11b0a10177c8562177e3e8a",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "pix_fmt": "yuv420p",
+            "r_frame_rate": "30/1"
+          }
+        ],
+        "format": {
+          "duration": "10.000000"
+        }
+      },
+      "description": "colagem de jornal",
+      "has_alpha": false,
+      "has_audio": false,
+      "visual_check": "frame a 2s inspecionado; movimento/loop no Resolve pendente",
+      "preview": "packs/brainstorm-academy/previews/background-05.jpg"
+    },
+    {
+      "id": "brainstorm/background-06",
+      "kind": "background",
+      "source_file": "Backgrounds/Background 06.mp4",
+      "file": "backgrounds/brainstorm-academy/background-06.mp4",
+      "bytes": 4620103,
+      "sha256": "d3df63ff066ecb6ad5bebcbd120adb41ab13ba29e71a7befe8c79bac8c706f25",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "pix_fmt": "yuv420p",
+            "r_frame_rate": "30/1"
+          }
+        ],
+        "format": {
+          "duration": "10.000000"
+        }
+      },
+      "description": "luz azul/verde",
+      "has_alpha": false,
+      "has_audio": false,
+      "visual_check": "frame a 2s inspecionado; movimento/loop no Resolve pendente",
+      "preview": "packs/brainstorm-academy/previews/background-06.jpg"
+    },
+    {
+      "id": "brainstorm/background-07",
+      "kind": "background",
+      "source_file": "Backgrounds/Background 07.mp4",
+      "file": "backgrounds/brainstorm-academy/background-07.mp4",
+      "bytes": 52103038,
+      "sha256": "a717239cd27fa9230343e1d6c4f103eb0b0a6dd4f78d283821ea904ae62e1e57",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "pix_fmt": "yuv420p",
+            "r_frame_rate": "30/1"
+          }
+        ],
+        "format": {
+          "duration": "10.000000"
+        }
+      },
+      "description": "luzes multicoloridas",
+      "has_alpha": false,
+      "has_audio": false,
+      "visual_check": "frame a 2s inspecionado; movimento/loop no Resolve pendente",
+      "preview": "packs/brainstorm-academy/previews/background-07.jpg"
+    },
+    {
+      "id": "brainstorm/background-08",
+      "kind": "background",
+      "source_file": "Backgrounds/Background 08.mp4",
+      "file": "backgrounds/brainstorm-academy/background-08.mp4",
+      "bytes": 51502193,
+      "sha256": "d8ccd4db0be93cf7cece1d0b75ab46bdb5bba151d808ed44a865328f8cccbeec",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "pix_fmt": "yuv420p",
+            "r_frame_rate": "30/1"
+          }
+        ],
+        "format": {
+          "duration": "10.000000"
+        }
+      },
+      "description": "folhagens e sombras",
+      "has_alpha": false,
+      "has_audio": false,
+      "visual_check": "frame a 2s inspecionado; movimento/loop no Resolve pendente",
+      "preview": "packs/brainstorm-academy/previews/background-08.jpg"
+    },
+    {
+      "id": "brainstorm/background-09",
+      "kind": "background",
+      "source_file": "Backgrounds/Background 09.mp4",
+      "file": "backgrounds/brainstorm-academy/background-09.mp4",
+      "bytes": 33682941,
+      "sha256": "68e9d5e28ea3c73e68c210e10ca3b4e04d4a2669b5ead2cdf1d855f7ab1432e7",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "pix_fmt": "yuv420p",
+            "r_frame_rate": "30/1"
+          },
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "7.100000"
+        }
+      },
+      "description": "textura/luz roxa",
+      "has_alpha": false,
+      "has_audio": true,
+      "visual_check": "frame a 2s inspecionado; movimento/loop no Resolve pendente",
+      "preview": "packs/brainstorm-academy/previews/background-09.jpg"
+    },
+    {
+      "id": "brainstorm/background-10",
+      "kind": "background",
+      "source_file": "Backgrounds/Background 10.mp4",
+      "file": "backgrounds/brainstorm-academy/background-10.mp4",
+      "bytes": 9597339,
+      "sha256": "4efdbc54341d0ebf776b7d87c63a4c1f5671942b7b2440fd8694296d771a9dde",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "h264",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "pix_fmt": "yuv420p",
+            "r_frame_rate": "30/1"
+          }
+        ],
+        "format": {
+          "duration": "10.000000"
+        }
+      },
+      "description": "grid em perspectiva",
+      "has_alpha": false,
+      "has_audio": false,
+      "visual_check": "frame a 2s inspecionado; movimento/loop no Resolve pendente",
+      "preview": "packs/brainstorm-academy/previews/background-10.jpg"
+    },
+    {
+      "id": "brainstorm/among-us",
+      "kind": "sfx",
+      "source_file": "Efeitos Sonoros Virais/Among Us.mp3",
+      "file": "sfx/brainstorm-academy/originals/among-us.mp3",
+      "bytes": 188081,
+      "sha256": "73a55c200b675f5fb0c3e10b547436a726f0388a36453d4945f0da95f8ec85d6",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "4.702025"
+        }
+      },
+      "resolve_file": "sfx/brainstorm-academy/among-us.wav",
+      "resolve_sha256": "143449853e718d78d0eab254c3b0c0a21ac1ee83c58162a8009fdad3fc5e5f5c",
+      "resolve_media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "4.702042"
+        }
+      },
+      "collection": false,
+      "auditioned": false
+    },
+    {
+      "id": "brainstorm/camera-shutter-click-5",
+      "kind": "sfx",
+      "source_file": "Efeitos Sonoros Virais/Camera Shutter Click (5).mp3",
+      "file": "sfx/brainstorm-academy/originals/camera-shutter-click-5.mp3",
+      "bytes": 389746,
+      "sha256": "04bab13170aaf710798236a3e8632b4e864c0db4f7fb12d0d54b4cbe62700f2c",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "9.743650"
+        }
+      },
+      "resolve_file": "sfx/brainstorm-academy/camera-shutter-click-5.wav",
+      "resolve_sha256": "110a364d0d38549e82c0fcc186d82bd4cc0cb726ec9f93813271bc699007da4c",
+      "resolve_media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "9.743688"
+        }
+      },
+      "collection": true,
+      "auditioned": false
+    },
+    {
+      "id": "brainstorm/cartoon-boing",
+      "kind": "sfx",
+      "source_file": "Efeitos Sonoros Virais/Cartoon Boing.aac",
+      "file": "sfx/brainstorm-academy/originals/cartoon-boing.aac",
+      "bytes": 17101,
+      "sha256": "aea5fa541585b60bdeec3e6cfecc4787b527a7ee69654bc4125c73760918b66e",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "0.597331"
+        }
+      },
+      "resolve_file": "sfx/brainstorm-academy/cartoon-boing.wav",
+      "resolve_sha256": "ea0c633df839f52d1c85b2809a6daae40f89585dd7227276cb77c25f2cb09013",
+      "resolve_media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "0.597333"
+        }
+      },
+      "collection": false,
+      "auditioned": false
+    },
+    {
+      "id": "brainstorm/dinheiro",
+      "kind": "sfx",
+      "source_file": "Efeitos Sonoros Virais/Dinheiro.aac",
+      "file": "sfx/brainstorm-academy/originals/dinheiro.aac",
+      "bytes": 137050,
+      "sha256": "e2290859a0a7696a99d7056a0d87997e2668877b073ac54cae1e226cdbb82462",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "3.383376"
+        }
+      },
+      "resolve_file": "sfx/brainstorm-academy/dinheiro.wav",
+      "resolve_sha256": "a33b431279c5aea5909c08957852099ab0ca138f0128f63c1540627d60b3f520",
+      "resolve_media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "4.365354"
+        }
+      },
+      "collection": false,
+      "auditioned": false
+    },
+    {
+      "id": "brainstorm/fahhh",
+      "kind": "sfx",
+      "source_file": "Efeitos Sonoros Virais/Fahhh.mp3",
+      "file": "sfx/brainstorm-academy/originals/fahhh.mp3",
+      "bytes": 184946,
+      "sha256": "c7bff9681b6a71ad13eacfa5b40671d3db983924dddc509f85f49ffdffdbae22",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "4.623650"
+        }
+      },
+      "resolve_file": "sfx/brainstorm-academy/fahhh.wav",
+      "resolve_sha256": "ef8495b055a6b53a3e87d046c8392f7e5441ca406715b69cfd613ebe5fecd8fc",
+      "resolve_media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "4.623688"
+        }
+      },
+      "collection": false,
+      "auditioned": false
+    },
+    {
+      "id": "brainstorm/gong",
+      "kind": "sfx",
+      "source_file": "Efeitos Sonoros Virais/Gong.mp3",
+      "file": "sfx/brainstorm-academy/originals/gong.mp3",
+      "bytes": 204800,
+      "sha256": "4eb5a044d1d911d5dc5a6e6030f5386937f5fdaff6a9b57f284edf5a4eebf02a",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "5.120000"
+        }
+      },
+      "resolve_file": "sfx/brainstorm-academy/gong.wav",
+      "resolve_sha256": "5cf53cfc0a3fb380244f873396fbf8c15d49c6ebffc1505bf66ed659dac341d5",
+      "resolve_media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "5.120000"
+        }
+      },
+      "collection": false,
+      "auditioned": false
+    },
+    {
+      "id": "brainstorm/impact",
+      "kind": "sfx",
+      "source_file": "Efeitos Sonoros Virais/Impact.aac",
+      "file": "sfx/brainstorm-academy/originals/impact.aac",
+      "bytes": 258497,
+      "sha256": "2d6f16911514a6e383e18314e995c2b70e07e561f7618a6622d24166c9effc9c",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "6.653912"
+        }
+      },
+      "resolve_file": "sfx/brainstorm-academy/impact.wav",
+      "resolve_sha256": "347190689ee6b726df2762e6e09e0b185c3f0a0fb01ee6e696d41ffe4eeaf67d",
+      "resolve_media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "9.218333"
+        }
+      },
+      "collection": false,
+      "auditioned": false
+    },
+    {
+      "id": "brainstorm/mouse-click",
+      "kind": "sfx",
+      "source_file": "Efeitos Sonoros Virais/Mouse Click.mp3",
+      "file": "sfx/brainstorm-academy/originals/mouse-click.mp3",
+      "bytes": 296751,
+      "sha256": "1cc12dfca2f346da2a103e1db9e08c398a0b7127aa7df0c7250aa8330d97f4b8",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "7.418775"
+        }
+      },
+      "resolve_file": "sfx/brainstorm-academy/mouse-click.wav",
+      "resolve_sha256": "87aa29358ecdd627db90825d42ab86ad9a339985c9ff48043f3141fa100581a0",
+      "resolve_media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "7.418792"
+        }
+      },
+      "collection": false,
+      "auditioned": false
+    },
+    {
+      "id": "brainstorm/piano-note",
+      "kind": "sfx",
+      "source_file": "Efeitos Sonoros Virais/Piano Note.aac",
+      "file": "sfx/brainstorm-academy/originals/piano-note.aac",
+      "bytes": 75753,
+      "sha256": "9b1418b0649a920e1cb8a91e2c87098d558f71edb200866fb1e95294cdac3896",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "2.470734"
+        }
+      },
+      "resolve_file": "sfx/brainstorm-academy/piano-note.wav",
+      "resolve_sha256": "924d1b1d4f63b5005c23c5d18bd7e8ebad9c2c0e492489509d1f917ee09d0dbb",
+      "resolve_media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "2.645333"
+        }
+      },
+      "collection": false,
+      "auditioned": false
+    },
+    {
+      "id": "brainstorm/pop",
+      "kind": "sfx",
+      "source_file": "Efeitos Sonoros Virais/Pop.aac",
+      "file": "sfx/brainstorm-academy/originals/pop.aac",
+      "bytes": 7135,
+      "sha256": "6140228470629e141339604d6975fd9c95ebce644e3c1833b38d52d8ff8d0705",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "aac",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "0.618626"
+        }
+      },
+      "resolve_file": "sfx/brainstorm-academy/pop.wav",
+      "resolve_sha256": "e64e065e5437259d87730f80e2d390085f40dc4105319f6d0e3b76f2a97bfb56",
+      "resolve_media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "0.618667"
+        }
+      },
+      "collection": false,
+      "auditioned": false
+    },
+    {
+      "id": "brainstorm/relogio",
+      "kind": "sfx",
+      "source_file": "Efeitos Sonoros Virais/Relógio.mp3",
+      "file": "sfx/brainstorm-academy/originals/relogio.mp3",
+      "bytes": 198530,
+      "sha256": "0a447edcaa535751922fd0141021ec2b4aa8dc0606fd4bbdf6ad12ad0297f563",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "4.963250"
+        }
+      },
+      "resolve_file": "sfx/brainstorm-academy/relogio.wav",
+      "resolve_sha256": "a4f10dbd474d2a2d9c70531a726d2665e4ae844d73715da5c370f928ebd72da6",
+      "resolve_media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "4.963271"
+        }
+      },
+      "collection": false,
+      "auditioned": false
+    },
+    {
+      "id": "brainstorm/riser-collection-15",
+      "kind": "sfx",
+      "source_file": "Efeitos Sonoros Virais/Riser Collection (15).mp3",
+      "file": "sfx/brainstorm-academy/originals/riser-collection-15.mp3",
+      "bytes": 2408489,
+      "sha256": "094c4e338acacc5127ee6dd269a1137f0f31f9ec8f9f181aa4c2920d14a80813",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "60.212225"
+        }
+      },
+      "resolve_file": "sfx/brainstorm-academy/riser-collection-15.wav",
+      "resolve_sha256": "e8b2c6e2abdf79df3506a0cdc67fed006d5db91c38fb80fd06a95dcc457b37f3",
+      "resolve_media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "60.212250"
+        }
+      },
+      "collection": true,
+      "auditioned": false
+    },
+    {
+      "id": "brainstorm/shocked",
+      "kind": "sfx",
+      "source_file": "Efeitos Sonoros Virais/Shocked.mp3",
+      "file": "sfx/brainstorm-academy/originals/shocked.mp3",
+      "bytes": 207934,
+      "sha256": "afe8e178c63c646ec46a011e64a8d5c1ea22853157cfd1c2410fc11de9ab784f",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "5.198350"
+        }
+      },
+      "resolve_file": "sfx/brainstorm-academy/shocked.wav",
+      "resolve_sha256": "e4b039363fae33aa87151321ad0de274933d2b0eed333ddc83648f6988e67357",
+      "resolve_media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "5.198375"
+        }
+      },
+      "collection": false,
+      "auditioned": false
+    },
+    {
+      "id": "brainstorm/teclado",
+      "kind": "sfx",
+      "source_file": "Efeitos Sonoros Virais/Teclado.mp3",
+      "file": "sfx/brainstorm-academy/originals/teclado.mp3",
+      "bytes": 355265,
+      "sha256": "bac60499f5f320373de7b9e853f200ba9449f83f779293e9680de2999f6a2548",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "8.881625"
+        }
+      },
+      "resolve_file": "sfx/brainstorm-academy/teclado.wav",
+      "resolve_sha256": "a9ae9c39d645516aa426caf19e8ce2b3609e5a8d3b03961be4292a57622008c0",
+      "resolve_media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "8.881646"
+        }
+      },
+      "collection": false,
+      "auditioned": false
+    },
+    {
+      "id": "brainstorm/tiktok-core",
+      "kind": "sfx",
+      "source_file": "Efeitos Sonoros Virais/TikTok Core.mp3",
+      "file": "sfx/brainstorm-academy/originals/tiktok-core.mp3",
+      "bytes": 31346,
+      "sha256": "b415fc6bc2687ab4cdda8a25d7508907fcf9d30f3323bded8530d552274178e6",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "mp3",
+            "codec_type": "audio",
+            "sample_rate": "44100",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "0.783650"
+        }
+      },
+      "resolve_file": "sfx/brainstorm-academy/tiktok-core.wav",
+      "resolve_sha256": "d5ead95fe60f3dcd78c41657450fb653a21fd42d68717fd8135b1d60e4dc6c04",
+      "resolve_media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "pcm_s24le",
+            "codec_type": "audio",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0"
+          }
+        ],
+        "format": {
+          "duration": "0.783688"
+        }
+      },
+      "collection": false,
+      "auditioned": false
+    },
+    {
+      "id": "brainstorm/bodoniflfbold-mvzx",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/BodoniflfBold-MVZx.ttf",
+      "file": "fonts/brainstorm-academy/BodoniflfBold-MVZx.ttf",
+      "bytes": 45160,
+      "sha256": "f6bdce19dc31d6583754039fa10779e0af410a46425143ef4210b4644e8c2f13",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/bodoniflfbolditalic-k7dd",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/BodoniflfBolditalic-K7dD.ttf",
+      "file": "fonts/brainstorm-academy/BodoniflfBolditalic-K7dD.ttf",
+      "bytes": 47508,
+      "sha256": "6b7a9efc0892c8b2d42678bf686da7000f0a0530e1c7443912fc33cc076e24a1",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/bodoniflfitalic-2oew",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/BodoniflfItalic-2OEw.ttf",
+      "file": "fonts/brainstorm-academy/BodoniflfItalic-2OEw.ttf",
+      "bytes": 48908,
+      "sha256": "6d820ca3431657fab99435e82b630af10c5e5b8eea018624a08987a61e15838e",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/bodoniflfroman-vmad",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/BodoniflfRoman-vmAD.ttf",
+      "file": "fonts/brainstorm-academy/BodoniflfRoman-vmAD.ttf",
+      "bytes": 45680,
+      "sha256": "59bba25292edec1584c81fd8b3266c99a114072dae755914e966740a40675a76",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/brigends-expanded",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/Brigends Expanded.otf",
+      "file": "fonts/brainstorm-academy/Brigends Expanded.otf",
+      "bytes": 120288,
+      "sha256": "130ad64d212faf82006de69f28ea255724e20915c373d4745cce0275516a4bed",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/gotham-black",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/Gotham-Black.otf",
+      "file": "fonts/brainstorm-academy/Gotham-Black.otf",
+      "bytes": 30608,
+      "sha256": "0826047154e04ac9b85a0369e2654594aa3211ad757f604ac848071da8069786",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/gotham-thin",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/Gotham-Thin.otf",
+      "file": "fonts/brainstorm-academy/Gotham-Thin.otf",
+      "bytes": 30412,
+      "sha256": "80cc8ef5083239b68a12bff0d34ce0fd015791a72ef9c173417edc29d95da6e8",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/gotham-thinitalic",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/Gotham-ThinItalic.otf",
+      "file": "fonts/brainstorm-academy/Gotham-ThinItalic.otf",
+      "bytes": 32720,
+      "sha256": "cb776d9e93ea04822ab2c828087e2007e2a488662f498cf1238affc93d2c5739",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/gotham-ultraitalic",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/Gotham-UltraItalic.otf",
+      "file": "fonts/brainstorm-academy/Gotham-UltraItalic.otf",
+      "bytes": 31504,
+      "sha256": "6bec80c774c2e7b1a3c1bbe638bc00b0b11734444bcba48712357143b15bcc96",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/gothambold",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/GothamBold.ttf",
+      "file": "fonts/brainstorm-academy/GothamBold.ttf",
+      "bytes": 45744,
+      "sha256": "50792d8e48ef25fb34eafc77277490c729745105f27fcc009fb072ab6a089ceb",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/gothambolditalic",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/GothamBoldItalic.ttf",
+      "file": "fonts/brainstorm-academy/GothamBoldItalic.ttf",
+      "bytes": 43928,
+      "sha256": "6662c90fea66cedddffc4ec3743a18caf0d871681371191c60952a20a01c28a9",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/gothambook",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/GothamBook.ttf",
+      "file": "fonts/brainstorm-academy/GothamBook.ttf",
+      "bytes": 56676,
+      "sha256": "742359d475131a75ff057224151c7b384ef0b89556212709a5e34a9409983876",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/gothambookitalic",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/GothamBookItalic.ttf",
+      "file": "fonts/brainstorm-academy/GothamBookItalic.ttf",
+      "bytes": 44136,
+      "sha256": "146a482367548fd99d70c7c9a89a79b49f6e7c3f00791ade68737f2b577ea20f",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/gothamlight",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/GothamLight.ttf",
+      "file": "fonts/brainstorm-academy/GothamLight.ttf",
+      "bytes": 56508,
+      "sha256": "463c6bc3f79f2bed4ca2415571b2ea04a8de79b8359c2542bc8dba424fff0069",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/gothamlightitalic",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/GothamLightItalic.ttf",
+      "file": "fonts/brainstorm-academy/GothamLightItalic.ttf",
+      "bytes": 44364,
+      "sha256": "eb2f8648ac173aeb2a32baec727bd4f0a5c2fd84f1882d05649040c2181f2fda",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/gothammedium",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/GothamMedium.ttf",
+      "file": "fonts/brainstorm-academy/GothamMedium.ttf",
+      "bytes": 55980,
+      "sha256": "b5b3eb8e443fe9e3976dedaa2650d68d37d992c4e4e2e7676674a1f3027e2a41",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-black",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-Black.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-Black.ttf",
+      "bytes": 146700,
+      "sha256": "6b07be888ad76d465c99a5ded706e15539a187903b171861817498a8e71b7072",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-blackita",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-BlackIta.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-BlackIta.ttf",
+      "bytes": 149972,
+      "sha256": "856d6a49af8d3ca823b1df571eaaaf3f5856abfb9f1bce2ae12d36c5a2c27182",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-bold",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-Bold.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-Bold.ttf",
+      "bytes": 149368,
+      "sha256": "84fdff66cb65ce300edc8897e687e7a2df6d0ec2e55e2728fdea7a3f7ad7b9c2",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-boldita",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-BoldIta.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-BoldIta.ttf",
+      "bytes": 151860,
+      "sha256": "edc971a1fcfaac1ee1b7238eef3d0286f519a737b11c97a067e46058423ed9ed",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-extbdita",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-ExtBdIta.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-ExtBdIta.ttf",
+      "bytes": 151492,
+      "sha256": "9dbbcd9467b126ba35428a4c103c69934b372b45e7c49bca306d4ed0871e711d",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-extblk",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-ExtBlk.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-ExtBlk.ttf",
+      "bytes": 147056,
+      "sha256": "0b76ebf6582cfe94ee132a883eae2c5fb8377d6a3e8ecc4f513882187717a870",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-extblkita",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-ExtBlkIta.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-ExtBlkIta.ttf",
+      "bytes": 149600,
+      "sha256": "e1c0a7ec6dcc653f83267f1fa21cf32729e64d28ede401d406b5035ec641ac79",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-extlt",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-ExtLt.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-ExtLt.ttf",
+      "bytes": 149400,
+      "sha256": "6fd81e476835e208758298ac5ff4022383120c5ae4e63d238de150c0a307306a",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-extltita",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-ExtLtIta.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-ExtLtIta.ttf",
+      "bytes": 152796,
+      "sha256": "b205ee9885d290cba8913c4a3d4d793189c0df2dd3d326ba5179c81e59cdee7b",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-extrabold",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-ExtraBold.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-ExtraBold.ttf",
+      "bytes": 149056,
+      "sha256": "1181a535d524363766c56673bb00c70281ecff19a3c690b0fe93efe96cb7646a",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-light",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-Light.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-Light.ttf",
+      "bytes": 149236,
+      "sha256": "be7a58b7cb926a51df4b1007a74ef6c587d1ecdbe62c788373c9b5630ec3ce84",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-lightita",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-LightIta.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-LightIta.ttf",
+      "bytes": 151636,
+      "sha256": "e7b190e55289e6f9a81e345f322a4ed5b4791d39dd4bcbc1b678a27ccd969ab5",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-medita",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-MedIta.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-MedIta.ttf",
+      "bytes": 152188,
+      "sha256": "ea10d9f3d01492e2ed95430ddf46fb91e31029668d6bbc2052c898880b5c411e",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-medium",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-Medium.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-Medium.ttf",
+      "bytes": 149920,
+      "sha256": "79c3d90ae2d27b712dff7929728dc57680fe69debe20f0db36d16ba759c464f8",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-regita",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-RegIta.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-RegIta.ttf",
+      "bytes": 149444,
+      "sha256": "3297cb46b2833ababcf9d395a4574282e8a42a606e7dead03bb6f9ff5737215e",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-regular",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-Regular.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-Regular.ttf",
+      "bytes": 147128,
+      "sha256": "6ac48f3629cae4025c0ceb90f83575d647940a0c3dd6da061091064bd81ae18e",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-thin",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-Thin.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-Thin.ttf",
+      "bytes": 150108,
+      "sha256": "1f3e4841b23edd475936e2225f73f1ef58d1855f14127063024acded02701b83",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/helveticanowdisplay-thinita",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/HelveticaNowDisplay-ThinIta.ttf",
+      "file": "fonts/brainstorm-academy/HelveticaNowDisplay-ThinIta.ttf",
+      "bytes": 152636,
+      "sha256": "3cdfcd41258fa133d7f675e647868d2396051c0d3c858a0e3970df771a0200cb",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/roboto-black",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/Roboto-Black.ttf",
+      "file": "fonts/brainstorm-academy/Roboto-Black.ttf",
+      "bytes": 171480,
+      "sha256": "3872e9b39760a1b59ac1e192633dbb3b58e595b4d423930ac7ded525e9ae25e0",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/roboto-blackitalic",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/Roboto-BlackItalic.ttf",
+      "file": "fonts/brainstorm-academy/Roboto-BlackItalic.ttf",
+      "bytes": 177552,
+      "sha256": "013d22a4fb2638adba28555ee19366f4585f6dc533b7c332f4931a231497cb22",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/roboto-bold",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/Roboto-Bold.ttf",
+      "file": "fonts/brainstorm-academy/Roboto-Bold.ttf",
+      "bytes": 170760,
+      "sha256": "7d0b991ee3e0be7af01ad7ea8cd2beea6c00a25e679a0226b6737f079aafff86",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/roboto-bolditalic",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/Roboto-BoldItalic.ttf",
+      "file": "fonts/brainstorm-academy/Roboto-BoldItalic.ttf",
+      "bytes": 174952,
+      "sha256": "a4bcac14f419a97de0917198a4bc51c3ed4fc4a3db9f68a5102f23664ee01354",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/roboto-italic",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/Roboto-Italic.ttf",
+      "file": "fonts/brainstorm-academy/Roboto-Italic.ttf",
+      "bytes": 173932,
+      "sha256": "5fce8b6f8ba9f4d19f0d535e241d56a2b8e72bb07e7df711d968d092ef7f9fca",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/roboto-light",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/Roboto-Light.ttf",
+      "file": "fonts/brainstorm-academy/Roboto-Light.ttf",
+      "bytes": 170420,
+      "sha256": "a6d343d425bc38db90152fa06058b1c7391eca9264f334ef65c1ce175085c6f6",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/roboto-lightitalic",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/Roboto-LightItalic.ttf",
+      "file": "fonts/brainstorm-academy/Roboto-LightItalic.ttf",
+      "bytes": 176616,
+      "sha256": "364a23e13c64937c3fcea3db778628b89379c893849bbade6e5bf83c5f605c6a",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/roboto-medium",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/Roboto-Medium.ttf",
+      "file": "fonts/brainstorm-academy/Roboto-Medium.ttf",
+      "bytes": 172064,
+      "sha256": "f205cc511821ea56078a105557fcea6253129404d411c997e1866fbd006abb68",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/roboto-mediumitalic",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/Roboto-MediumItalic.ttf",
+      "file": "fonts/brainstorm-academy/Roboto-MediumItalic.ttf",
+      "bytes": 176864,
+      "sha256": "f177eed10d2470d13ec68d04907a582829d0ee8281f8a02a906f6954c7816e58",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/roboto-regular",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/Roboto-Regular.ttf",
+      "file": "fonts/brainstorm-academy/Roboto-Regular.ttf",
+      "bytes": 171676,
+      "sha256": "79e851404657dac2106b3d22ad256d47824a9a5765458edb72c9102a45816d95",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/roboto-thin",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/Roboto-Thin.ttf",
+      "file": "fonts/brainstorm-academy/Roboto-Thin.ttf",
+      "bytes": 171904,
+      "sha256": "3d91f7aa69cb7f7064035895c566ac5cb9b2084582d351af7267bb4e0fba60f5",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/roboto-thinitalic",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/Roboto-ThinItalic.ttf",
+      "file": "fonts/brainstorm-academy/Roboto-ThinItalic.ttf",
+      "bytes": 176300,
+      "sha256": "f5e89a344894a60f0f98f1c0182ba51f5046e29dde3118820d39025445aeaae8",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/robotocondensed-bold",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/RobotoCondensed-Bold.ttf",
+      "file": "fonts/brainstorm-academy/RobotoCondensed-Bold.ttf",
+      "bytes": 141796,
+      "sha256": "28a1d37668b4cf94fff5256e9639f175baf4dd654ec84ba910485d38beefa6bd",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/robotocondensed-bolditalic",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/RobotoCondensed-BoldItalic.ttf",
+      "file": "fonts/brainstorm-academy/RobotoCondensed-BoldItalic.ttf",
+      "bytes": 145256,
+      "sha256": "1b7b805a79e932723b2f052df899a14fb4570c311b73968f2899c63e923c06ec",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/robotocondensed-italic",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/RobotoCondensed-Italic.ttf",
+      "file": "fonts/brainstorm-academy/RobotoCondensed-Italic.ttf",
+      "bytes": 144404,
+      "sha256": "36e85f83d6b2a492d762f465037bd5273e7e14f4fe1961f9f5f28b76d0f93ee0",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/robotocondensed-light",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/RobotoCondensed-Light.ttf",
+      "file": "fonts/brainstorm-academy/RobotoCondensed-Light.ttf",
+      "bytes": 141384,
+      "sha256": "bcafee6b8dbf976a036373a94c340c9aeb7c9683c34808dd9425331c2892be9c",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/robotocondensed-lightitalic",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/RobotoCondensed-LightItalic.ttf",
+      "file": "fonts/brainstorm-academy/RobotoCondensed-LightItalic.ttf",
+      "bytes": 145104,
+      "sha256": "b49459fd132f1dd3c9702df08fee08791e67bfe0a26e06b1badb208e56d2fda4",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/robotocondensed-regular",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/RobotoCondensed-Regular.ttf",
+      "file": "fonts/brainstorm-academy/RobotoCondensed-Regular.ttf",
+      "bytes": 140396,
+      "sha256": "4a7c36df4318fee50a8159c3a0ebde4572abab65447ae4a651c2fe87212302b5",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/tiktoksans-variablefont-opsz-slnt-wdth-wght",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/TikTokSans-VariableFont_opsz,slnt,wdth,wght.ttf",
+      "file": "fonts/brainstorm-academy/TikTokSans-VariableFont_opsz,slnt,wdth,wght.ttf",
+      "bytes": 759080,
+      "sha256": "01faf6120d9a25ea0e59305bc10b2f15d9f24c2eba020bd26bf4ac0f74d0da4e",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/georgia",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/georgia.ttf",
+      "file": "fonts/brainstorm-academy/georgia.ttf",
+      "bytes": 219712,
+      "sha256": "38dffcaf1fac89492f7c56c600a14daf36ae42f7c21985cd4134ae113124a58f",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/georgiab",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/georgiab.ttf",
+      "file": "fonts/brainstorm-academy/georgiab.ttf",
+      "bytes": 207476,
+      "sha256": "72a6cd94fab6c179392075d3fb361e269cdddfad41bb7ab385fa22a37e49a900",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/georgiai",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/georgiai.ttf",
+      "file": "fonts/brainstorm-academy/georgiai.ttf",
+      "bytes": 208444,
+      "sha256": "d3e4bad27651d120ac8f2cea42cf4b4f077264fb243f66b3caffcfd35465f49b",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/georgiaz",
+      "kind": "font",
+      "source_file": "Fontes (Bônus)/georgiaz.ttf",
+      "file": "fonts/brainstorm-academy/georgiaz.ttf",
+      "bytes": 211780,
+      "sha256": "3f9e512f82eaf6f1b7869b82013fb79f6eaf1a41e75a0e7b96f31f35b1022ae4",
+      "usage": "Fonte opcional arquivada localmente; não instalada globalmente; não altera captions."
+    },
+    {
+      "id": "brainstorm/guia-reels",
+      "kind": "guide",
+      "source_file": "Guias de Margem/Guia_Reels.png",
+      "file": "guides/brainstorm-academy/guia-reels.png",
+      "bytes": 314439,
+      "sha256": "7e6a8aba3e2fed7e73eb703029a606e33471a0be3eabe010f118025902b1e95f",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "png",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "pix_fmt": "rgba",
+            "r_frame_rate": "25/1"
+          }
+        ],
+        "format": {}
+      },
+      "usage": "Overlay de inspeção; desabilitar antes de exportar. Referência do pack, não garantia de interface atual."
+    },
+    {
+      "id": "brainstorm/guia-tiktok",
+      "kind": "guide",
+      "source_file": "Guias de Margem/Guia_TikTok.png",
+      "file": "guides/brainstorm-academy/guia-tiktok.png",
+      "bytes": 314960,
+      "sha256": "f392d82315c416d48102e9a4ac92358d642246fa582b6df11bc3762fb4b939ba",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "png",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "pix_fmt": "rgba",
+            "r_frame_rate": "25/1"
+          }
+        ],
+        "format": {}
+      },
+      "usage": "Overlay de inspeção; desabilitar antes de exportar. Referência do pack, não garantia de interface atual."
+    },
+    {
+      "id": "brainstorm/guia-ytshorts",
+      "kind": "guide",
+      "source_file": "Guias de Margem/Guia_YTShorts.png",
+      "file": "guides/brainstorm-academy/guia-ytshorts.png",
+      "bytes": 327406,
+      "sha256": "d818ae83dce8682163491c0a5cde3f04ee463b3b0702403ee971daa651de8ab2",
+      "media": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "codec_name": "png",
+            "codec_type": "video",
+            "width": 1080,
+            "height": 1920,
+            "pix_fmt": "rgba",
+            "r_frame_rate": "25/1"
+          }
+        ],
+        "format": {}
+      },
+      "usage": "Overlay de inspeção; desabilitar antes de exportar. Referência do pack, não garantia de interface atual."
+    },
+    {
+      "id": "brainstorm/reels-animacoes-de-texto-brainstorm-academy",
+      "kind": "adobe-reference",
+      "source_file": "Presets de Adobe Premiere/Reels - Animações de Texto - brainstorm.academy.mogrt",
+      "file": "packs/brainstorm-academy/adobe/premiere/Reels - Animações de Texto - brainstorm.academy.mogrt",
+      "bytes": 37816,
+      "sha256": "e7730f56310ac55d2623298e531a83039a9566e1131d1a853f6911d027cbb015",
+      "usage": "Original Adobe; sem conversão ou validação no Fusion."
+    },
+    {
+      "id": "brainstorm/reels-presets-adobe-premiere-by-brainstorm-academy",
+      "kind": "adobe-reference",
+      "source_file": "Presets de Adobe Premiere/Reels Presets - Adobe Premiere by brainstorm academy.prfpset",
+      "file": "packs/brainstorm-academy/adobe/premiere/Reels Presets - Adobe Premiere by brainstorm academy.prfpset",
+      "bytes": 337072,
+      "sha256": "2b3f00103fe8e5e4ce01f1bdc04ef7e64d39177e497f38d7b574a4db7ec0a64d",
+      "usage": "Original Adobe; sem conversão ou validação no Fusion."
+    },
+    {
+      "id": "brainstorm/text-da-esquerda-palavra-unica",
+      "kind": "adobe-reference",
+      "source_file": "Presets de After Effects/[Text] Da Esquerda - Palavra única.ffx",
+      "file": "packs/brainstorm-academy/adobe/after-effects/[Text] Da Esquerda - Palavra única.ffx",
+      "bytes": 4728,
+      "sha256": "0d75d97d3430ec72ccd57be5b3d9dfcf77164eff33dd78fe8a0aaa410dd21b06",
+      "usage": "Original Adobe; sem conversão ou validação no Fusion."
+    },
+    {
+      "id": "brainstorm/text-da-esquerda-por-palavra",
+      "kind": "adobe-reference",
+      "source_file": "Presets de After Effects/[Text] Da Esquerda - Por Palavra.ffx",
+      "file": "packs/brainstorm-academy/adobe/after-effects/[Text] Da Esquerda - Por Palavra.ffx",
+      "bytes": 41712,
+      "sha256": "6defb9c51eb5c9de9b50c8f440776dc46d2bc823a9dde897ca64db8ec869375e",
+      "usage": "Original Adobe; sem conversão ou validação no Fusion."
+    },
+    {
+      "id": "brainstorm/text-de-baixo-por-palavra",
+      "kind": "adobe-reference",
+      "source_file": "Presets de After Effects/[Text] De baixo - Por Palavra.ffx",
+      "file": "packs/brainstorm-academy/adobe/after-effects/[Text] De baixo - Por Palavra.ffx",
+      "bytes": 41704,
+      "sha256": "c133c61099d745c4b68a29cef053f08ecc15fdb523c185497442ab669d27f73c",
+      "usage": "Original Adobe; sem conversão ou validação no Fusion."
+    },
+    {
+      "id": "brainstorm/text-decode-por-letra",
+      "kind": "adobe-reference",
+      "source_file": "Presets de After Effects/[Text] Decode - Por Letra.ffx",
+      "file": "packs/brainstorm-academy/adobe/after-effects/[Text] Decode - Por Letra.ffx",
+      "bytes": 41720,
+      "sha256": "330fd94dd111f2b7f30fc49f451144dcdb96c8d37b9fe9b2cdd29d9f7f8208d7",
+      "usage": "Original Adobe; sem conversão ou validação no Fusion."
+    },
+    {
+      "id": "brainstorm/text-desfoque-por-palavra",
+      "kind": "adobe-reference",
+      "source_file": "Presets de After Effects/[Text] Desfoque - Por Palavra.ffx",
+      "file": "packs/brainstorm-academy/adobe/after-effects/[Text] Desfoque - Por Palavra.ffx",
+      "bytes": 41704,
+      "sha256": "f13d8b9c2106825dac438f473e00cb38ad93f6f21c303397d489c1dc9662f9bc",
+      "usage": "Original Adobe; sem conversão ou validação no Fusion."
+    },
+    {
+      "id": "brainstorm/text-escala-por-letra",
+      "kind": "adobe-reference",
+      "source_file": "Presets de After Effects/[Text] Escala - Por Letra.ffx",
+      "file": "packs/brainstorm-academy/adobe/after-effects/[Text] Escala - Por Letra.ffx",
+      "bytes": 41716,
+      "sha256": "b6b187c000a82dd53982ebbb95415a3015009259cb07858c897b155772c67ec3",
+      "usage": "Original Adobe; sem conversão ou validação no Fusion."
+    },
+    {
+      "id": "brainstorm/text-glitch-por-letra",
+      "kind": "adobe-reference",
+      "source_file": "Presets de After Effects/[Text] Glitch - Por Letra.ffx",
+      "file": "packs/brainstorm-academy/adobe/after-effects/[Text] Glitch - Por Letra.ffx",
+      "bytes": 41716,
+      "sha256": "4dbed4b4575f7b128804176ec190c80e16bdfff79400c61c4f8e2cea4c659459",
+      "usage": "Original Adobe; sem conversão ou validação no Fusion."
+    },
+    {
+      "id": "brainstorm/text-glitch-por-palavra",
+      "kind": "adobe-reference",
+      "source_file": "Presets de After Effects/[Text] Glitch - Por Palavra.ffx",
+      "file": "packs/brainstorm-academy/adobe/after-effects/[Text] Glitch - Por Palavra.ffx",
+      "bytes": 41800,
+      "sha256": "fcf7a1a9055f8d2a7275f7126c1bd11309b73a964051e225433ae5df0c96c8f7",
+      "usage": "Original Adobe; sem conversão ou validação no Fusion."
+    },
+    {
+      "id": "brainstorm/text-opacidade-por-letra",
+      "kind": "adobe-reference",
+      "source_file": "Presets de After Effects/[Text] Opacidade - Por Letra.ffx",
+      "file": "packs/brainstorm-academy/adobe/after-effects/[Text] Opacidade - Por Letra.ffx",
+      "bytes": 41704,
+      "sha256": "12e1763a96c7cca4487579346bf90f79fb78b29b0b40003d4a32354dad3afd9b",
+      "usage": "Original Adobe; sem conversão ou validação no Fusion."
+    },
+    {
+      "id": "brainstorm/text-stretch-por-letra",
+      "kind": "adobe-reference",
+      "source_file": "Presets de After Effects/[Text] Stretch - Por Letra.ffx",
+      "file": "packs/brainstorm-academy/adobe/after-effects/[Text] Stretch - Por Letra.ffx",
+      "bytes": 41700,
+      "sha256": "65ff5d0ab850bd1adbc2469374a3f321c5d0c4f617136e71d0b58d5aaaf2f311",
+      "usage": "Original Adobe; sem conversão ou validação no Fusion."
+    },
+    {
+      "id": "brainstorm/text-stretch-por-palavra",
+      "kind": "adobe-reference",
+      "source_file": "Presets de After Effects/[Text] Stretch - Por Palavra.ffx",
+      "file": "packs/brainstorm-academy/adobe/after-effects/[Text] Stretch - Por Palavra.ffx",
+      "bytes": 41704,
+      "sha256": "75bd17c81e5969c80994fef1219e59371b9edd05325a6c6ebcfd9968fd588a02",
+      "usage": "Original Adobe; sem conversão ou validação no Fusion."
+    }
+  ],
+  "adobe_preset_names": [
+    "[b.acdmy] Bordas Arredondadas",
+    "[b.acdmy] Distorção Engraçada",
+    "[b.acdmy] Preto e Branco Estiloso",
+    "[b.acdmy] Stop Motion",
+    "[b.acdmy] Voz de Rádio",
+    "[b.acdmy] Voz Impactante",
+    "[b.acdmy] Fast Zoom In",
+    "[b.acdmy] Fast Zoom Out",
+    "[b.acdmy] Pan Dir/Esq Contínuo",
+    "[b.acdmy] Pan Esq/Dir Contínuo",
+    "[b.acdmy] Zoom In Contínuo (até 125%)",
+    "[b.acdmy] Zoom Out Contínuo (de 130% a 100%)"
+  ]
+}

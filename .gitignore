@@ -9,3 +9,12 @@ build/
 coverage/
 .vite/
 *.tsbuildinfo
+
+# pipeline port — never commit deps / huge media
+pipeline/**/node_modules/
+pipeline/**/__pycache__/
+pipeline/**/.remotion/
+pipeline/**/*.mp4
+pipeline/**/*.mov
+pipeline/**/*.MOV
+pipeline/**/exports/

@@ -53,7 +53,7 @@ export async function runProjectJob(jobId: string): Promise<void> {
   } catch {
     const error =
       `Pipeline root not readable: ${PIPELINE_ROOT}. ` +
-      `Set TAKEKIT_PIPELINE_ROOT to your ai-content-agent checkout.`;
+      `Set TAKEKIT_PIPELINE_ROOT to takekit/pipeline (in-repo) or another checkout with .agents + video/.`;
     updateJob(jobId, {
       status: "failed",
       finishedAt: new Date().toISOString(),

@@ -1,0 +1,4 @@
+{"_doc":"Receita do pipeline 02 (fase 3) — film burn de abertura. Asset real (ITC FILMS, ledger yt_o8xwVwbTaNg) na track FX, composite Screen, pico do burn no frame 0 do vídeo + SFX de burn na A3.",
+ "asset":"assets/filmburns/itc_11.mp4","asset_alt":"assets/filmburns/itc_02.mp4","peak_frame_in_asset":20,"start_offset":14,"length_frames":18,
+ "composite_mode":5,"composite_name":"Screen","track":"FX","sfx":"assets/sfx/filmburn_yt_l2pxVBGIxSs.wav","sfx_track":"SFX","sfx_gain_db":-10,
+ "api":{"place":"AppendToTimeline({startFrame:14,endFrame:32,mediaType:1,trackIndex:FX,recordFrame:tl.GetStartFrame()})","mode":"item.SetProperty('CompositeMode',5)"}}

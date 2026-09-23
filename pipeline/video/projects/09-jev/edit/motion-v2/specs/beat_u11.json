@@ -1,0 +1,238 @@
+{
+ "uid": "u11",
+ "palco": "B",
+ "frames": 67,
+ "intent": "A outra IA inventou um desconto na fatura: o número é fabricado na frente do viewer e a própria varredura de checagem apaga o ouro e carimba recusado.",
+ "hero": "u11_plate — prato ink 840x180 com \"desconto\" e o \"-40%\" ouro que conta 0→40 e é riscado: o claim fabricado e a recusa no MESMO objeto.",
+ "objects": [
+  {
+   "drift": "MESMA spline, nós depois da entrada — y: f0 164 → f16 132 → f34 128 → f67 126 (total −6px); scale: f0 0.965 → f16 1.0 → f67 1.006; x fica em 0. No corte ainda sobe ~0,4px/frame.",
+   "enter": "de y +32 (nó f0 y=164 → f16 y=132), scale 0.965 em torno do centro, opacity 0→1 em f0..9; start f0, 16f, ease enter — zero overshoot (documento/financeiro é sério)",
+   "exit": "held to cut",
+   "h": 460,
+   "id": "u11_card",
+   "notes": "x/y = canto superior esquerdo. Ocupa y 132..592 (na entrada, 164..624; sombra chega a 682) — tudo dentro da caixa do palco B (y 40..700) e deixa a faixa 700..960 limpa para a caption do Grok. É o pai de todos os elementos menos o carimbo.",
+   "role": "support",
+   "w": 920,
+   "what": "placa branca (raio 44, hairline rgba(28,26,24,0.14), sombra lift 0 30px 70px rgba(28,26,24,0.16)) — a fatura que vai ser checada; sem texto próprio",
+   "x": 80,
+   "y": 132
+  },
+  {
+   "drift": "nós relativos ao card — x: f4 −16 → f14 0 → f67 +6; y: f14 0 → f67 −5; opacity f4 0 → f12 1. A deriva absoluta no frame é a do card + esta (≈2x: lê como camada da frente).",
+   "enter": "de x −16 (entra pela esquerda, direção de leitura), opacity 0→1; start f4, 10f, ease enter",
+   "exit": "held to cut",
+   "h": 28,
+   "id": "u11_eyebrow",
+   "notes": "É o único chrome textual do topo; fica muted para o olho não parar nele.",
+   "role": "ambient",
+   "w": 840,
+   "what": "\"FATURA\" (Hetrixo 24, ls 3.2, uppercase, muted #5A544E) à esquerda em x=120; \"0412\" (mesmo tipo, muted @0.65, tabular) alinhado à direita, borda direita em x=960 — chrome de documento, nunca a fala",
+   "x": 120,
+   "y": 172
+  },
+  {
+   "drift": "x rel: f18 0 → f67 +4; y rel: f18 0 → f67 −5 (filha do card)",
+   "enter": "scaleX 0→1 com transform-origin left + opacity 0→1; start f6, 12f, ease enter",
+   "exit": "held to cut",
+   "h": 2,
+   "id": "u11_rule",
+   "notes": "Fecha o cabeçalho do documento e separa o chrome das linhas do ledger.",
+   "role": "ambient",
+   "w": 840,
+   "what": "régua de 840x2, raio 1, rgba(28,26,24,0.10), desenhada da esquerda para a direita",
+   "x": 120,
+   "y": 216
+  },
+  {
+   "drift": "x rel: f18 0 → f67 +5; y rel: f18 0 → f67 −5; opacity f8 0 → f16 1",
+   "enter": "de x −20, opacity 0→1; start f8, 10f, ease enter",
+   "exit": "held to cut",
+   "h": 52,
+   "id": "u11_row1",
+   "notes": "34px muted: nunca compete com o número de 132px do prato.",
+   "role": "support",
+   "w": 840,
+   "what": "\"Assinatura\" (Hetrixo 34, muted) à esquerda; \"R$ 89,00\" (Hetrixo 34 muted, tabular) alinhado à direita com borda em x=960 — linha real da fatura, o contraste que faz a falsa existir",
+   "x": 120,
+   "y": 240
+  },
+  {
+   "drift": "x rel: f22 0 → f67 +5; y rel: f22 0 → f67 −5; opacity f12 0 → f20 1",
+   "enter": "de x −20, opacity 0→1; start f12, 10f, ease enter",
+   "exit": "held to cut",
+   "h": 52,
+   "id": "u11_row2",
+   "notes": "Stagger de 4f entre as duas linhas (MOTION.stagger).",
+   "role": "support",
+   "w": 840,
+   "what": "\"Suporte\" / \"R$ 120,00\", mesmo tratamento — segunda metade do stagger do ledger",
+   "x": 120,
+   "y": 296
+  },
+  {
+   "drift": "UMA spline com nó extra na recusa — y rel: f14 +26 → f32 0 → f52 −2 → f58 +5 → f67 −5; scale: f14 0.94 → f32 1.0 → f58 0.985 → f67 1.005; x rel: f32 0 → f67 −6 (contra-deriva contra o card, que tem x=0: duas camadas, duas velocidades). No corte ainda sobe ~1,1px/frame.",
+   "enter": "de y +26, scale 0.94 em torno do centro, opacity 0→1; start f14, 18f (MOTION.enterHero), ease enter — zero overshoot (dinheiro não popa)",
+   "exit": "held to cut",
+   "h": 180,
+   "id": "u11_plate",
+   "notes": "x/y = canto superior esquerdo; vive dentro do padding de 40px do card. O trecho f52..58 (+5px, −1,5% scale) é o flinch da recusa — e é o único flinch do beat. Os dois números que importam ('desconto' em x=156, '-40%' com borda direita em x=880) compartilham o eixo y=462 com a risca.",
+   "role": "hero",
+   "w": 840,
+   "what": "prato ink #1C1A18 de 840x180, raio 36, sombra lift — a linha fabricada. Dentro: \"desconto\" e \"-40%\". Único objeto de 132px e única massa escura do frame.",
+   "x": 120,
+   "y": 372
+  },
+  {
+   "drift": "x rel: f33 0 → f67 +4; y rel: f33 0 → f67 −4; opacity f24 0 → f32 1",
+   "enter": "de x −14, opacity 0→1; start f24, 9f, ease enter",
+   "exit": "held to cut; a cor drena de creme @0.78 para creme @0.40 na janela f40,5–44 — dim = clamp((scanX − 156)/240), dirigido pelo x da varredura, não por um segundo relógio",
+   "h": 40,
+   "id": "u11_label",
+   "notes": "Objeto da frase, 40px: nunca cresce. O label é a primeira coisa que a varredura apaga.",
+   "role": "support",
+   "w": 240,
+   "what": "\"desconto\" (Hetrixo 40) em creme @0.78, dentro do prato",
+   "x": 156,
+   "y": 442
+  },
+  {
+   "drift": "x rel: f40 0 → f67 +3; y rel: f26 0 → f67 −4; cor: ouro → creme @0.40 na janela f46–51,1 — dim = clamp((scanX − 560)/320)",
+   "enter": "o contador é a entrada: n = 40 * rise((f−26)/14), travado em 40 a partir de f40 (ease rise); opacity 0→1 em f26..30",
+   "exit": "held to cut; a partir de f57 já é fantasma e continua andando",
+   "h": 121,
+   "id": "u11_value",
+   "notes": "Centro em (720, 462) = power point de 2/3 do frame. É o texto da frase-objeto; nada mais de texto entra no canvas.",
+   "role": "support",
+   "w": 320,
+   "what": "\"-40%\" — Hetrixo 132 ouro #F4B400, tabular, letterSpacing −3, hífen ASCII (fonte-safe), borda direita em x=880; conta 0→40",
+   "x": 560,
+   "y": 402
+  },
+  {
+   "drift": "x rel: f52 0 → f67 +5; y rel: f40 0 → f67 −5 (deriva absoluta = prato + esta, então a risca acompanha o flinch)",
+   "enter": "largura (scaleX, origin left) 0 → 820px ao longo de f40..52 (≈68px/frame, 0,4 s); opacity 0→1 em f40..43",
+   "exit": "fica desenhada até o corte — a risca do desconto permanece na tela; a cabeça some em f54",
+   "h": 6,
+   "id": "u11_audit",
+   "notes": "Um objeto, um relógio. O desenho da risca é o que apaga o ouro: o dim do rótulo e do valor é função do x desta linha, não de uma segunda curva.",
+   "role": "support",
+   "w": 0,
+   "what": "a risca: barra de 6px, raio 3, creme @0.85, em y=459 (centro 462), desenhada de x=120 até x=940 atravessando rótulo e valor — a varredura E o strike são o MESMO objeto",
+   "x": 120,
+   "y": 459
+  },
+  {
+   "drift": "x do centro: f40 120 → f52 934 → f58 940 → f67 946; y rel: f40 0 → f67 −5; opacity 1 até f50, → 0 em f54",
+   "enter": "nasce junto com o traço: opacity 0→1 em f40..43",
+   "exit": "desaparece em f54, exatamente onde e quando o carimbo chega — a vez passa para ele",
+   "h": 40,
+   "id": "u11_scanhead",
+   "notes": "Mesma spline do traço; nunca se solta da ponta (clipado pelo prato, overflow hidden, então nas pontas raspa na borda do prato).",
+   "role": "support",
+   "w": 12,
+   "what": "cabeça da varredura: tick ouro de 12x40, raio 6, centro vertical em y=462, centro x = scanX — é a ponta que desenha a risca",
+   "x": 114,
+   "y": 442
+  },
+  {
+   "drift": "está em coords de canvas (fora do card), então segue a soma card+prato para ficar soldado à linha — y: f49 428 → f57 418 → f58 423 (flinch) → f67 407; x: f49 896 → f67 890; scale: f49 0.62 → f57 1.0 → f67 1.005",
+   "enter": "de scale 0.62 em torno do centro, y +10, opacity 0→1; start f49, 8f, ease pop — overshoot +1,8%, pico em f54,8 (overshoot só aqui: é marca de estado, nunca no dinheiro)",
+   "exit": "held to cut; aos 66 ainda sobe ~1,2px/frame",
+   "h": 88,
+   "id": "u11_stamp",
+   "notes": "Não pode ser filho do Plate (overflow hidden cortaria o disco): absoluto em coords de canvas, z acima do card e do prato. Metade esquerda pousa no prato (borda 960), metade direita no branco do card — carimbo em cima da emenda. Centro (940, 462) = fim da risca (x=940). O ouro passa do valor para o carimbo: quando ele chega, o '-40%' já está drenando.",
+   "role": "support",
+   "w": 88,
+   "what": "disco ouro 88px (radius 999) com o × em ink desenhado como duas barras de 7x42 a ±45° (não é glifo: não depende da fonte do sistema). Sem texto.",
+   "x": 896,
+   "y": 418
+  }
+ ],
+ "internal_beats": [
+  {
+   "event": "card entra de baixo (y 164 → 132, scale 0.965, opacity 0→1 em 9f) — documento novo na mesa, 16f de movimento",
+   "f": 0
+  },
+  {
+   "event": "chrome aparece: \"FATURA\" + \"0412\" entram de x −16",
+   "f": 4
+  },
+  {
+   "event": "régua hairline se desenha da esquerda (scaleX 0→1, 12f)",
+   "f": 6
+  },
+  {
+   "event": "ledger linha 1: \"Assinatura / R$ 89,00\" entra de x −20",
+   "f": 8
+  },
+  {
+   "event": "ledger linha 2: \"Suporte / R$ 120,00\" (stagger de 4f)",
+   "f": 12
+  },
+  {
+   "event": "HERÓI: prato ink entra (y +26, scale 0.94, 18f, sem overshoot)",
+   "f": 14
+  },
+  {
+   "event": "\"desconto\" aparece dentro do prato",
+   "f": 24
+  },
+  {
+   "event": "começa a contagem: \"-0%\" → \"-40%\" em 14f (ease rise) — a outra IA fabricando o desconto",
+   "f": 26
+  },
+  {
+   "event": "contador trava em 40%; a varredura parte de x=120 (risca começa a ser desenhada)",
+   "f": 40
+  },
+  {
+   "event": "a risca cruza o rótulo: \"desconto\" drena de creme 0.78 para 0.40 entre f40,5 e f44",
+   "f": 40.5
+  },
+  {
+   "event": "a risca cruza o valor: o ouro de \"-40%\" drena para creme 0.40 entre f46 e f51,1 (dim dirigido pelo x da linha)",
+   "f": 46
+  },
+  {
+   "event": "carimbo × popa no fim da risca (pico de overshoot em f54,8, +1,8% de escala)",
+   "f": 49
+  },
+  {
+   "event": "risca completa os 820px em x=940 — strike-through fechado; a cabeça ouro some em f54",
+   "f": 52
+  },
+  {
+   "event": "o prato recua (y +5, scale 0.985 até f58) — o flinch da recusa",
+   "f": 52
+  },
+  {
+   "event": "tudo resolvido: carimbo assentado, cor drenada, recuo terminado",
+   "f": 58
+  },
+  {
+   "event": "f59–66: só deriva — nenhuma ideia nova, nenhum elemento parado, todos ainda subindo ~0,4–1,2px/frame até o corte",
+   "f": 59
+  }
+ ],
+ "sfx_cues": [
+  {
+   "kind": "riser",
+   "t_local_f": 26,
+   "why": "a contagem 0→40 é o evento do beat (a fabricação do desconto); a subida acompanha o número, não a imagem"
+  },
+  {
+   "kind": "snap",
+   "t_local_f": 54,
+   "why": "o carimbo × bate no fim da varredura: é a recusa, o único golpe percussivo do beat e o ponto de virada de ouro→recusado"
+  }
+ ],
+ "risks": [
+  "A varredura é MUDA de propósito: com o riser (f26) e o snap (f54) já colocados, um whoosh sobre a linha de checagem decora e duplica o gesto. Se o Grok quiser um terceiro som, o candidato é um tick em f40 (partida da linha), nunca um whoosh.",
+  "O prato ink 840x180 é a maior massa escura do palco B; se pesar contra o card branco do host, o fallback é prato branco + régua ink de 6px na borda esquerda com o número em ouro — mesmo motion, menos peso.",
+  "Cinco cadeias de texto em 2,23 s: se a legibilidade não fechar, corte a linha 2 do ledger (u11_row2) antes de encolher o prato ou o valor — o herói não encolhe.",
+  "A risca e o '-40%' compartilham o eixo y=462: como o prato deriva −11px em y e −6px em x ao longo do beat, o carimbo tem de seguir a SOMA card+prato (nós absolutos de canvas), senão parece descolado do prato.",
+  "Se u09/u10 fizerem a mesma entrada de card, os três beats de lista ficam idênticos: a assinatura deste beat é o prato ink + a varredura + a cor que drena, não o card.",
+  "Sem FontGate o headless fotografa o fallback e o '-40%' tabular perde a largura — o alinhamento à direita (x=880) quebra. O gate de fontes não é opcional."
+ ]
+}

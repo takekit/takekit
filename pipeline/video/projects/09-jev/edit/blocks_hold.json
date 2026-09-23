@@ -1,0 +1,22 @@
+[
+  {
+    "key": "u17",
+    "layout": "hold",
+    "start_f": 912,
+    "end_f": 988,
+    "y": 1080,
+    "visual_gap_px": -20,
+    "back": {
+      "text": "comment",
+      "font": "script",
+      "fill": "#FFFFFF",
+      "z_index": 1
+    },
+    "front": {
+      "text": "“JEV”",
+      "font": "sans",
+      "fill": {"type": "radial_gradient", "name": "gold"},
+      "z_index": 3
+    }
+  }
+]

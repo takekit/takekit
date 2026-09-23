@@ -1,0 +1,441 @@
+{
+  "_doc": "Biblioteca de SFX por categoria (taxonomia do Peu / Menino do Urso). Cada item: arquivo normalizado -16 LUFS 48k estéreo, duração, uso recomendado, ganho relativo à voz. Regra: SFX nunca mascara narração.",
+  "categories": {
+    "ambience": "cama linear sem brilho; preenche vazio (intro/transições) — -28 dB vs voz",
+    "background": "ambiência com característica do que está na tela (fogo, chuva) — -24 dB",
+    "snap": "estalo curto; popup/marcação/assinatura — -16 dB, só em evento visual",
+    "riser": "crescente; antecipação antes de revelação/hit — termina no corte, -14 dB",
+    "whoosh": "corpo cheio (sobe+desce); zoom, punch, transição — -14 dB, 2 f antes do movimento",
+    "texture": "crispy/elétrico; sensação, letreiro neon, glitch — -22 dB",
+    "foley": "simula som do que aparece (digitação, clique) — -18 dB",
+    "clap": "batida com cauda; marcação rítmica/transição; invertido vira whoosh — -14 dB",
+    "impact": "grave, pesado; trailer, entrada forte — -10 dB, nunca sobre palavra",
+    "hit": "médio-agudo, curto, punch; marcações — -12 dB",
+    "beep": "censura / positivo-negativo — -12 dB",
+    "filmburn": "acompanha overlay de film burn — -10 dB",
+    "explosion": "impacto extremo / foley de explosão — raro",
+    "reverse": "flashback, retroceder; reverse de qualquer áudio — -14 dB",
+    "reveal": "marcação de revelação (motion/UI) — -14 dB",
+    "notification": "UI de sistema (iPhone) — padrão do Oldaque — -12 dB"
+  },
+  "items": [
+    {
+      "id": "ambience/ambience_airy_chord",
+      "file": "sfx/ambience/ambience_airy_chord.wav",
+      "category": "ambience",
+      "duration_s": 23.0,
+      "source": "(OPEU) Projeto - Sound Effects / Glitchedtones - Dreamstates - A Serious Thought Airy Single Static Chord.wav",
+      "license": "pack do Peu (Menino do Urso) — verificar licença individual (Artlist/Blackguard/Glitchedtones/Sonic Bat/Udi Zisser)"
+    },
+    {
+      "id": "background/background_bonfire_crackle",
+      "file": "sfx/background/background_bonfire_crackle.wav",
+      "category": "background",
+      "duration_s": 90.0,
+      "source": "(OPEU) Projeto - Sound Effects / Blackguard Sound - Fire Experiments - Bonfire Burning Pop Crackle.wav",
+      "license": "pack do Peu (Menino do Urso) — verificar licença individual (Artlist/Blackguard/Glitchedtones/Sonic Bat/Udi Zisser)"
+    },
+    {
+      "id": "snap/snap_finger",
+      "file": "sfx/snap/snap_finger.wav",
+      "category": "snap",
+      "duration_s": 1.05,
+      "source": "(OPEU) Projeto - Sound Effects / Snap.wav",
+      "license": "pack do Peu (Menino do Urso) — verificar licença individual (Artlist/Blackguard/Glitchedtones/Sonic Bat/Udi Zisser)"
+    },
+    {
+      "id": "riser/riser_metallic",
+      "file": "sfx/riser/riser_metallic.wav",
+      "category": "riser",
+      "duration_s": 5.2,
+      "source": "(OPEU) Projeto - Sound Effects / SFX - Riser Metallic.mp3",
+      "license": "pack do Peu (Menino do Urso) — verificar licença individual (Artlist/Blackguard/Glitchedtones/Sonic Bat/Udi Zisser)"
+    },
+    {
+      "id": "whoosh/whoosh_swoosh_01",
+      "file": "sfx/whoosh/whoosh_swoosh_01.wav",
+      "category": "whoosh",
+      "duration_s": 3.91,
+      "source": "(OPEU) Projeto - Sound Effects / Swoosh 01.wav",
+      "license": "pack do Peu (Menino do Urso) — verificar licença individual (Artlist/Blackguard/Glitchedtones/Sonic Bat/Udi Zisser)"
+    },
+    {
+      "id": "texture/texture_electric_sparks",
+      "file": "sfx/texture/texture_electric_sparks.wav",
+      "category": "texture",
+      "duration_s": 8.54,
+      "source": "(OPEU) Projeto - Sound Effects / Blackguard Sound - Electrified - Flickering Sparks.wav",
+      "license": "pack do Peu (Menino do Urso) — verificar licença individual (Artlist/Blackguard/Glitchedtones/Sonic Bat/Udi Zisser)"
+    },
+    {
+      "id": "foley/foley_keyboard_typing",
+      "file": "sfx/foley/foley_keyboard_typing.wav",
+      "category": "foley",
+      "duration_s": 49.0,
+      "source": "(OPEU) Projeto - Sound Effects / Sonic Bat - Papercraft - Typewriter Keyboard Typing.wav",
+      "license": "pack do Peu (Menino do Urso) — verificar licença individual (Artlist/Blackguard/Glitchedtones/Sonic Bat/Udi Zisser)"
+    },
+    {
+      "id": "clap/clap_electronic_reverb",
+      "file": "sfx/clap/clap_electronic_reverb.wav",
+      "category": "clap",
+      "duration_s": 4.83,
+      "source": "(OPEU) Projeto - Sound Effects / Artlist Original - Shuffle - Electronic Clap Reverb (1).wav",
+      "license": "pack do Peu (Menino do Urso) — verificar licença individual (Artlist/Blackguard/Glitchedtones/Sonic Bat/Udi Zisser)"
+    },
+    {
+      "id": "impact/impact_deep_hard_reverb",
+      "file": "sfx/impact/impact_deep_hard_reverb.wav",
+      "category": "impact",
+      "duration_s": 8.01,
+      "source": "(OPEU) Projeto - Sound Effects / Udi Zisser - Heavy Hitters - Deep Hard Impact Reverb.wav",
+      "license": "pack do Peu (Menino do Urso) — verificar licença individual (Artlist/Blackguard/Glitchedtones/Sonic Bat/Udi Zisser)"
+    },
+    {
+      "id": "hit/hit_dramatic",
+      "file": "sfx/hit/hit_dramatic.wav",
+      "category": "hit",
+      "duration_s": 4.08,
+      "source": "(OPEU) Projeto - Sound Effects / Dramatic Hit.mp3",
+      "license": "pack do Peu (Menino do Urso) — verificar licença individual (Artlist/Blackguard/Glitchedtones/Sonic Bat/Udi Zisser)"
+    },
+    {
+      "id": "beep/beep_censor",
+      "file": "sfx/beep/beep_censor.wav",
+      "category": "beep",
+      "duration_s": 5.36,
+      "source": "(OPEU) Projeto - Sound Effects / BEEP.mp3",
+      "license": "pack do Peu (Menino do Urso) — verificar licença individual (Artlist/Blackguard/Glitchedtones/Sonic Bat/Udi Zisser)"
+    },
+    {
+      "id": "filmburn/filmburn_01",
+      "file": "sfx/filmburn/filmburn_01.wav",
+      "category": "filmburn",
+      "duration_s": 1.96,
+      "source": "(OPEU) Projeto - Sound Effects / Film Burn 01.wav",
+      "license": "pack do Peu (Menino do Urso) — verificar licença individual (Artlist/Blackguard/Glitchedtones/Sonic Bat/Udi Zisser)"
+    },
+    {
+      "id": "explosion/explosion_hit_blast_01",
+      "file": "sfx/explosion/explosion_hit_blast_01.wav",
+      "category": "explosion",
+      "duration_s": 10.29,
+      "source": "(OPEU) Projeto - Sound Effects / Explosion Hit Blast 01.wav",
+      "license": "pack do Peu (Menino do Urso) — verificar licença individual (Artlist/Blackguard/Glitchedtones/Sonic Bat/Udi Zisser)"
+    },
+    {
+      "id": "reverse/reverse_hit_03",
+      "file": "sfx/reverse/reverse_hit_03.wav",
+      "category": "reverse",
+      "duration_s": 3.99,
+      "source": "(OPEU) Projeto - Sound Effects / Reverse Hit 03.wav",
+      "license": "pack do Peu (Menino do Urso) — verificar licença individual (Artlist/Blackguard/Glitchedtones/Sonic Bat/Udi Zisser)"
+    },
+    {
+      "id": "reveal/reveal_logo_element_01",
+      "file": "sfx/reveal/reveal_logo_element_01.wav",
+      "category": "reveal",
+      "duration_s": 8.81,
+      "source": "(OPEU) Projeto - Sound Effects / SFX Logo Element Reveal 01.wav",
+      "license": "pack do Peu (Menino do Urso) — verificar licença individual (Artlist/Blackguard/Glitchedtones/Sonic Bat/Udi Zisser)"
+    },
+    {
+      "id": "foley/mixkit_click_1",
+      "file": "sfx/mixkit_click_1.wav",
+      "category": "foley",
+      "duration_s": 1.1,
+      "source": "mixkit.co",
+      "license": "Mixkit free",
+      "note": "qualidade inferior ao pack do Peu; usar só como fallback"
+    },
+    {
+      "id": "notification/mixkit_notification_1",
+      "file": "sfx/mixkit_notification_1.wav",
+      "category": "notification",
+      "duration_s": 7.24,
+      "source": "mixkit.co",
+      "license": "Mixkit free",
+      "note": "qualidade inferior ao pack do Peu; usar só como fallback"
+    },
+    {
+      "id": "notification/mixkit_notification_2",
+      "file": "sfx/mixkit_notification_2.wav",
+      "category": "notification",
+      "duration_s": 3.84,
+      "source": "mixkit.co",
+      "license": "Mixkit free",
+      "note": "qualidade inferior ao pack do Peu; usar só como fallback"
+    },
+    {
+      "id": "snap/mixkit_pop_1",
+      "file": "sfx/mixkit_pop_1.wav",
+      "category": "snap",
+      "duration_s": 1.01,
+      "source": "mixkit.co",
+      "license": "Mixkit free",
+      "note": "qualidade inferior ao pack do Peu; usar só como fallback"
+    },
+    {
+      "id": "snap/mixkit_pop_2",
+      "file": "sfx/mixkit_pop_2.wav",
+      "category": "snap",
+      "duration_s": 0.28,
+      "source": "mixkit.co",
+      "license": "Mixkit free",
+      "note": "qualidade inferior ao pack do Peu; usar só como fallback"
+    },
+    {
+      "id": "whoosh/mixkit_whoosh_1",
+      "file": "sfx/mixkit_whoosh_1.wav",
+      "category": "whoosh",
+      "duration_s": 0.45,
+      "source": "mixkit.co",
+      "license": "Mixkit free",
+      "note": "qualidade inferior ao pack do Peu; usar só como fallback"
+    },
+    {
+      "id": "whoosh/mixkit_whoosh_2",
+      "file": "sfx/mixkit_whoosh_2.wav",
+      "category": "whoosh",
+      "duration_s": 6.6,
+      "source": "mixkit.co",
+      "license": "Mixkit free",
+      "note": "qualidade inferior ao pack do Peu; usar só como fallback"
+    },
+    {
+      "id": "filmburn/filmburn_yt_DTVSfxqepHM",
+      "file": "sfx/filmburn_yt_DTVSfxqepHM.wav",
+      "category": "filmburn",
+      "duration_s": 3.81,
+      "source": "youtube shorts (ledger)",
+      "license": "free declarado"
+    },
+    {
+      "id": "filmburn/filmburn_yt_Wc3G6i0xa8o",
+      "file": "sfx/filmburn_yt_Wc3G6i0xa8o.wav",
+      "category": "filmburn",
+      "duration_s": 29.69,
+      "source": "youtube shorts (ledger)",
+      "license": "free declarado"
+    },
+    {
+      "id": "filmburn/filmburn_yt_l2pxVBGIxSs",
+      "file": "sfx/filmburn_yt_l2pxVBGIxSs.wav",
+      "category": "filmburn",
+      "duration_s": 0.61,
+      "source": "youtube shorts (ledger)",
+      "license": "free declarado"
+    },
+    {
+      "id": "filmburn/filmburn_yt_mVKWHeId9QU",
+      "file": "sfx/filmburn_yt_mVKWHeId9QU.wav",
+      "category": "filmburn",
+      "duration_s": 3.84,
+      "source": "youtube shorts (ledger)",
+      "license": "free declarado"
+    },
+    {
+      "id": "filmburn/filmburn_yt_p1EBp_BxibI",
+      "file": "sfx/filmburn_yt_p1EBp_BxibI.wav",
+      "category": "filmburn",
+      "duration_s": 3.79,
+      "source": "youtube shorts (ledger)",
+      "license": "free declarado"
+    },
+    {
+      "id": "notification/iphone_notification",
+      "file": "sfx/notification/iphone_notification.wav",
+      "category": "notification",
+      "duration_s": null,
+      "source": "myinstants iphone-notification-71441 (baixado pelo Oldaque, 12/09)",
+      "license": "som de sistema Apple; uso em vídeo de redes é prática comum, não é asset licenciado",
+      "default": true
+    },
+    {
+      "id": "brainstorm/among-us",
+      "file": "sfx/brainstorm-academy/among-us.wav",
+      "category": "texture",
+      "duration_s": 4.702042,
+      "source": "Brainstorm Academy — pack fornecido pelo usuário; packs/brainstorm-academy/transcript.txt",
+      "license": "Transcrição fornecida declara pack gratuito para uso; não acompanha termo individual de licença dos arquivos. Não inferir licença de redistribuição.",
+      "normalized": false,
+      "collection": false,
+      "note": "48 kHz estéreo PCM; ganho original preservado. Ouvir/selecionar trecho e preparar ganho relativo à voz. Não substitui SFX padrão aprovado."
+    },
+    {
+      "id": "brainstorm/camera-shutter-click-5",
+      "file": "sfx/brainstorm-academy/camera-shutter-click-5.wav",
+      "category": "foley",
+      "duration_s": 9.743688,
+      "source": "Brainstorm Academy — pack fornecido pelo usuário; packs/brainstorm-academy/transcript.txt",
+      "license": "Transcrição fornecida declara pack gratuito para uso; não acompanha termo individual de licença dos arquivos. Não inferir licença de redistribuição.",
+      "normalized": false,
+      "collection": true,
+      "note": "48 kHz estéreo PCM; ganho original preservado. Ouvir/selecionar trecho e preparar ganho relativo à voz. Não substitui SFX padrão aprovado."
+    },
+    {
+      "id": "brainstorm/cartoon-boing",
+      "file": "sfx/brainstorm-academy/cartoon-boing.wav",
+      "category": "foley",
+      "duration_s": 0.597333,
+      "source": "Brainstorm Academy — pack fornecido pelo usuário; packs/brainstorm-academy/transcript.txt",
+      "license": "Transcrição fornecida declara pack gratuito para uso; não acompanha termo individual de licença dos arquivos. Não inferir licença de redistribuição.",
+      "normalized": false,
+      "collection": false,
+      "note": "48 kHz estéreo PCM; ganho original preservado. Ouvir/selecionar trecho e preparar ganho relativo à voz. Não substitui SFX padrão aprovado."
+    },
+    {
+      "id": "brainstorm/dinheiro",
+      "file": "sfx/brainstorm-academy/dinheiro.wav",
+      "category": "foley",
+      "duration_s": 4.365354,
+      "source": "Brainstorm Academy — pack fornecido pelo usuário; packs/brainstorm-academy/transcript.txt",
+      "license": "Transcrição fornecida declara pack gratuito para uso; não acompanha termo individual de licença dos arquivos. Não inferir licença de redistribuição.",
+      "normalized": false,
+      "collection": false,
+      "note": "48 kHz estéreo PCM; ganho original preservado. Ouvir/selecionar trecho e preparar ganho relativo à voz. Não substitui SFX padrão aprovado."
+    },
+    {
+      "id": "brainstorm/fahhh",
+      "file": "sfx/brainstorm-academy/fahhh.wav",
+      "category": "hit",
+      "duration_s": 4.623688,
+      "source": "Brainstorm Academy — pack fornecido pelo usuário; packs/brainstorm-academy/transcript.txt",
+      "license": "Transcrição fornecida declara pack gratuito para uso; não acompanha termo individual de licença dos arquivos. Não inferir licença de redistribuição.",
+      "normalized": false,
+      "collection": false,
+      "note": "48 kHz estéreo PCM; ganho original preservado. Ouvir/selecionar trecho e preparar ganho relativo à voz. Não substitui SFX padrão aprovado."
+    },
+    {
+      "id": "brainstorm/gong",
+      "file": "sfx/brainstorm-academy/gong.wav",
+      "category": "impact",
+      "duration_s": 5.12,
+      "source": "Brainstorm Academy — pack fornecido pelo usuário; packs/brainstorm-academy/transcript.txt",
+      "license": "Transcrição fornecida declara pack gratuito para uso; não acompanha termo individual de licença dos arquivos. Não inferir licença de redistribuição.",
+      "normalized": false,
+      "collection": false,
+      "note": "48 kHz estéreo PCM; ganho original preservado. Ouvir/selecionar trecho e preparar ganho relativo à voz. Não substitui SFX padrão aprovado."
+    },
+    {
+      "id": "brainstorm/impact",
+      "file": "sfx/brainstorm-academy/impact.wav",
+      "category": "impact",
+      "duration_s": 9.218333,
+      "source": "Brainstorm Academy — pack fornecido pelo usuário; packs/brainstorm-academy/transcript.txt",
+      "license": "Transcrição fornecida declara pack gratuito para uso; não acompanha termo individual de licença dos arquivos. Não inferir licença de redistribuição.",
+      "normalized": false,
+      "collection": false,
+      "note": "48 kHz estéreo PCM; ganho original preservado. Ouvir/selecionar trecho e preparar ganho relativo à voz. Não substitui SFX padrão aprovado."
+    },
+    {
+      "id": "brainstorm/mouse-click",
+      "file": "sfx/brainstorm-academy/mouse-click.wav",
+      "category": "foley",
+      "duration_s": 7.418792,
+      "source": "Brainstorm Academy — pack fornecido pelo usuário; packs/brainstorm-academy/transcript.txt",
+      "license": "Transcrição fornecida declara pack gratuito para uso; não acompanha termo individual de licença dos arquivos. Não inferir licença de redistribuição.",
+      "normalized": false,
+      "collection": false,
+      "note": "48 kHz estéreo PCM; ganho original preservado. Ouvir/selecionar trecho e preparar ganho relativo à voz. Não substitui SFX padrão aprovado."
+    },
+    {
+      "id": "brainstorm/piano-note",
+      "file": "sfx/brainstorm-academy/piano-note.wav",
+      "category": "hit",
+      "duration_s": 2.645333,
+      "source": "Brainstorm Academy — pack fornecido pelo usuário; packs/brainstorm-academy/transcript.txt",
+      "license": "Transcrição fornecida declara pack gratuito para uso; não acompanha termo individual de licença dos arquivos. Não inferir licença de redistribuição.",
+      "normalized": false,
+      "collection": false,
+      "note": "48 kHz estéreo PCM; ganho original preservado. Ouvir/selecionar trecho e preparar ganho relativo à voz. Não substitui SFX padrão aprovado."
+    },
+    {
+      "id": "brainstorm/pop",
+      "file": "sfx/brainstorm-academy/pop.wav",
+      "category": "snap",
+      "duration_s": 0.618667,
+      "source": "Brainstorm Academy — pack fornecido pelo usuário; packs/brainstorm-academy/transcript.txt",
+      "license": "Transcrição fornecida declara pack gratuito para uso; não acompanha termo individual de licença dos arquivos. Não inferir licença de redistribuição.",
+      "normalized": false,
+      "collection": false,
+      "note": "48 kHz estéreo PCM; ganho original preservado. Ouvir/selecionar trecho e preparar ganho relativo à voz. Não substitui SFX padrão aprovado."
+    },
+    {
+      "id": "brainstorm/relogio",
+      "file": "sfx/brainstorm-academy/relogio.wav",
+      "category": "foley",
+      "duration_s": 4.963271,
+      "source": "Brainstorm Academy — pack fornecido pelo usuário; packs/brainstorm-academy/transcript.txt",
+      "license": "Transcrição fornecida declara pack gratuito para uso; não acompanha termo individual de licença dos arquivos. Não inferir licença de redistribuição.",
+      "normalized": false,
+      "collection": false,
+      "note": "48 kHz estéreo PCM; ganho original preservado. Ouvir/selecionar trecho e preparar ganho relativo à voz. Não substitui SFX padrão aprovado."
+    },
+    {
+      "id": "brainstorm/riser-collection-15",
+      "file": "sfx/brainstorm-academy/riser-collection-15.wav",
+      "category": "riser",
+      "duration_s": 60.21225,
+      "source": "Brainstorm Academy — pack fornecido pelo usuário; packs/brainstorm-academy/transcript.txt",
+      "license": "Transcrição fornecida declara pack gratuito para uso; não acompanha termo individual de licença dos arquivos. Não inferir licença de redistribuição.",
+      "normalized": false,
+      "collection": true,
+      "note": "48 kHz estéreo PCM; ganho original preservado. Ouvir/selecionar trecho e preparar ganho relativo à voz. Não substitui SFX padrão aprovado."
+    },
+    {
+      "id": "brainstorm/shocked",
+      "file": "sfx/brainstorm-academy/shocked.wav",
+      "category": "hit",
+      "duration_s": 5.198375,
+      "source": "Brainstorm Academy — pack fornecido pelo usuário; packs/brainstorm-academy/transcript.txt",
+      "license": "Transcrição fornecida declara pack gratuito para uso; não acompanha termo individual de licença dos arquivos. Não inferir licença de redistribuição.",
+      "normalized": false,
+      "collection": false,
+      "note": "48 kHz estéreo PCM; ganho original preservado. Ouvir/selecionar trecho e preparar ganho relativo à voz. Não substitui SFX padrão aprovado."
+    },
+    {
+      "id": "brainstorm/teclado",
+      "file": "sfx/brainstorm-academy/teclado.wav",
+      "category": "foley",
+      "duration_s": 8.881646,
+      "source": "Brainstorm Academy — pack fornecido pelo usuário; packs/brainstorm-academy/transcript.txt",
+      "license": "Transcrição fornecida declara pack gratuito para uso; não acompanha termo individual de licença dos arquivos. Não inferir licença de redistribuição.",
+      "normalized": false,
+      "collection": false,
+      "note": "48 kHz estéreo PCM; ganho original preservado. Ouvir/selecionar trecho e preparar ganho relativo à voz. Não substitui SFX padrão aprovado."
+    },
+    {
+      "id": "brainstorm/tiktok-core",
+      "file": "sfx/brainstorm-academy/tiktok-core.wav",
+      "category": "texture",
+      "duration_s": 0.783688,
+      "source": "Brainstorm Academy — pack fornecido pelo usuário; packs/brainstorm-academy/transcript.txt",
+      "license": "Transcrição fornecida declara pack gratuito para uso; não acompanha termo individual de licença dos arquivos. Não inferir licença de redistribuição.",
+      "normalized": false,
+      "collection": false,
+      "note": "48 kHz estéreo PCM; ganho original preservado. Ouvir/selecionar trecho e preparar ganho relativo à voz. Não substitui SFX padrão aprovado."
+    }
+  ],
+  "updated": "2026-09-12",
+  "rel_db": {
+    "ambience": -30,
+    "background": -26,
+    "snap": -8,
+    "riser": -16,
+    "whoosh": -19,
+    "texture": -24,
+    "foley": -20,
+    "clap": -16,
+    "impact": -12,
+    "hit": -14,
+    "beep": -14,
+    "filmburn": -14,
+    "explosion": -12,
+    "reverse": -16,
+    "reveal": -24,
+    "notification": -3
+  },
+  "_rule_gain": "alvo_LUFS = voz_LUFS + rel_db[categoria]; calcular com engine/sfx_prep.py (mede o arquivo, nunca no olho). Film burn: overlay baixado já traz o som → sem SFX extra.",
+  "_approved_levels_12_09": "whoosh -19 / snap -8 / notification -3 (arquivo normalizado a -16 LUFS usado direto, aprovado de ouvido) / reveal -24. O *_prep.wav de notificação (alvo -29) NÃO é o canônico."
+}

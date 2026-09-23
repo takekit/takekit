@@ -1,0 +1,217 @@
+{
+  "$schema": "caption-style-direction/v1",
+  "project": "09-jev",
+  "_canonical": "video/resolve/styles/caption-style-config.json",
+  "render_reference": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30
+  },
+  "scope": [
+    "cta_em_duas_linhas",
+    "frase_com_enfase_em_duas_linhas"
+  ],
+  "visual_intent": {
+    "summary": "Duas linhas muito próximas e parcialmente sobrepostas. A linha de trás é renderizada primeiro. A linha da frente, incluindo sua sombra, é composta por cima e interfere visualmente na linha de trás. A família tipográfica não determina a profundidade: tanto a sans quanto a cursiva podem ocupar qualquer uma das camadas.",
+    "look": [
+      "contraste entre sans pesada e cursiva condensada",
+      "bloco compacto, centralizado e com largura semelhante nas duas linhas",
+      "sobreposição intencional; nunca usar distância positiva de line-height",
+      "cores sólidas; não usar gradiente",
+      "sombra curta, escura e densa na linha da frente"
+    ]
+  },
+  "fonts": {
+    "sans": {
+      "family": "Hetrixo ExtraBold",
+      "file": "video/resolve/assets/fonts/hetrixotypeface-extrabold.otf"
+    },
+    "script": {
+      "family": "Alvito Nova Comp Bold Italic",
+      "file": "video/resolve/assets/fonts/fontspring-demo-alvitonovacomp-bolditalic.otf"
+    }
+  },
+  "composition_contract": {
+    "measurement": "visible_glyph_bounds",
+    "depth_assignment_rule": "Definir frente e trás por composição e hierarquia da frase, nunca pela família tipográfica. Cursiva não significa frente; sans não significa trás. Qualquer uma pode ocupar qualquer camada.",
+    "line_box_rule": "Posicionar pelas bordas visíveis dos glifos. Não usar ascender, descender ou line-height da fonte para calcular a distância entre linhas.",
+    "layer_order": [
+      "back_line_glyphs",
+      "front_line_shadow",
+      "front_line_glyphs"
+    ],
+    "shadow_interaction": "A sombra da linha da frente deve cair por cima dos glifos da linha de trás. Não recortar a sombra na caixa da própria linha.",
+    "implementation": "Usar duas camadas de texto independentes. Renderizar a linha de trás; depois compor a sombra da linha da frente; por último compor o preenchimento da linha da frente.",
+    "alignment": "center",
+    "max_width_px": 920,
+    "safe_width_px": 900
+  },
+  "styles": {
+    "cta_double_line": {
+      "purpose": "CTA curto no padrão comment + keyword entre aspas",
+      "example": {
+        "back_line": "comment",
+        "front_line": "“JEV”"
+      },
+      "block": {
+        "center_x_px": 540,
+        "center_y_px": 1080,
+        "visual_gap_px": -20,
+        "width_relationship": "Ajustar tracking/tamanho para as duas linhas terem largura visual próxima; tolerância de 12%."
+      },
+      "back_line": {
+        "role": "supporting_cue",
+        "font": "script",
+        "size_px": 82,
+        "tracking_px": -1,
+        "case": "lowercase",
+        "fill": {
+          "type": "solid",
+          "color": "#FFFFFF"
+        },
+        "stroke": {
+          "enabled": false,
+          "width_px": 0,
+          "color": "#000000"
+        },
+        "shadow": {
+          "enabled": true,
+          "offset_x_px": 0,
+          "offset_y_px": 3,
+          "blur_px": 5,
+          "opacity": 0.62,
+          "color": "#000000"
+        },
+        "z_index": 1
+      },
+      "front_line": {
+        "role": "keyword",
+        "font": "sans",
+        "size_px": 88,
+        "tracking_px": -2,
+        "case": "preserve",
+        "quotes": "double_curly_or_straight",
+        "fill": {
+          "type": "radial_gradient",
+          "name": "gold",
+          "interpolation_space": "oklch",
+          "center": {
+            "x_percent": 46,
+            "y_percent": 30
+          },
+          "radius_percent": 70,
+          "stops": [
+            {
+              "at_percent": 0,
+              "color": "#FFD85A",
+              "role": "specular_highlight"
+            },
+            {
+              "at_percent": 48,
+              "color": "#F4B400",
+              "role": "brand_gold"
+            },
+            {
+              "at_percent": 100,
+              "color": "#8C5400",
+              "role": "deep_gold_edge"
+            }
+          ],
+          "color_rule": "O CTA usa ouro em gradiente radial. Preservar o núcleo luminoso e a borda dourada profunda; não achatar para cor sólida e não interpolar por cinza."
+        },
+        "stroke": {
+          "enabled": false,
+          "width_px": 0,
+          "color": "#000000"
+        },
+        "shadow": {
+          "enabled": true,
+          "offset_x_px": 0,
+          "offset_y_px": 6,
+          "blur_px": 9,
+          "opacity": 0.78,
+          "color": "#000000",
+          "composite_over_back_line": true
+        },
+        "z_index": 3
+      }
+    },
+    "emphasis_double_line": {
+      "purpose": "Frase normal curta atrás + trecho enfatizado cursivo na frente",
+      "example": {
+        "back_line": "NÃO GERA",
+        "front_line": "texto"
+      },
+      "block": {
+        "center_x_px": 540,
+        "center_y_px": 1180,
+        "visual_gap_px": -24,
+        "width_relationship": "A linha cursiva da frente pode ser até 18% mais larga que a linha sans de trás."
+      },
+      "back_line": {
+        "role": "sentence_context",
+        "font": "sans",
+        "size_px": 76,
+        "tracking_px": -2,
+        "case": "preserve",
+        "fill": {
+          "type": "solid",
+          "color_on_dark": "#FFFFFF",
+          "color_on_light": "#171512"
+        },
+        "stroke": {
+          "enabled": false,
+          "width_px": 0,
+          "color": "#000000"
+        },
+        "shadow": {
+          "enabled": false,
+          "offset_x_px": 0,
+          "offset_y_px": 0,
+          "blur_px": 0,
+          "opacity": 0,
+          "color": "#000000"
+        },
+        "z_index": 1
+      },
+      "front_line": {
+        "role": "emphasis",
+        "font": "script",
+        "size_px": 92,
+        "tracking_px": -1,
+        "case": "preserve",
+        "fill": {
+          "type": "solid",
+          "color_mode": "contextual_accent",
+          "example_color_from_reference": "#F05A2A",
+          "color_rule": "Escolher pela mensagem, pela cena e pelo contraste com o fundo. O laranja pertence apenas ao exemplo visual e não é default nem cor obrigatória."
+        },
+        "stroke": {
+          "enabled": false,
+          "width_px": 0,
+          "color": "#000000"
+        },
+        "shadow": {
+          "enabled": true,
+          "offset_x_px": 0,
+          "offset_y_px": 4,
+          "blur_px": 6,
+          "opacity": 0.46,
+          "color": "#000000",
+          "composite_over_back_line": true
+        },
+        "z_index": 3
+      }
+    }
+  },
+  "agent_instructions": [
+    "Aplicar estes estilos somente ao CTA e às frases explicitamente marcadas como ênfase de duas linhas.",
+    "Não transformar captions comuns de uma linha neste layout.",
+    "Decidir qual linha fica na frente conforme a hierarquia de cada frase. Não vincular z-index à fonte: cursiva e sans podem ficar na frente ou atrás.",
+    "Escolher a cor da ênfase conforme o contexto semântico e visual da cena. Não aplicar laranja automaticamente; #F05A2A é somente a cor do exemplo de referência.",
+    "Não usar gradiente, glow, chroma, tetris ou caixa de fundo.",
+    "Manter as duas linhas em camadas separadas para preservar a interação da sombra com o texto de trás.",
+    "A distância negativa é medida entre os pixels visíveis dos glifos, não entre baselines nem caixas tipográficas.",
+    "Validar o resultado em frame real do DaVinci a 1080x1920 antes de replicar no vídeo inteiro."
+  ]
+}

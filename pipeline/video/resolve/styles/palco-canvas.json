@@ -1,0 +1,33 @@
+{
+  "_doc": "Caption palco B/C: Hetrixo tinta no creme. Mesmo contrato de duas linhas do caption-style-config. Sem tetris, sem glow.",
+  "engine": "captions_palco.py",
+  "layout": "canvas",
+  "caption_config": "styles/caption-style-config.json",
+  "font_sans": "assets/fonts/hetrixotypeface-extrabold.otf",
+  "font_script": "assets/fonts/fontspring-demo-alvitonovacomp-bolditalic.otf",
+  "font_accent": "assets/fonts/fontspring-demo-alvitonovacomp-bolditalic.otf",
+  "size": { "sans": 76, "accent": 88 },
+  "tracking": { "sans": -2, "script": -1, "accent": -1 },
+  "max_width": 920,
+  "color_sans": [23, 21, 18, 255],
+  "color_accent": [140, 84, 0, 255],
+  "stroke": null,
+  "shadow": { "dx": 0, "dy": 0, "blur": 0, "alpha": 0 },
+  "glow_accent": { "blur": 0, "alpha": 0 },
+  "y": 700,
+  "case": "sentence",
+  "lead": 2,
+  "in_frames": 4,
+  "out_frames": 3,
+  "blur_in": 0,
+  "blur_out": 0,
+  "ease_k": 6.0,
+  "passage_words": "a o e é de da do das dos em no na nos nas um uma uns umas para pra por com sem que se ao aos à às os as te teu tua seu sua ele ela isso esse essa este esta lá aqui ou",
+  "auto": {
+    "gap_frames": 8,
+    "max_words": 3,
+    "max_chars": 20,
+    "hold_frames": 8,
+    "y_mode": "canvas"
+  }
+}

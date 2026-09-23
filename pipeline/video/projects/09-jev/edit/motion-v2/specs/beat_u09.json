@@ -1,0 +1,152 @@
+{
+ "uid": "u09",
+ "palco": "B",
+ "frames": 48,
+ "intent": "Um card de inbox mostra tres emails e um deles e classificado na frente do viewer: um tag INBOX pousa no item, que sobe e passa de \"preview\" a conteudo reconhecido.",
+ "hero": "row1 — o item de email que recebe o tag INBOX (item + tag sao um so gesto; a Plate e o conteiner que o carrega)",
+ "objects": [
+  {
+   "drift": "a mesma funcao continua de f9 (meio da entrada) a f48: x +6px, y -5px, scale +0.006 (token MOTION.drift do kit). Nenhum ponto de velocidade zero ate o corte.",
+   "enter": "f0: opacity 0->1 em 6 frames; transform numa UNICA spline monotona de f0 a f18, de (y +30px, scale 0.972) ate (y 0, scale 1.0). Sem overshoot: card nao e chip.",
+   "exit": "held to cut — f47 e o ultimo frame visivel; nada sai",
+   "h": 376,
+   "id": "plate",
+   "notes": "x,y = canto superior ESQUERDO. Card 80..1000 / 176..552, inteiro dentro de y 40..700; faixa 700..960 fica vazia; nada abaixo de y=960 (StageB clippa). A sombra lift (0 30px 70px rgba(28,26,24,0.16)) sangra ~30px de alfa suave para fora de x 80..1000 — se o checker amostrar borda dura, trocar por shadow 'soft'.",
+   "role": "support",
+   "w": 920,
+   "what": "card de inbox em UI de produto: Plate branca #FFFFFF (sem titulo), raio 36, hairline 1px rgba(28,26,24,0.14), sombra lift; header so com glifos; varredura de luz ink rgba(28,26,24,0.055) atravessa o card em f18-f44 (banda de 12% em linear-gradient 112deg, clipped pela Plate)",
+   "x": 80,
+   "y": 176
+  },
+  {
+   "drift": "y -2px e x +1px de f6 a f48, somados a deriva da Plate (que eles herdam por serem filhos dela)",
+   "enter": "f0: opacity 0->1 em 8 frames, com y +6px e scale 0.97 resolvidos ate f12 na mesma spline do beat",
+   "exit": "held to cut",
+   "h": 28,
+   "id": "headerGlyphs",
+   "notes": "x,y = canto superior esquerdo da faixa de header (padding 34/36 da Plate). Slot direito do header fica livre — os irmaos u10/u11 podem espelhar a mesma anatomia.",
+   "role": "ambient",
+   "w": 848,
+   "what": "header do card, sem uma palavra: glifo de caixa de entrada (envelope 20x14 numa bandeja, traco hairline muted 2px, dentro de 34x28) a esquerda + tres pontos muted de 6px (gap 6, bloco 30x6) a direita",
+   "x": 116,
+   "y": 210
+  },
+  {
+   "drift": "x 0->+3px e scale 0.99->1.003 de f7 a f48 na mesma spline; de f28 ao corte o y segue de -8px para -13px (a deriva e o proprio rabo da entrada, nao um segundo movimento)",
+   "enter": "f2, 10 frames: de y +16px, scale 0.99, opacity 0 ate o lugar. O y do beat inteiro e UMA funcao: nos (f2,+16) -> (f12,0) -> (f28,-8) -> (f48,-13), estritamente decrescente — sem plato, nunca para de subir.",
+   "exit": "held to cut",
+   "h": 76,
+   "id": "row1",
+   "notes": "x,y = canto superior esquerdo. Centro vertical y=294. Barra A -> tinta solida em f16-f26 = state change de 10 frames pareado com o lift (regra 1/3: nenhum elemento viaja >1/3 sem scale/estado junto).",
+   "role": "hero",
+   "w": 848,
+   "what": "o item de email classificado: Dot 44px outline (hairline) com envelope 20x14 dentro, duas barras de preview 380x12 e 240x12 (radius 6, rgba(28,26,24,0.18)) que em f16-f26 viram tinta solida rgba(28,26,24,0.88); separador hairline 1px no topo da linha",
+   "x": 116,
+   "y": 256
+  },
+  {
+   "drift": "x (f16,+30) -> (f28,0) -> (f48,+2px), y -3px, scale +0.004 de f22 a f48. Unica inversao de velocidade no dock f28, instantanea; do f28 ao corte anda para a direita no mesmo ritmo do resto da cena.",
+   "enter": "f16, 12 frames, ease 'pop' do kit (sobe ~2% no pico em f23 e volta a 1 em f28): de x +30px, scale 0.92, opacity 0. Nasce em x 860..994 — dentro da Plate, nao e clipado.",
+   "exit": "held to cut — segue como o elemento de maior contraste do frame",
+   "h": 46,
+   "id": "tag",
+   "notes": "x,y = canto superior esquerdo; centro y=294, alinhado a row1. Largura 134px conferida com a metrica real do Hetrixo; se estourar, 150px e deslocar o trail das rows 2/3.",
+   "role": "support",
+   "w": 134,
+   "what": "tag de classificacao: Pill ink (placa #1C1A18) raio 999, texto 'INBOX' em Hetrixo ExtraBold 26px, letterSpacing 1.4, uppercase, cor #F4B400 — o unico ouro e o unico overshoot do frame",
+   "x": 830,
+   "y": 271
+  },
+  {
+   "drift": "y -4px, x +2px, scale +0.002 de f10 a f48 na mesma spline",
+   "enter": "f5 (stagger 4), 10 frames: de y +14px, scale 0.99, opacity 0",
+   "exit": "held to cut",
+   "h": 76,
+   "id": "row2",
+   "notes": "Centro y=370. Escurece 100% -> 45% de opacidade em f26-f36 (follow-through do irmao classificado) e continua a derivar ate o corte.",
+   "role": "support",
+   "w": 848,
+   "what": "segundo item de email (mesma anatomia de row1, sem tag): Dot 44 outline, barras 380x12 e 240x12 hairline, barra de hora muted 56x12 no trail",
+   "x": 116,
+   "y": 332
+  },
+  {
+   "drift": "y -3px, x +2px, scale +0.002 de f13 a f48 na mesma spline",
+   "enter": "f8 (stagger 4), 10 frames: de y +14px, scale 0.99, opacity 0",
+   "exit": "held to cut",
+   "h": 76,
+   "id": "row3",
+   "notes": "Centro y=446. Escurece 100% -> 45% em f26-f36, junto com row2.",
+   "role": "support",
+   "w": 848,
+   "what": "terceiro item de email (mesma anatomia, sem tag): Dot 44 outline, barras 380x12 e 240x12 hairline, barra de hora muted 56x12 no trail",
+   "x": 116,
+   "y": 408
+  }
+ ],
+ "internal_beats": [
+  {
+   "event": "Plate entra: fade em 6 frames, transform numa spline de 18 frames (y +30, scale 0.972)",
+   "f": 0
+  },
+  {
+   "event": "row1 entra (10f, y +16 -> 0)",
+   "f": 2
+  },
+  {
+   "event": "row2 entra (stagger 4)",
+   "f": 5
+  },
+  {
+   "event": "row3 entra — cascata do conteudo completa em f18",
+   "f": 8
+  },
+  {
+   "event": "classificacao comeca: row1 sobe, barra de preview vira tinta solida, tag INBOX parte de x +30 / scale 0.92",
+   "f": 16
+  },
+  {
+   "event": "varredura de luz ink comeca a atravessar o card (ate f44, ambiente — nenhum elemento novo)",
+   "f": 18
+  },
+  {
+   "event": "pico do overshoot do tag (~2%)",
+   "f": 23
+  },
+  {
+   "event": "rows 2 e 3 comecam a escurecer para 45% (follow-through)",
+   "f": 26
+  },
+  {
+   "event": "tag pousa (dock); daqui ao corte so existe deriva — nenhuma ideia nova",
+   "f": 28
+  },
+  {
+   "event": "escurecimento de row2/row3 termina",
+   "f": 36
+  },
+  {
+   "event": "varredura de luz sai do card; ultimos 4 frames so com deriva viva",
+   "f": 44
+  },
+  {
+   "event": "corte (ultimo frame visivel = f47); card, rows e tag ainda andando",
+   "f": 48
+  }
+ ],
+ "sfx_cues": [
+  {
+   "kind": "snap",
+   "t_local_f": 24,
+   "why": "o tag INBOX pousa no item de email (pico do overshoot, f23-24) — unico evento pontuado do beat; o resto e texto/estado de apoio, silencioso por BEHAVIORS.md"
+  }
+ ],
+ "risks": [
+  "Se o caption do outro agente escrever 'inbox' em vez de 'email', o tag duplica a palavra: fallback e manter o pill ink+ouro sem texto (tag so com o glifo) ou trocar o tag para 'email'.",
+  "As barras de preview podem ler como skeleton de loading: manter hairline estatico (sem shimmer) e garantir que a mudanca para tinta solida em f16-f26 e definitiva, nao pulsante.",
+  "O fade aninhado (Plate abrindo enquanto row1/row2/row3 abrem por dentro) pode ficar leitoso por ~6 frames: manter o fade da Plate em 6 frames e o das rows em 6 frames, sem alongar.",
+  "A sombra 'lift' sangra ~30px fora de x 80..1000 com alfa suave; se o validador de palco B amostrar borda dura, trocar para shadow 'soft'.",
+  "O tag tem 134px de largura assumindo 26px de Hetrixo ExtraBold com letterSpacing 1.4 — medir no render e ajustar para 150px se estourar, sem mexer no centro y=294.",
+  "Nao deixar o ouro escapar: a varredura de luz e ink 5,5%, nunca ouro; o tag INBOX e o unico ouro do frame."
+ ]
+}

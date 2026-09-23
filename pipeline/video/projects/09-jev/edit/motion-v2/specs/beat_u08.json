@@ -1,0 +1,179 @@
+{
+ "uid": "u08",
+ "palco": "C",
+ "frames": 71,
+ "intent": "A decisão voltou: \"financeiro\" é o vencedor e a probabilidade é um número vivo que sobe e trava em 94%.",
+ "hero": "counter",
+ "objects": [
+  {
+   "drift": "spline única f0→f70 no centro da lavagem: (540,800) → f35 (572,782) → f70 (600,768); raio 560 → 600 → 640. Delta no tail: +28px x, -14px y, +40px raio, velocidade nunca zero",
+   "enter": "existe desde f0, opaco, sem entrada (base do palco C)",
+   "exit": "held to cut (o campo É o palco)",
+   "h": 1920,
+   "id": "bg",
+   "notes": "alpha 255 em todos os pixels do frame (palco C é opaco, sem transparência). Nada mais do fundo se move; a vida ambiente é só a lavagem.",
+   "role": "ambient",
+   "w": 1080,
+   "what": "creme opaco #F4EFE6 full frame + lavagem radial branca 7% (raio 560→640) por trás do card, dando profundidade sem virar gradiente colorido",
+   "x": 0,
+   "y": 0
+  },
+  {
+   "drift": "MESMA spline, sem parada: f0 {dy+64, s0.972, a0} → f7 {dy-7, s1.005, a1} → f14 {dy0, s1.000} → f40 {dy-9, s1.003} → f70 {dy-16, s1.006}. Tail = 16px para cima + 0.6% de escala em 56 frames, ainda com velocidade no corte",
+   "enter": "de baixo (é a decisão voltando): spline começa em f0 com dy +64, scale 0.972, opacity 0",
+   "exit": "held to cut (corte seco em f71 para o palco B do u09)",
+   "h": 680,
+   "id": "card",
+   "notes": "o overshoot é um NÓ explícito (f7, dy-7) dentro da spline monotônica, não uma curva de bounce separada. x/y = canto superior esquerdo. É a camada mid (parallax 1.0x).",
+   "role": "support",
+   "w": 920,
+   "what": "painel de produto branco #FFFFFF, raio 56, hairline 1px rgba(28,26,24,0.06), sombra 0 28px 64px rgba(28,26,24,0.10)",
+   "x": 80,
+   "y": 420
+  },
+  {
+   "drift": "MESMA spline: f6 {dx+28, dy+18, s0.90, a0} → f11 {dx-4, dy+3, s1.030, a1} → f17 {dx0, dy0, s1.000} → f42 {dx-5, dy-10, s1.005} → f70 {dx-8, dy-19, s1.008}. Tail = 8px esquerda, 19px cima, +0.8% (parallax 1.2x em relação ao card)",
+   "enter": "stagger +6 depois do card: f6 com dx +28, dy +18, scale 0.90, opacity 0 (entra da direita, de baixo)",
+   "exit": "held to cut",
+   "h": 76,
+   "id": "tag",
+   "notes": "largura real: texto 194px (5.397em a 36px) + 11×2.16px de tracking + 2×36px de padding = 292. Se o u01 renderizar os chips em caixa baixa, espelhar a caixa aqui (é a mesma palavra). Não é o chip branco do PIL: superfície de tinta cheia, é o único elemento de tinta sólida do frame.",
+   "role": "support",
+   "w": 292,
+   "what": "pill de vencedor: preenchimento tinta #1C1A18, raio 38, texto FINANCEIRO em Hetrixo ExtraBold 36px, tracking +0.06em, maiúsculas, creme #F4EFE6, centrado",
+   "x": 152,
+   "y": 492
+  },
+  {
+   "drift": "a MESMA spline carrega entrada + deriva (tail: 24px para cima, 10px para a esquerda, +0.6% escala, parallax 1.5x). Em paralelo, o valor é uma spline própria que só termina no último frame: f12:0 → f18:22 → f26:48 → f36:72 → f46:86 → f56:92 → f64:93.6 → f70:94",
+   "enter": "sobe e cresce em f12: spline {f12: dy+30, s0.86, a0} → {f16: dy-6, s1.010, a1} → {f21: dy0, s1.000} → {f45: dy-10, s1.003} → {f70: dy-24, s1.006}; dx 0 → f70 -10",
+   "exit": "held to cut",
+   "h": 204,
+   "id": "counter",
+   "notes": "HERÓI (maior, maior contraste, única unidade com ouro). Slots fixos porque a Hetrixo não tem tnum (sem FeatureRecord 'num' no GSUB): 187px = avanço do dígito mais largo (0,667em a 280px), glifo centrado no slot — o campo nunca muda de largura durante a contagem. Cap height 0.66em → topo dos dígitos em y=691, baseline 876. % a 128px: largura desenhada 114px (548→662). Blur de velocidade ligado ao valor (5px em f12 → 0 em f26) para a fase rápida não estroboscopar. x/y = canto do slot 1; y = topo do cap.",
+   "role": "hero",
+   "w": 510,
+   "what": "número vivo 94%: dois slots fixos de 187px (x=152 e x=339) com os dígitos em Hetrixo ExtraBold 280px tinta #1C1A18, baseline y=876; unidade % em ouro #F4B400 128px em x=548, mesma baseline; contagem 00→94",
+   "x": 152,
+   "y": 691
+  },
+  {
+   "drift": "MESMA spline: f22 → f70 dx -6, dy -20 (parallax 1.25x), scaleX fica em 1.000. Velocidade preservada no corte",
+   "enter": "entra com o grupo do número em f10: scaleX 0.97 com transform-origin à esquerda, opacity 0 → f17 {sX 1.004, a1} → f22 {sX 1.000} (wipe curto da esquerda)",
+   "exit": "held to cut",
+   "h": 20,
+   "id": "meterTrack",
+   "notes": "largura fixa de 776px é a régua do fill — nunca animar a largura do trilho.",
+   "role": "support",
+   "w": 776,
+   "what": "trilho do medidor: cápsula raio 10, h 20, preenchimento #5A544E a 12% (sobre branco)",
+   "x": 152,
+   "y": 1000
+  },
+  {
+   "drift": "a própria spline do valor É a deriva: a borda ainda anda 3px entre f64 e f70. Mesmo translate do trilho (dx -6, dy -20 até f70), para fill e trilho nunca desalinharem",
+   "enter": "parte do zero no MESMO frame do contador (f12, w=0) e cresce na spline do valor: f12:0 → f18:171 → f26:372 → f36:559 → f46:667 → f56:714 → f64:726 → f70:729,4 (94%)",
+   "exit": "held to cut (borda congela em 94% no último frame)",
+   "h": 20,
+   "id": "meterFill",
+   "notes": "contador e fill compartilham UM driver de valor (v). Nunca animar largura e número separados — é o que faz a leitura parecer 'cálculo acontecendo' e não duas animações empilhadas.",
+   "role": "support",
+   "w": 729,
+   "what": "preenchimento ouro #F4B400 do medidor, raio 10, h 20, largura = 7.76 × valor (0 → 729,4px em 94%); últimos 32px com realce branco 30% para a borda parecer viva",
+   "x": 152,
+   "y": 1000
+  }
+ ],
+ "internal_beats": [
+  {
+   "event": "card entra de baixo (dy+64, s0.972, a0) — a decisão volta",
+   "f": 0
+  },
+  {
+   "event": "tag do vencedor entra em stagger (dx+28, dy+18, s0.90)",
+   "f": 6
+  },
+  {
+   "event": "pico do overshoot do card (dy-7, s1.005)",
+   "f": 7
+  },
+  {
+   "event": "trilho do medidor entra em wipe da esquerda (scaleX 0.97)",
+   "f": 10
+  },
+  {
+   "event": "pico do overshoot da tag (s1.030)",
+   "f": 11
+  },
+  {
+   "event": "contador aparece (00) e o valor arranca: número e barra partem do zero no mesmo frame",
+   "f": 12
+  },
+  {
+   "event": "card assenta na geometria de repouso (y=420)",
+   "f": 14
+  },
+  {
+   "event": "tag assenta (fim do stagger)",
+   "f": 17
+  },
+  {
+   "event": "valor 22 / fill 171px",
+   "f": 18
+  },
+  {
+   "event": "contador em repouso geométrico (dy0, s1.000)",
+   "f": 21
+  },
+  {
+   "event": "trilho assenta (scaleX 1.000)",
+   "f": 22
+  },
+  {
+   "event": "valor 48 — metade do caminho; blur de velocidade já zerado",
+   "f": 26
+  },
+  {
+   "event": "valor 72",
+   "f": 36
+  },
+  {
+   "event": "valor 86 — desaceleração visível",
+   "f": 46
+  },
+  {
+   "event": "valor 92",
+   "f": 56
+  },
+  {
+   "event": "valor trava em 94: última troca de dígito, frame assentado para o corte",
+   "f": 64
+  },
+  {
+   "event": "último frame: sem ideia nova — fill ainda anda 3px, todas as derivas vivas",
+   "f": 70
+  }
+ ],
+ "sfx_cues": [
+  {
+   "kind": "riser",
+   "t_local_f": 12,
+   "why": "número e barra arrancam do zero ao mesmo tempo: a decisão está sendo calculada. Riser curto e baixo por baixo da voz, resolvido no lock do f64 — se brigar com a fala, cortar e ficar só com o click."
+  },
+  {
+   "kind": "click",
+   "t_local_f": 64,
+   "why": "o contador trava em 94: pontua o fim do único movimento longo do beat e deixa os 6 frames finais assentados antes do corte"
+  }
+ ],
+ "risks": [
+  "Contador zero-padded: entre f12 e f18 o campo mostra 03 / 07 / 11 / 15 por 1-2 frames. Lê como contador de UI, mas se no still de f6 parecer placar esportivo, trocar para valor inicial 2 dígitos (12) e tirar o pad.",
+  "Sem tnum na Hetrixo (confirmado: nenhum FeatureRecord 'num' no GSUB). Se o builder usar o avanço natural do glifo em vez dos slots fixos de 187px, o número muda de largura ao passar de 1 para 2 dígitos e a % pulsa — é o defeito número 1 deste beat.",
+  "Fase rápida da contagem (f12-f26, até 3,7 pontos por frame): sem o blur ligado à velocidade os dígitos estroboscopam em 30fps. Se o blur não for implementado, alongar a subida em ~8 frames.",
+  "Card branco em creme pode colapsar no look do PNG velho (chip branco estático) se a hairline e a sombra não forem renderizadas: sem elas o painel não flutua e não há camada mid.",
+  "A pill de tinta é a maior massa escura do frame e pode roubar o olho do número. Se no still ela ganhar a leitura, trocar o preenchimento para #5A544E ou reduzir para 64px de altura — o herói tem que continuar sendo o 94.",
+  "Spline monotônica não dá overshoot de mola: o overshoot está escrito como nó explícito (f7 dy-7 / f11 s1.030). Se o builder empilhar uma curva de bounce pronta por cima, volta o 'entrou e parou' que o MOTION-BRIEF proíbe.",
+  "O ouro aparece duas vezes (% e medidor) e a pill é tinta: se o % ou o fill saírem de #F4B400, o acento suja e o par com a pill deixa de ler como sistema.",
+  "Beat sem logo/brand PNG (plan.json: marca vazia) — logo-animation não se aplica aqui; nenhum asset de marca entra neste frame."
+ ]
+}

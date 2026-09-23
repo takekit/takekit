@@ -1,0 +1,105 @@
+{
+ "uid": "u04",
+ "palco": "B",
+ "frames": 32,
+ "intent": "O Jev existe e acabou de sair: um selo de produto recém-lançado, com brilho passando e o selo ainda respirando no corte.",
+ "hero": "lockup_jev — selo circular ink D380 (centro 540,372) com o mark JEV em creme dentro; íris, anel e shine compartilham o mesmo eixo",
+ "objects": [
+  {
+   "drift": "Mesma spline, sem segundo relógio: tail = curve([[9,0],[18,2,0.28],[32,1]]) somado à entrada (dStart = 0+18/2 = 9). Delta até o corte: dx +14, dy −10, dscale +0,012 → f12 (+1,2 / −0,8 / +0,10%) · f18 (+3,8 / −2,7 / +0,33%) · f24 (+7,9 / −5,6 / +0,67%) · f31 (+13,3 / −9,5 / +1,14%). No corte anda ≈1,1 px/frame em x: velocidade nunca zero, sem 'entrou e parou'.",
+   "enter": "f0: opacity 0, scale 0,92 (D 349,6), íris local r 0. Íris = clip circular no espaço local do grupo (feather 4px), r = 193·open(f) com open = curve([[0,0],[3,0,79],[6,1]]) → f1 51 · f2 103 · f3 144 · f4 166 · f5 176 · f6 186 (aberta; 3px de folga sobre r190, nunca corta depois). Opacidade = fadeIn(f,0,4) → 0,25 / 0,50 / 0,75 / 1,00 em f1-f4. Scale = 0,92 + 0,08·s(f), enter 18, s = curve([[0,0],[9,9,0,84],[18,1]]) → f0 0,920 · f4 0,950 · f6 0,964 · f9 0,983 · f12 0,9935 · f18 1,000. Técnica única de logo = mask wipe / reveal (a íris): o mark não tem motion próprio, nunca escala nem rotaciona — entra pela mesma íris e pelo mesmo transform do grupo (geometria de marca intacta).",
+   "exit": "Held to cut em f31 — o grupo ainda anda (D efetivo 384,3) e nunca sai do quadro.",
+   "h": 380,
+   "id": "lockup_jev",
+   "notes": "x,y = CENTRO do disco (não left/top). Disco em y 182-562: centro da faixa gráfica (y40-700). Centro exato em x é deliberado (beat concêntrico: íris, anel e shine no mesmo eixo) — não é descuido de regra dos terços.",
+   "role": "hero",
+   "w": 380,
+   "what": "Selo de produto: disco ink #1C1A18 D380 r190 + mark JEV (video/resolve/assets/brands/jev/logo.png) em creme #F4EFE6 no centro, caixa 320x320 (alfa do PNG como máscara, preenchida de creme; tinta visível ≈165x240). Sombra ALPHA.plateShadow, r44 blur44 α0,10, dentro do grupo. SEM tipografia neste beat — o nome em tipo é caption do Grok na faixa 700-960.",
+   "x": 540,
+   "y": 372
+  },
+  {
+   "drift": "Sem relógio próprio: vive no espaço local do grupo, então herda a deriva do selo. A varredura fecha em f24 — nada do shine existe depois.",
+   "enter": "f14: banda inteiramente fora do selo pela esquerda (centro local x −340; borda de ataque em −210, disco tem r190). sweep(f,14,10) linear → centro local x = −340 + 680·sweep: f15 −272 · f16 −204 · f18 −68 · f19,5 0 (pico no centro) · f21 +136 · f23 +272 · f24 +340 (borda de fuga em +470, fora). Cruzamento visível do disco ~f15,6 a ~f22,4, a 68 px/frame.",
+   "exit": "Sai pela direita do selo; em f24 já não há banda sobre o disco.",
+   "h": 460,
+   "id": "shine_sweep",
+   "notes": "x,y = centro do selo no meio da varredura (não centro da banda). w,h = tamanho da banda na varredura, medidos em espaço local.",
+   "role": "support",
+   "w": 260,
+   "what": "Banda de luz diagonal 260x460 px, −18°, clipada no disco do selo: gradiente transparente(0%) → branco #FFFFFF α0,42 (45%) → ouro #F4B400 α0,30 (62%) → transparente(100%). Mark em creme (não branco) para o sheen atravessar por cima dele sem 'abrir' em volta do desenho.",
+   "x": 540,
+   "y": 372
+  },
+  {
+   "drift": "D 380 → 600 (r 190 → 300) linear, 4,4 px/frame, de f6 a f31; opacidade 0,55 → 0,15 (linear) em f9-f31. No corte ainda expande a 4,4 px/frame — é o que mantém o frame vivo nos últimos 8f sem ideia nova.",
+   "enter": "f6: nasce sob o selo com D 380 (r 190) no mesmo frame em que a íris termina de abrir; opacity fadeIn(f,6,3) → 0 / 0,18 / 0,37 / 0,55 em f6-f9.",
+   "exit": "Held to cut; o anel morre com o alfa do overlay, não dentro do beat.",
+   "h": 380,
+   "id": "ring_pulse",
+   "notes": "x,y = centro (concêntrico ao selo). w,h = D na emissão, não no fim. y máximo alcançado 672 (28px de folga para a faixa de caption 700-960); x 240-840, dentro de 80-1000.",
+   "role": "ambient",
+   "w": 380,
+   "what": "Anel hairline ouro #F4B400 de 2px, concêntrico ao selo, atrás dele (z abaixo do disco): o 'ping' de produto recém-lançado emitido quando o selo fica formado.",
+   "x": 540,
+   "y": 372
+  }
+ ],
+ "internal_beats": [
+  {
+   "event": "corte entra: selo em scale 0,92 e opacity 0, íris fechada — frame vazio",
+   "f": 0
+  },
+  {
+   "event": "íris r 51 + opacity 0,25: o disco flori do centro",
+   "f": 1
+  },
+  {
+   "event": "opacity 1,0; selo visível a D 361 (scale 0,950)",
+   "f": 4
+  },
+  {
+   "event": "íris aberta (r 186); anel ouro emitido com D 380 e opacity 0",
+   "f": 6
+  },
+  {
+   "event": "começa a deriva (dStart = 9): a partir daqui a velocidade nunca mais cai — D 373,6",
+   "f": 9
+  },
+  {
+   "event": "shine entra pela esquerda do selo (centro local x −340)",
+   "f": 14
+  },
+  {
+   "event": "scale chega a 1,0 (D 380) com a deriva já em curso: sem tranco de 'entrou e parou'",
+   "f": 18
+  },
+  {
+   "event": "pico do shine no centro do selo",
+   "f": 19
+  },
+  {
+   "event": "shine encerrado fora do disco; últimos 8f só têm deriva + anel",
+   "f": 24
+  },
+  {
+   "event": "corte: selo em +13,3 x / −9,5 y / +1,14%, anel em D 600 ainda expandindo — nada congelado",
+   "f": 31
+  }
+ ],
+ "sfx_cues": [
+  {
+   "kind": "click",
+   "t_local_f": 6,
+   "why": "o anel ouro sai de baixo do selo no frame em que a íris termina de abrir: um tique curto pontua o 'acabou de sair'. Sem whoosh de corte (palco troca por corte seco) e sem hit no shine (BEHAVIORS: shine em logo é silencioso)."
+  }
+ ],
+ "risks": [
+  "Deriva do tail é sutil (13,3 px / 1,14% até o corte). Se o playback parecer parado nos últimos 8f, subir dx para 20 antes de mexer em qualquer outro número — o defeito é distância, não timing.",
+  "O click de f6 é o único SFX proposto. BEHAVIORS declara canvas B e shine silenciosos por padrão: se a mixagem com a voz ficar cheia, derrubar a cue inteira mantém o beat válido.",
+  "Mark em creme (não branco) para o shine ler por cima dele. Se o still de f6 mostrar contraste baixo, trocar por #FFFFFF e aceitar que o sheen passa 'em volta' do desenho em vez de por cima.",
+  "Não usar wordmark.png (a instrução do beat é mark, não wordmark de texto) e nada de tipografia no canvas: se a caption do Grok não disser 'Jev' na faixa 700-960, o nome não aparece em tipo neste beat — isso é decisão do outro agente, não deste.",
+  "O disco ink é a maior massa escura do vídeo em palco B. Conferir no playback que ele não compete com o card do host (y>960): a folga é de 398px, mas o contraste do selo é alto.",
+  "A íris r=193·open(f) tem de viver no espaço local do grupo (escala com a deriva); se for montada em espaço de frame, ela corta o disco de f18 em diante (scale > 1,0)."
+ ]
+}

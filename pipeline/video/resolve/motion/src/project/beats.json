@@ -1,0 +1,21 @@
+{
+  "project": "example",
+  "fps": 30,
+  "beats": [
+    {
+      "id": "u01",
+      "palco": "B",
+      "frames": 57,
+      "pattern": "chips-decision",
+      "eyebrow": "decide",
+      "inputs": {
+        "rows": [
+          {"label": "financeiro", "pct": 94, "winner": true},
+          {"label": "suporte", "pct": 4},
+          {"label": "humano", "pct": 2}
+        ],
+        "lockAt": 40
+      }
+    }
+  ]
+}
