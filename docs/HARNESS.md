@@ -15,7 +15,7 @@ This document covers **CI / coding-agent adapters**. Product layout and pipeline
 ```
 ┌─────────────┐     HTTP /api/*      ┌──────────────┐     spawn      ┌─────────────────┐
 │ harness UI  │ ───────────────────► │ takekit      │ ─────────────► │ Executor        │
-│ (threads +  │ ◄─────────────────── │ engine       │                │ (Claude Code…)  │
+│ (threads +  │ ◄─────────────────── │ engine       │                │ (Claude/Codex/…)│
 │  chat +     │   jobs / preview     │ ProjectRunner│                └────────┬────────┘
 │  preview)   │                      └──────────────┘                         │
 └─────────────┘                                                               ▼
@@ -74,14 +74,16 @@ If the binary is missing, the adapter **fails with a clear error** (no fake succ
 
 It does **not** reimplement FFmpeg/Resolve/captions scripts.
 
-## Future stubs
+## Pluggable executors
 
 | Adapter id | File | Status |
 |------------|------|--------|
+| `claude-code` | `adapters/claude-code.ts` | **Active** — spawns Claude Code CLI |
 | `codex` | `adapters/codex.ts` | Stub — throws “not implemented” |
 | `grok-build` | `adapters/grok-build.ts` | Stub — throws “not implemented” |
+| `opencode` | `adapters/opencode.ts` | Stub — throws “not implemented” |
 
-Same `Executor` contract; swap via registry / env when ready.
+Same `Executor` contract; swap via registry / `TAKEKIT_EXECUTOR` when ready.
 
 ## HTTP API (engine)
 
@@ -112,5 +114,5 @@ In-memory store only (scaffold). No secrets in repo — use env / `.env` locally
 - Discovering / attaching real export as `previewPath` after a run
 - Headless pipeline steps inside Takekit (today agent must drive `ai-content-agent` scripts)
 - Persistence (DB), multi-user, auth
-- Codex / Grok Build adapters
+- Codex / Grok Build / OpenCode adapters (stubs registered)
 - Parallel job scheduling / cancellation UX

@@ -2,6 +2,7 @@ import type { Executor } from "./types.js";
 import { ClaudeCodeExecutor } from "./claude-code.js";
 import { CodexExecutor } from "./codex.js";
 import { GrokBuildExecutor } from "./grok-build.js";
+import { OpenCodeExecutor } from "./opencode.js";
 
 const registry = new Map<string, Executor>();
 
@@ -12,6 +13,7 @@ function register(executor: Executor): void {
 register(new ClaudeCodeExecutor());
 register(new CodexExecutor());
 register(new GrokBuildExecutor());
+register(new OpenCodeExecutor());
 
 export function getExecutor(id?: string): Executor {
   const key = id ?? process.env.TAKEKIT_EXECUTOR ?? "claude-code";

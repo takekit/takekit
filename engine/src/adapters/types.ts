@@ -1,6 +1,6 @@
 /**
  * Executor — CI / agent adapter contract.
- * Claude Code is the first implementation; Codex and Grok Build are stubs.
+ * Claude Code is the first implementation; Codex, Grok Build, and OpenCode are stubs.
  */
 export interface ExecutorRequest {
   /** Absolute path to the video project directory */
