@@ -7,7 +7,7 @@ execução. Sugestões geradas são identificadas como sugestões, não ordens d
 ## Intenção e formato
 
 - Objetivo, público e mensagem central.
-- Formato editorial. Default do creator: explicação ilustrada / palco A/B/C (`DEFAULT.md`).
+- Formato editorial. Default do creator: explicação ilustrada / palco A/B/C (estilo `talking-head-motions`).
   YAP ou outro só se explícito. Não confundir com proporção 9:16.
 - Plataforma/proporção e duração pretendida, se houver restrição real.
 - Perfil de estilo: caminho do creator; exceções deste vídeo, se explícitas.

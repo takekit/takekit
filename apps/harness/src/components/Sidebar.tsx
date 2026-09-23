@@ -14,14 +14,17 @@ import {
   SquarePen,
   Trash2,
 } from "lucide-react";
-import { isThreadBusy, type Thread } from "../api/client";
+import { isThreadBusy, type StyleSummary, type Thread } from "../api/client";
 import { basename, relativeTime } from "../lib/format";
 import { useNow, usePersistentState } from "../lib/hooks";
 import { SETTINGS_SECTIONS, type SettingsSection } from "./SettingsView";
+import { StyleGallery } from "./StyleGallery";
 import { IconButton, Kbd, Popover } from "./ui";
 
 interface Props {
   threads: Thread[];
+  styles: StyleSummary[];
+  defaultStyleId: string | null;
   activeId: string | null;
   drafting: boolean;
   settingsOpen: boolean;
@@ -29,6 +32,8 @@ interface Props {
   engineOnline: boolean;
   onSelect: (id: string) => void;
   onNewThread: (projectPath?: string) => void;
+  /** New thread with this style picked. */
+  onPickStyle: (styleId: string) => void;
   onOpenSettings: () => void;
   onCloseSettings: () => void;
   onSettingsSection: (section: SettingsSection) => void;
@@ -64,6 +69,8 @@ function groupByProject(threads: Thread[]): Group[] {
 export const Sidebar = forwardRef<HTMLInputElement, Props>(function Sidebar(
   {
     threads,
+    styles,
+    defaultStyleId,
     activeId,
     drafting,
     settingsOpen,
@@ -71,6 +78,7 @@ export const Sidebar = forwardRef<HTMLInputElement, Props>(function Sidebar(
     engineOnline,
     onSelect,
     onNewThread,
+    onPickStyle,
     onOpenSettings,
     onCloseSettings,
     onSettingsSection,
@@ -175,6 +183,7 @@ export const Sidebar = forwardRef<HTMLInputElement, Props>(function Sidebar(
       </nav>
 
       <div className="sidebar-scroll">
+        {query ? null : <StyleGallery styles={styles} defaultStyleId={defaultStyleId} onPick={onPickStyle} />}
         {groups.map((group) => {
           const isCollapsed = !query && collapsed.includes(group.path);
           return (

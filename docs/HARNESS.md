@@ -122,9 +122,13 @@ model picker, Settings, `config.json` (`executorId` + `model` + `effort` + `skip
 | Method | Path | Purpose |
 |--------|------|---------|
 | GET | `/api/health` | Liveness + executor list + CLI help |
-| GET | `/api/projects` | Known projects (09-jev wired) |
+| GET | `/api/projects` | Projects in the projects root (`config.projectsRoot`) + next number |
+| POST | `/api/projects` | New project `{ name }` → `<projects root>/<NN>-<slug>` with input/, edit/, exports/ |
+| GET | `/api/styles` | Style Kit gallery (`styles/<id>/`) + default id |
+| GET | `/api/styles/:id` | Full style package (id or alias) |
+| GET | `/api/styles/:id/preview`, `/thumb` | Preview loop / its thumbnail |
 | GET | `/api/threads` | List threads |
-| POST | `/api/threads` | Create thread |
+| POST | `/api/threads` | Create thread (`projectPath` required; `styleId` must be in the gallery, omitted = default) |
 | GET | `/api/threads/:id` | Thread + messages |
 | POST | `/api/threads/:id/messages` | Post chat; queues job (`run` default true) |
 | GET | `/api/jobs/:id` | Job status / stdout / stderr |

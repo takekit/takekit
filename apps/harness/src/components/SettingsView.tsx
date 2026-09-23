@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Blocks, Check, Copy, Keyboard, Lock, Palette, Server, SlidersHorizontal, type LucideIcon } from "lucide-react";
 import { engineBaseUrl, getHealth, type EngineHealth } from "../api/client";
 import { tildify } from "../lib/format";
+import { IS_TAURI } from "../lib/platform";
 import { findModel } from "../lib/harness";
 import { useCopy } from "../lib/hooks";
 import { useHarnessSelection } from "../lib/useHarnessSelection";
@@ -55,6 +56,13 @@ export function SettingsView({ section, engine, engineOnline, onRetry, appearanc
       </div>
     </div>
   );
+}
+
+/** Finder folder dialog → config.projectsRoot. */
+async function chooseProjectsRoot(engine: EngineConfigState) {
+  const { open } = await import("@tauri-apps/plugin-dialog");
+  const chosen = await open({ directory: true, multiple: false, defaultPath: engine.data?.config.projectsRoot });
+  if (typeof chosen === "string") await engine.update({ projectsRoot: chosen });
 }
 
 /* ───────── Building blocks ───────── */
@@ -152,9 +160,25 @@ function Offline({ engineOnline, onRetry }: { engineOnline: boolean; onRetry: ()
 /* ───────── Sections ───────── */
 
 function General({ engine }: { engine: EngineConfigState }) {
-  const { locked } = engine;
+  const { data, locked } = engine;
   return (
     <>
+      {data ? (
+        <Group title="Projetos">
+          <Row
+            title="Pasta de projetos"
+            description="Cada projeto novo nasce aqui como uma pasta numerada: 01-nome, 02-nome…"
+            locked={locked.has("projectsRoot")}
+          >
+            <PathValue value={data.config.projectsRoot} />
+            {IS_TAURI && !locked.has("projectsRoot") ? (
+              <button type="button" className="btn btn-small" disabled={engine.saving} onClick={() => void chooseProjectsRoot(engine)}>
+                Selecionar…
+              </button>
+            ) : null}
+          </Row>
+        </Group>
+      ) : null}
       <Group title="Novas mensagens">
         <Row
           title="Modelo"
@@ -351,11 +375,6 @@ function Engine({
           <Row title="Pipeline" locked={locked.has("pipelineRoot")}>
             <PathValue value={data.config.pipelineRoot} />
           </Row>
-          {health ? (
-            <Row title="Projeto padrão">
-              <PathValue value={health.defaultProject} />
-            </Row>
-          ) : null}
           <Row title="Claude CLI" locked={locked.has("claudeBin")}>
             <PathValue value={data.config.claudeBin} />
           </Row>

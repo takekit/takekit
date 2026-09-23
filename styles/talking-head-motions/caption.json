@@ -1,0 +1,20 @@
+{
+  "_doc": "Legenda o vídeo inteiro no ataque da fala. Os motores leem os style JSON abaixo; aqui fica o resumo e onde mexer.",
+  "engine": "video/resolve/engine/captions_palco.py",
+  "drafter": "video/resolve/pipeline/caption_jobs.py",
+  "config": "video/resolve/styles/caption-style-config.json",
+  "styles": {
+    "face": "video/resolve/styles/palco-face.json",
+    "canvas": "video/resolve/styles/palco-canvas.json",
+    "hold": "video/resolve/styles/palco-hold.json"
+  },
+  "fonts": {
+    "sans": "assets/fonts/hetrixotypeface-extrabold.otf",
+    "script": "assets/fonts/fontspring-demo-alvitonovacomp-bolditalic.otf"
+  },
+  "words": { "min": 1, "max": 3 },
+  "timing": { "leadFrames": 2, "inFrames": 4, "outFrames": 3, "gapFrames": 8 },
+  "emphasis": "duas camadas, overlap por glyph bounds, sombra da frente na de trás; cor e profundidade por frase",
+  "hold": "só no CTA: comment cursiva atrás + keyword sans ouro radial na frente",
+  "never": ["tetris", "chroma", "glow", "duas captions concorrentes"]
+}

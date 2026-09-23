@@ -7,7 +7,7 @@ do escopo de aprovação é o registro: `python3 video/resolve/presets.py list [
 "aprovado" significa aprovado **no vídeo listado**, não uso universal — exceto o pacote
 do 09-jev (`caption/palco-*`, `layout/host-bottom-split`, `motion/canvas-kit`,
 `sfx/palco-cues`, `kit/brands`), que é o **default** da explicação ilustrada
-([DEFAULT.md](../DEFAULT.md)). "draft" permite experimentar no escopo pedido sem inventar
+([Talking Head + Motions](../../../../styles/talking-head-motions/prompt.md)). "draft" permite experimentar no escopo pedido sem inventar
 aprovação. Regras de promoção: [WORKFLOW.md](../WORKFLOW.md), §6.
 
 <!-- presets:start -->

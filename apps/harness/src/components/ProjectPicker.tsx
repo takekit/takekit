@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
-import { Check, ChevronRight, Folder, FolderCheck, FolderOpen, FolderPlus, FolderSearch, Laptop } from "lucide-react";
-import { listDir, makeDir, type DirListing } from "../api/client";
+import { Check, ChevronRight, Folder, FolderCheck, FolderCog, FolderOpen, FolderPlus, FolderSearch, Laptop } from "lucide-react";
+import { createProject, listDir, projectFolderName, projectSlug, type DirListing } from "../api/client";
 import { basename, tildify } from "../lib/format";
 import { IS_TAURI } from "../lib/platform";
 import { Palette, PaletteFooter, PaletteRow, PaletteSearch } from "./Palette";
@@ -22,19 +22,28 @@ interface Item {
   section?: string;
 }
 
-/** Folder picker for the thread's project: known projects, a disk browser and "new project". */
+/**
+ * Folder picker for the thread's project: known projects, a disk browser, "new project"
+ * (always <projects root>/<NN>-name) and the choice of that projects root.
+ */
 export function ProjectPicker({
   current,
   projects,
   projectsRoot,
+  nextNumber,
   onSelect,
+  onChangeRoot,
   onClose,
 }: {
   current: string;
   projects: ProjectOption[];
-  /** Where "Novo projeto" creates folders (the pipeline's video/projects). */
+  /** Where "Novo projeto" creates folders (config.projectsRoot). */
   projectsRoot: string;
+  /** Number the next project folder gets. */
+  nextNumber: number;
   onSelect: (path: string) => void;
+  /** Makes `path` the projects root (engine config). */
+  onChangeRoot: (path: string) => Promise<void>;
   onClose: () => void;
 }) {
   const [view, setView] = useState<View>({ kind: "root" });
@@ -72,12 +81,23 @@ export function ProjectPicker({
     onClose();
   };
 
-  async function create(parent: string, name: string) {
+  async function create(name: string) {
     try {
-      const { path } = await makeDir(parent, name);
+      const { path } = await createProject(name);
       pick(path);
     } catch (err) {
       setError(err instanceof Error ? err.message.replace(/^\d+: /, "") : String(err));
+    }
+  }
+
+  async function chooseRoot() {
+    try {
+      const { open } = await import("@tauri-apps/plugin-dialog");
+      const chosen = await open({ directory: true, multiple: false, defaultPath: projectsRoot });
+      if (typeof chosen === "string") await onChangeRoot(chosen);
+      inputRef.current?.focus();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
     }
   }
 
@@ -133,12 +153,20 @@ export function ProjectPicker({
           id: "create",
           icon: <FolderPlus size={16} strokeWidth={1.75} />,
           title: "Novo projeto",
-          subtitle: `Cria uma pasta em ${tildify(projectsRoot)}`,
+          subtitle: `Cria ${projectFolderName(nextNumber, "nome")} em ${tildify(projectsRoot)}`,
           run: () => go({ kind: "create" }),
           section: "Origens",
         },
       ];
       if (IS_TAURI) {
+        sources.push({
+          id: "root",
+          icon: <FolderCog size={16} strokeWidth={1.75} />,
+          title: "Selecionar pasta de projetos…",
+          subtitle: `Onde os projetos novos nascem. Atual: ${tildify(projectsRoot)}`,
+          run: () => void chooseRoot(),
+          section: "Origens",
+        });
         sources.push({
           id: "finder",
           icon: <Laptop size={16} strokeWidth={1.75} />,
@@ -152,18 +180,18 @@ export function ProjectPicker({
     }
 
     if (view.kind === "create") {
-      const name = query.trim();
-      return name
-        ? [
-            {
-              id: "create-go",
-              icon: <FolderPlus size={16} strokeWidth={1.75} />,
-              title: `Criar “${name}”`,
-              subtitle: `${tildify(projectsRoot)}/${name}`,
-              run: () => void create(projectsRoot, name),
-            },
-          ]
-        : [];
+      const slug = projectSlug(query);
+      if (!slug) return [];
+      const folder = projectFolderName(nextNumber, slug);
+      return [
+        {
+          id: "create-go",
+          icon: <FolderPlus size={16} strokeWidth={1.75} />,
+          title: `Criar ${folder}`,
+          subtitle: `em ${tildify(projectsRoot)}`,
+          run: () => void create(query),
+        },
+      ];
     }
 
     if (!listing) return [];
@@ -197,16 +225,6 @@ export function ProjectPicker({
       });
     }
     const name = query.trim();
-    if (name && !/^(~|\/)/.test(name) && !listing.entries.some((e) => norm(e.name) === norm(name))) {
-      out.push({
-        id: "mkdir",
-        icon: <FolderPlus size={16} strokeWidth={1.75} />,
-        title: `Criar pasta “${name}”`,
-        subtitle: `em ${tildify(here)}`,
-        run: () => void create(here, name),
-        use: () => void create(here, name),
-      });
-    }
     if (q) out.push(useHere);
     if (/^(~|\/)/.test(name)) {
       out.unshift({
@@ -217,7 +235,7 @@ export function ProjectPicker({
       });
     }
     return out;
-  }, [view, listing, query, projects, current, projectsRoot]);
+  }, [view, listing, query, projects, current, projectsRoot, nextNumber]);
 
   const active = Math.min(cursor, Math.max(0, items.length - 1));
 
@@ -306,10 +324,11 @@ export function ProjectPicker({
         {view.kind === "browse" && listing && !listing.entries.length && !query ? (
           <p className="palette-empty">Sem subpastas aqui.</p>
         ) : null}
-        {view.kind === "create" && !query.trim() ? (
+        {view.kind === "create" && !projectSlug(query) ? (
           <p className="palette-empty">
-            A pasta nasce em {tildify(projectsRoot)}. Na primeira mensagem o engine cria input/, edit/, exports/ e
-            briefing.md dentro dela.
+            {query.trim()
+              ? "Use letras ou números no nome."
+              : `O projeto nasce em ${tildify(projectsRoot)} como ${projectFolderName(nextNumber, "nome")}, já com input/, edit/, exports/ e briefing.md.`}
           </p>
         ) : null}
         {error ? <p className="palette-empty is-error">{error}</p> : null}

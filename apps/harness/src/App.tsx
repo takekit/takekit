@@ -5,11 +5,14 @@ import {
   getThread,
   isThreadBusy,
   listProjects,
+  listStyles,
   listThreads,
   postMessage,
   deleteProject,
   setThreadArchived,
+  styleName,
   type ProjectSummary,
+  type StyleSummary,
   type Thread,
 } from "./api/client";
 import { basename, tildify, titleFromPrompt } from "./lib/format";
@@ -37,10 +40,10 @@ const PANEL_W = { min: 300, initial: 380, max: 4000 };
 /** Chat column never gets squeezed below this by the side panels. */
 const MIN_MAIN_W = 380;
 const OFFLINE_RETRY_MS = 5000;
-const EMPTY_DRAFT: Draft = { projectPath: "", inputVideoPaths: [] };
+const EMPTY_DRAFT: Draft = { projectPath: "", inputVideoPaths: [], styleId: "" };
 // The agent tells a question from an edit request on its own; starters show both.
 const SUGGESTIONS = [
-  "Edita esse Short com o estilo 09-jev",
+  "Edita esse Short do bruto ao export",
   "Corta os silêncios e deixa o ritmo mais rápido",
   "O que dá pra melhorar no ritmo desse vídeo?",
 ];
@@ -54,7 +57,11 @@ export default function App() {
   const [settingsSection, setSettingsSection] = useState<SettingsSection>("general");
   const [glass, setGlass] = usePersistentState("takekit.glass", true);
   const [ambient, setAmbient] = usePersistentState("takekit.ambient", true);
-  const [draft, setDraft] = useState<Draft>(EMPTY_DRAFT);
+  // A new thread starts in the last project used (no fixed "default project").
+  const [lastProject, setLastProject] = usePersistentState("takekit.lastProject", "");
+  const [draft, setDraft] = useState<Draft>(() => ({ ...EMPTY_DRAFT, projectPath: lastProject }));
+  // Bumped when sending needs a project first; the draft tray opens the picker.
+  const [askProject, setAskProject] = useState(0);
   const [sidebarOpen, setSidebarOpen] = usePersistentState("takekit.sidebarOpen", true);
   const [panelOpen, setPanelOpen] = usePersistentState("takekit.previewOpen", true);
   const [sidebarWidth, setSidebarWidth] = usePersistentState("takekit.sidebarWidth", SIDEBAR_W.initial);
@@ -74,7 +81,14 @@ export default function App() {
     busy: boolean;
     error: string | null;
   } | null>(null);
-  const [projects, setProjects] = useState<ProjectSummary[]>([]);
+  // Projects in the projects root (config.projectsRoot) + the number the next one gets.
+  const [projects, setProjects] = useState<{ root: string; nextNumber: number; list: ProjectSummary[] }>({
+    root: "",
+    nextNumber: 1,
+    list: [],
+  });
+  // Style Kit gallery (styles/<id>/ on the engine).
+  const [styles, setStyles] = useState<{ list: StyleSummary[]; defaultId: string | null }>({ list: [], defaultId: null });
   // Timeline annotations waiting in each thread's composer.
   const [annotationsBy, setAnnotationsBy] = useState<Record<string, TimelineAnnotation[]>>({});
   const searchRef = useRef<HTMLInputElement>(null);
@@ -101,6 +115,23 @@ export default function App() {
     );
   }, []);
 
+  const reloadProjects = useCallback(async () => {
+    try {
+      const res = await listProjects();
+      setProjects({ root: res.root, nextNumber: res.nextNumber, list: res.projects });
+    } catch {
+      setProjects((prev) => ({ ...prev, list: [] }));
+    }
+  }, []);
+
+  const changeProjectsRoot = useCallback(
+    async (path: string) => {
+      await engine.update({ projectsRoot: path });
+      await reloadProjects();
+    },
+    [engine, reloadProjects],
+  );
+
   const refresh = useCallback(async () => {
     try {
       const { threads: remote } = await listThreads();
@@ -108,9 +139,10 @@ export default function App() {
       setEngineOnline(true);
       setError(null);
       setActiveId((prev) => (prev && remote.some((t) => t.id === prev) ? prev : null));
-      listProjects()
-        .then((res) => setProjects(res.projects))
-        .catch(() => setProjects([]));
+      void reloadProjects();
+      listStyles()
+        .then((res) => setStyles({ list: res.styles, defaultId: res.defaultStyleId }))
+        .catch(() => setStyles({ list: [], defaultId: null }));
     } catch (err) {
       // Keep whatever was loaded last; the sidebar and toast show the engine is down.
       setEngineOnline(false);
@@ -118,7 +150,7 @@ export default function App() {
     } finally {
       setConnecting(false);
     }
-  }, [setActiveId]);
+  }, [setActiveId, reloadProjects]);
 
   useEffect(() => {
     void refresh();
@@ -157,13 +189,12 @@ export default function App() {
   }, [active, setPanelOpen]);
 
   const startThread = useCallback(
-    (projectPath?: string) => {
-      const defaultPath = projects[0]?.path;
+    (projectPath?: string, styleId = "") => {
       setView("chat");
       setActiveId(null);
-      setDraft({ projectPath: projectPath && projectPath !== defaultPath ? projectPath : "", inputVideoPaths: [] });
+      setDraft({ projectPath: projectPath ?? lastProject, inputVideoPaths: [], styleId });
     },
-    [projects, setActiveId],
+    [lastProject, setActiveId],
   );
 
   const archive = useCallback(
@@ -188,7 +219,9 @@ export default function App() {
       await deleteProject(path, trash);
       setThreads((prev) => prev.filter((t) => t.projectPath !== path));
       if (active?.projectPath === path) setActiveId(null);
-      setDraft((d) => (d.projectPath === path ? EMPTY_DRAFT : d));
+      setDraft((d) => (d.projectPath === path ? { ...d, projectPath: "", inputVideoPaths: [] } : d));
+      if (lastProject === path) setLastProject("");
+      void reloadProjects();
       setDeleting(null);
     } catch (err) {
       setDeleting({ ...deleting, busy: false, error: message(err).replace(/^\d+: /, "") });
@@ -257,6 +290,10 @@ export default function App() {
     const block = serializeAnnotations(attached);
     const text = typed || (attached.length ? "Aplique as anotações da timeline." : "");
     const content = block ? `${text}\n\n${block}` : text;
+    if (!active && !draft.projectPath) {
+      setAskProject((n) => n + 1);
+      return false;
+    }
     let target = active;
     setSending(true);
     setError(null);
@@ -264,12 +301,14 @@ export default function App() {
       if (!target) {
         const { thread } = await createThread({
           title: titleFromPrompt(content),
-          projectPath: draft.projectPath || undefined,
+          projectPath: draft.projectPath,
           inputVideoPaths: draft.inputVideoPaths.length ? draft.inputVideoPaths : undefined,
+          styleId: draft.styleId || undefined,
         });
         target = thread;
         upsertThread(thread);
         setActiveId(thread.id);
+        setLastProject(thread.projectPath);
         setDraft(EMPTY_DRAFT);
       }
       setPending({ threadId: target.id, content });
@@ -308,7 +347,7 @@ export default function App() {
 
   const projectOptions = useMemo<ProjectOption[]>(() => {
     const seen = new Map<string, ProjectOption>();
-    for (const p of projects) seen.set(p.path, { path: p.path, name: basename(p.path) });
+    for (const p of projects.list) seen.set(p.path, { path: p.path, name: p.name });
     for (const t of threads) {
       if (!seen.has(t.projectPath)) {
         seen.set(t.projectPath, { path: t.projectPath, name: basename(t.projectPath) });
@@ -317,8 +356,7 @@ export default function App() {
     return [...seen.values()];
   }, [projects, threads]);
 
-  const defaultPath = projects[0]?.path ?? "";
-  const defaultStyle = projects[0]?.styleId ?? "09-jev";
+  const defaultStyle = styles.defaultId ?? styles.list[0]?.id ?? "";
 
   const composer = (hero: boolean) => (
     <Composer
@@ -345,14 +383,22 @@ export default function App() {
       tray={
         hero ? (
           active ? (
-            <ThreadTray thread={active} />
+            <ThreadTray thread={active} styles={styles.list} />
           ) : (
             <DraftTray
               draft={draft}
               projects={projectOptions}
-              defaultPath={defaultPath}
-              styleId={defaultStyle}
-              onChange={setDraft}
+              projectsRoot={projects.root}
+              nextNumber={projects.nextNumber}
+              askProject={askProject}
+              styles={styles.list}
+              defaultStyleId={defaultStyle}
+              onChange={(next) => {
+                // A project picked (or just created) refreshes the list and the next number.
+                if (next.projectPath !== draft.projectPath) void reloadProjects();
+                setDraft(next);
+              }}
+              onChangeRoot={changeProjectsRoot}
             />
           )
         ) : undefined
@@ -383,7 +429,7 @@ export default function App() {
       />
     );
   } else {
-    const project = basename(active?.projectPath ?? (draft.projectPath || defaultPath)) || null;
+    const project = basename(active?.projectPath ?? draft.projectPath) || null;
     body = <Hero project={project}>{composer(true)}</Hero>;
   }
 
@@ -402,6 +448,8 @@ export default function App() {
         <Sidebar
           ref={searchRef}
           threads={threads}
+          styles={styles.list}
+          defaultStyleId={styles.defaultId}
           activeId={active?.id ?? null}
           drafting={view === "chat" && !active}
           settingsOpen={view === "settings"}
@@ -411,6 +459,7 @@ export default function App() {
           engineOnline={engineOnline}
           onSelect={selectThread}
           onNewThread={startThread}
+          onPickStyle={(styleId) => startThread(draft.projectPath || undefined, styleId === defaultStyle ? "" : styleId)}
           onOpenSettings={() => setView((v) => (v === "settings" ? "chat" : "settings"))}
           onRetry={() => void refresh()}
           onCollapse={() => setSidebarOpen(false)}
@@ -480,7 +529,6 @@ export default function App() {
           <DeleteProjectBody
             deleting={deleting}
             threadCount={threads.filter((t) => t.projectPath === deleting.path).length}
-            isDefault={deleting.path === defaultPath}
             onTrash={(trash) => setDeleting({ ...deleting, trash, error: null })}
           />
         </ConfirmDialog>
@@ -489,6 +537,7 @@ export default function App() {
       {showPanel ? (
         <PreviewPanel
           thread={active}
+          styleName={active ? styleName(styles.list, active.styleId) : ""}
           onClose={() => setPanelOpen(false)}
           annotations={activeAnnotations}
           onAnnotate={
@@ -546,12 +595,10 @@ function ThreadBadge({ thread, sending }: { thread: Thread; sending: boolean }) 
 function DeleteProjectBody({
   deleting,
   threadCount,
-  isDefault,
   onTrash,
 }: {
   deleting: { path: string; trash: boolean; busy: boolean };
   threadCount: number;
-  isDefault: boolean;
   onTrash: (trash: boolean) => void;
 }) {
   return (
@@ -561,20 +608,16 @@ function DeleteProjectBody({
         {threadCount === 1 ? "sai" : "saem"} do Takekit, com o histórico dos jobs.
         {deleting.trash ? null : " Os arquivos continuam na pasta."}
       </p>
-      <label className={`confirm-check${isDefault ? " is-disabled" : ""}`}>
+      <label className="confirm-check">
         <input
           type="checkbox"
           checked={deleting.trash}
-          disabled={isDefault || deleting.busy}
+          disabled={deleting.busy}
           onChange={(e) => onTrash(e.target.checked)}
         />
         <span>
           Também mover a pasta para a Lixeira
-          <small>
-            {isDefault
-              ? "É o projeto padrão do engine: a pasta fica."
-              : "Vídeos, renders e exports vão juntos. Dá pra recuperar pela Lixeira do macOS."}
-          </small>
+          <small>Vídeos, renders e exports vão juntos. Dá pra recuperar pela Lixeira do macOS.</small>
         </span>
       </label>
       <code className="confirm-path">{tildify(deleting.path)}</code>

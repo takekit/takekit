@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronDown, Film, Folder, Palette as PaletteIcon, X } from "lucide-react";
-import { threadInputs, type Thread } from "../api/client";
+import { styleName, threadInputs, type StyleSummary, type Thread } from "../api/client";
 import { basename } from "../lib/format";
 import { ProjectPicker } from "./ProjectPicker";
+import { StylePicker } from "./StyleGallery";
 import { VideoPicker } from "./VideoPicker";
 
 export interface Draft {
+  /** "" = no project yet (the thread can't start without one). */
   projectPath: string;
   /** Footage for the new thread, in pick order. */
   inputVideoPaths: string[];
+  /** Style Kit id; "" = the gallery default. */
+  styleId: string;
 }
 
 export interface ProjectOption {
@@ -23,32 +27,43 @@ const videosLabel = (paths: string[]) =>
 export function DraftTray({
   draft,
   projects,
-  defaultPath,
-  styleId,
+  projectsRoot,
+  nextNumber,
+  askProject,
+  styles,
+  defaultStyleId,
   onChange,
+  onChangeRoot,
 }: {
   draft: Draft;
   projects: ProjectOption[];
-  defaultPath: string;
-  styleId: string;
+  projectsRoot: string;
+  nextNumber: number;
+  /** Bumped when a send needs a project first: opens the project picker. */
+  askProject: number;
+  styles: StyleSummary[];
+  defaultStyleId: string;
   onChange: (draft: Draft) => void;
+  onChangeRoot: (path: string) => Promise<void>;
 }) {
   const [picker, setPicker] = useState<"project" | "videos" | null>(null);
-  const projectPath = draft.projectPath || defaultPath;
+  const projectPath = draft.projectPath;
   const videos = draft.inputVideoPaths;
-  const projectsRoot = parentOf(defaultPath || projectPath);
+  useEffect(() => {
+    if (askProject) setPicker("project");
+  }, [askProject]);
 
   return (
     <>
       <button
         type="button"
-        className={`chip${picker === "project" ? " is-open" : ""}`}
+        className={`chip${picker === "project" ? " is-open" : ""}${projectPath ? "" : " is-empty"}`}
         onClick={() => setPicker("project")}
-        title={projectPath || "Projeto padrão do engine"}
+        title={projectPath || "Escolha ou crie o projeto da thread"}
         aria-haspopup="dialog"
       >
         <Folder size={13} strokeWidth={1.75} />
-        <span>{basename(projectPath) || "Projeto padrão"}</span>
+        <span>{basename(projectPath) || "Escolher projeto"}</span>
         <ChevronDown size={11} strokeWidth={2} className="chip-caret" />
       </button>
 
@@ -57,6 +72,7 @@ export function DraftTray({
           type="button"
           className={`chip${picker === "videos" ? " is-open" : ""}${videos.length ? "" : " is-empty"}`}
           onClick={() => setPicker("videos")}
+          disabled={!projectPath}
           title={videos.length ? videos.join("\n") : "Vídeos brutos de entrada (opcional)"}
           aria-haspopup="dialog"
         >
@@ -76,25 +92,28 @@ export function DraftTray({
         ) : null}
       </span>
 
-      <span className="chip is-static" title="Estilo aplicado pelo pipeline">
-        <PaletteIcon size={13} strokeWidth={1.75} />
-        <span>{styleId}</span>
-      </span>
+      <StylePicker
+        styles={styles}
+        value={draft.styleId || defaultStyleId}
+        onChange={(styleId) => onChange({ ...draft, styleId: styleId === defaultStyleId ? "" : styleId })}
+      />
 
       {picker === "project" ? (
         <ProjectPicker
           current={projectPath}
           projects={projects}
           projectsRoot={projectsRoot}
+          nextNumber={nextNumber}
+          onChangeRoot={onChangeRoot}
           onSelect={(path) => {
             if (path === projectPath) return;
             // Footage belongs to a project: a new folder starts with none picked.
-            onChange({ projectPath: path === defaultPath ? "" : path, inputVideoPaths: [] });
+            onChange({ ...draft, projectPath: path, inputVideoPaths: [] });
           }}
           onClose={() => setPicker(null)}
         />
       ) : null}
-      {picker === "videos" ? (
+      {picker === "videos" && projectPath ? (
         <VideoPicker
           projectPath={projectPath}
           selected={videos}
@@ -107,7 +126,7 @@ export function DraftTray({
 }
 
 /** Read-only context for an existing thread. */
-export function ThreadTray({ thread }: { thread: Thread }) {
+export function ThreadTray({ thread, styles }: { thread: Thread; styles: StyleSummary[] }) {
   const inputs = threadInputs(thread);
   return (
     <>
@@ -121,15 +140,10 @@ export function ThreadTray({ thread }: { thread: Thread }) {
           <span>{videosLabel(inputs)}</span>
         </span>
       ) : null}
-      <span className="chip is-static" title="Estilo aplicado pelo pipeline">
+      <span className="chip is-static" title="Estilo da thread">
         <PaletteIcon size={13} strokeWidth={1.75} />
-        <span>{thread.styleId}</span>
+        <span>{styleName(styles, thread.styleId)}</span>
       </span>
     </>
   );
-}
-
-function parentOf(path: string): string {
-  const cut = path.replace(/\/+$/, "").lastIndexOf("/");
-  return cut > 0 ? path.slice(0, cut) : "/";
 }

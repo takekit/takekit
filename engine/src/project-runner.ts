@@ -15,6 +15,7 @@ import {
   upsertActivity,
   appendMessage,
 } from "./store.js";
+import { getStyle, type StyleKit } from "./styles.js";
 import type { ActivityItem, ActivityUpdate } from "./activity.js";
 import type { Thread } from "./types.js";
 
@@ -36,7 +37,7 @@ export function cancelJob(jobId: string): boolean {
  * Does NOT reimplement the editor-reels pipeline (headless: FFmpeg + RVM).
  * It only:
  *   1) Validates project + pipeline paths exist
- *   2) Builds a prompt that points the agent at editor-reels / DEFAULT 09-jev
+ *   2) Builds a prompt that points the agent at editor-reels + the thread's Style Kit package
  *   3) Spawns the configured CI adapter (default: Claude Code, model opus)
  *   4) Discovers the exported mp4 (TAKEKIT_PREVIEW= marker, else newest exports/**.mp4)
  *
@@ -45,8 +46,8 @@ export function cancelJob(jobId: string): boolean {
  *
  * Reference paths (read-only wiring):
  *   skill:     .agents/skills/editor-reels/SKILL.md
- *   default:   video/resolve/DEFAULT.md (09-jev)
- *   project:   video/projects/09-jev (guinea pig)
+ *   style:     styles/<styleId>/ (prompt.md goes into the prompt)
+ *   project:   the thread's folder (new ones: <projects root>/NN-name)
  */
 export async function runProjectJob(jobId: string): Promise<void> {
   const job = getJob(jobId);
@@ -126,12 +127,18 @@ async function runJob(jobId: string, signal: AbortSignal): Promise<void> {
     return;
   }
 
+  const style = getStyle(thread?.styleId);
+  if (!style) {
+    failJob(jobId, `Estilo "${thread?.styleId ?? ""}" não está na galeria (styles/). Crie o pacote ou troque o estilo da thread.`);
+    return;
+  }
+
   const executor = getExecutor(config.executorId);
   const composedPrompt = composeAgentPrompt({
     pipelineRoot,
     projectPath: job.projectPath,
     inputVideoPaths: thread?.inputVideoPaths ?? [],
-    styleId: thread?.styleId ?? "09-jev",
+    style,
     userPrompt: job.prompt,
     history: thread ? conversationSoFar(thread, jobId) : [],
   });
@@ -285,22 +292,26 @@ function composeAgentPrompt(input: {
   pipelineRoot: string;
   projectPath: string;
   inputVideoPaths: string[];
-  styleId: string;
+  style: StyleKit;
   userPrompt: string;
   history: Array<{ role: "user" | "assistant"; text: string }>;
 }): string {
   const context = [
     `ROOT do pipeline (cwd): ${input.pipelineRoot}`,
     "Skill principal: .agents/skills/editor-reels/SKILL.md",
-    "Estilo travado: video/resolve/DEFAULT.md (09-jev)",
+    `Estilo da thread: ${input.style.name} (id ${input.style.id}). Pacote Style Kit: ${input.style.dir}/`,
+    "  prompt.md (abaixo), storyboard.md, stage-scheme.json, caption.json, cuts.json, sound-effects.json,",
+    "  transitions.json, engine-scripts.json. O pacote substitui o default citado na skill.",
     "Workflow: video/resolve/WORKFLOW.md",
     "Render sem Resolve: video/headless/README.md (Python: .venv/bin/python; trim.py → palco_b.py → compose.py)",
     `Projeto de vídeo: ${input.projectPath}`,
     ...(input.inputVideoPaths.length > 1
       ? ["Vídeos de entrada (na ordem escolhida):", ...input.inputVideoPaths.map((p, i) => `  ${i + 1}) ${p}`)]
       : [`Vídeo de entrada: ${input.inputVideoPaths[0] ?? "(não informado; procure em <projeto>/input/)"}`]),
-    `Estilo: ${input.styleId}`,
   ];
+  const styleBrief = input.style.promptMarkdown
+    ? ["", `Briefing do estilo (${input.style.id}/prompt.md):`, "<style-brief>", input.style.promptMarkdown, "</style-brief>"]
+    : [];
   const history = input.history.length
     ? [
         "",
@@ -326,6 +337,7 @@ function composeAgentPrompt(input: {
     "Você é o editor do Takekit. Trabalhe APENAS via as skills e scripts do pipeline.",
     "",
     ...context,
+    ...styleBrief,
     ...history,
     "",
     "Pedido do usuário:",

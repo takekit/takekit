@@ -1,0 +1,23 @@
+{
+  "_doc": "SFX por cue do motion: cada beat marca { uid, kind, t_local_f } em edit/motion/sfx-cues.json e map_sfx_cues.py troca o kind pelo id do catálogo. Ganho relativo à voz por categoria em rel_db do catálogo. Paths de assets relativos a video/resolve/.",
+  "mapper": "video/resolve/pipeline/map_sfx_cues.py",
+  "prep": "video/resolve/engine/sfx_prep.py",
+  "catalog": "assets/sfx/catalog.json",
+  "kindToCatalogId": {
+    "snap": "snap/snap_finger",
+    "click": "foley/mixkit_click_1",
+    "whoosh": "whoosh/whoosh_swoosh_01",
+    "riser": "riser/riser_metallic",
+    "reveal": "reveal/reveal_logo_element_01"
+  },
+  "music": {
+    "file": "assets/music/arpmedia-trap-trap-hype-569432.mp3",
+    "gainDb": -25,
+    "duck": true
+  },
+  "rules": [
+    "SFX nunca mascara a narração.",
+    "Só com evento visual: o som vem de um cue do motion, não de ouvido.",
+    "Filmburn traz o próprio som (ver transitions.json)."
+  ]
+}

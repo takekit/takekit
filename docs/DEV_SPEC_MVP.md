@@ -84,7 +84,7 @@ Body proposto:
 {
   "title": "Short cobaia 01",
   "projectPath": "/abs/path/para/projeto",
-  "styleId": "09-jev",
+  "styleId": "talking-head-motions",
   "inputVideoPath": "/abs/path/para/entrada.mp4"
 }
 ```
@@ -103,7 +103,7 @@ Body proposto:
 
 Regras:
 
-- `styleId` default `"09-jev"` → aponta semanticamente pra `pipeline/video/resolve/DEFAULT.md`.
+- `styleId` default `"talking-head-motions"` (alias antigo `"09-jev"`) → pacote Style Kit `styles/talking-head-motions/` ([spec](style-kit/SPEC.md)).
 - `projectPath` deve ser acessível ao Claude (`--add-dir`).
 - Se `inputVideoPath` vier, copiar ou registrar no estado da thread; incluir no prompt do runner.
 
@@ -130,7 +130,7 @@ Você é o editor do Takekit. Trabalhe APENAS via as skills e scripts do pipelin
 
 ROOT do pipeline (cwd): <TAKEKIT_PIPELINE_ROOT>
 Skill principal: .agents/skills/editor-reels/SKILL.md
-Estilo travado: video/resolve/DEFAULT.md (09-jev)
+Estilo da thread: Talking Head + Motions (id talking-head-motions). Pacote Style Kit: <repo>/styles/talking-head-motions/
 Workflow: video/resolve/WORKFLOW.md
 Projeto de vídeo: <projectPath>
 Vídeo de entrada: <inputVideoPath>
@@ -232,7 +232,7 @@ Override: `TAKEKIT_DATA_DIR`.
   "id": "thr_...",
   "title": "Short cobaia 01",
   "projectPath": "/abs/...",
-  "styleId": "09-jev",
+  "styleId": "talking-head-motions",
   "briefing": "",
   "inputVideoPath": "/abs/.../source.mp4",
   "previewPath": "/abs/.../exports/final.mp4",
@@ -267,6 +267,7 @@ Override: `TAKEKIT_DATA_DIR`.
   "executorId": "claude-code",
   "model": "opus",
   "pipelineRoot": null,
+  "projectsRoot": null,
   "claudeBin": null,
   "skipClaudePerms": false
 }
@@ -281,6 +282,7 @@ Precedência: **env > config.json > defaults**.
 | executorId | `TAKEKIT_EXECUTOR` | `claude-code` |
 | model | `TAKEKIT_MODEL` | `opus` |
 | pipelineRoot | `TAKEKIT_PIPELINE_ROOT` | `<repo>/pipeline` |
+| projectsRoot | `TAKEKIT_PROJECTS_ROOT` | `<pipelineRoot>/video/projects` (projeto novo = `NN-nome` aqui; escolhido no app) |
 | claudeBin | `CLAUDE_BIN` | `claude` |
 | skipClaudePerms | `TAKEKIT_CLAUDE_SKIP_PERMS=1` | false |
 

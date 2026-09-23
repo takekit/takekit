@@ -1,0 +1,16 @@
+{
+  "_doc": "Corte seco por padrão. Filmburn no gancho sempre e nas trocas de palco marcadas no beat do storyboard. compose.py aplica tudo.",
+  "default": "cut",
+  "filmburn": {
+    "preset": "video/resolve/presets/filmburn-hook.json",
+    "composite": "screen",
+    "hook": true,
+    "onStageChange": "marcado no beat: \"transicao\": \"filmburn\"",
+    "sfxGainDb": -10
+  },
+  "lightLeak": {
+    "use": "só no CTA, se o corte pedir pontuação",
+    "engine": "video/resolve/engine/lightleak.py"
+  },
+  "applier": "video/headless/compose.py"
+}

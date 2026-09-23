@@ -1,6 +1,6 @@
 # Pipeline headless (sem DaVinci Resolve)
 
-O Resolve saiu do pipeline em 23/09/2026. O default 09-jev roda inteiro por linha de
+O Resolve saiu do pipeline em 23/09/2026. O estilo default (Talking Head + Motions) roda inteiro por linha de
 comando, sem GUI, e vários vídeos rodam ao mesmo tempo. Visual e som do 09-jev mantidos
 (validação abaixo). Pasta `video/resolve/` continua com docs, presets, estilos e motores;
 o nome é histórico.

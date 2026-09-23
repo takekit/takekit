@@ -1,0 +1,18 @@
+{
+  "_doc": "Fala montada: Whisper escolhe o take, tighten_cuts.py aperta as bordas na energia do waveform, trim.py corta em frame exato.",
+  "tighten": {
+    "script": "video/resolve/pipeline/tighten_cuts.py",
+    "fps": 30,
+    "threshDb": -40,
+    "padFrames": 1
+  },
+  "trim": {
+    "script": "video/headless/trim.py",
+    "output": "edit/aroll.mov"
+  },
+  "rules": [
+    "Sem ar na cabeça do clipe: a borda é o primeiro/último frame com voz.",
+    "1 frame de pad (fonema); 2 recolocam o respiro que o usuário corta.",
+    "Cortes aprovados em edit/cuts.json são preservados."
+  ]
+}

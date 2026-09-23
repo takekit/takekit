@@ -16,12 +16,14 @@ import {
 } from "./store.js";
 import { cancelJob, runProjectJob } from "./project-runner.js";
 import { readTimeline } from "./timeline.js";
+import { defaultStyleId, getStyle, listStyles, resolveStyleId } from "./styles.js";
 import {
   FsError,
-  createFolder,
+  createProject,
   expandPath,
   isVideo,
   listDir,
+  listProjects,
   listVideos,
   sendFile,
   thumbnail,
@@ -32,15 +34,12 @@ import { claudeCodeCliHelp } from "./adapters/claude-code.js";
 import {
   CONFIG_PATH,
   DATA_DIR,
-  DEFAULT_STYLE_ID,
   EXECUTOR_IDS,
   HOST,
-  defaultProjectPath,
   envOverrides,
   getConfig,
   saveFileConfig,
 } from "./config.js";
-import type { ProjectSummary } from "./types.js";
 
 /**
  * Pages allowed to call the engine: the Tauri shell and the Vite dev server.
@@ -82,7 +81,7 @@ export function createApp() {
       ok: true,
       service: "takekit-engine",
       pipelineRoot: config.pipelineRoot,
-      defaultProject: defaultProjectPath(),
+      projectsRoot: config.projectsRoot,
       dataDir: DATA_DIR,
       executors: listExecutors(),
       claudeCli: claudeCodeCliHelp(config.claudeBin, config.model),
@@ -108,16 +107,49 @@ export function createApp() {
     res.json(configResponse());
   });
 
-  app.get("/api/projects", (_req, res) => {
-    const projects: ProjectSummary[] = [
-      {
-        id: "09-jev",
-        path: defaultProjectPath(),
-        label: "09-jev (DEFAULT guinea pig)",
-        styleId: DEFAULT_STYLE_ID,
-      },
-    ];
-    res.json({ projects, pipelineRoot: getConfig().pipelineRoot });
+  // Projects in the projects root (config.projectsRoot) + the number the next one gets.
+  app.get("/api/projects", async (_req, res) => {
+    await fsRoute(res, async () => res.json(await listProjects()));
+  });
+
+  // New project: { name } → <projects root>/<NN>-<slug>, with the project layout.
+  app.post("/api/projects", async (req, res) => {
+    await fsRoute(res, async () => {
+      const path = await createProject(String(req.body?.name ?? ""));
+      res.status(201).json({ path });
+    });
+  });
+
+  // ── Style Kit gallery (styles/<id>/) ──
+
+  app.get("/api/styles", (_req, res) => {
+    res.json({ styles: listStyles(), defaultStyleId: defaultStyleId() });
+  });
+
+  app.get("/api/styles/:id", (req, res) => {
+    const style = getStyle(req.params.id);
+    if (!style) {
+      res.status(404).json({ error: "Estilo não encontrado" });
+      return;
+    }
+    res.json({ style });
+  });
+
+  app.get("/api/styles/:id/preview", (req, res) => {
+    const preview = getStyle(req.params.id)?.previewVideoPath;
+    if (!preview) {
+      res.status(404).json({ error: "Estilo sem preview" });
+      return;
+    }
+    sendFile(req, res, preview);
+  });
+
+  app.get("/api/styles/:id/thumb", async (req, res) => {
+    await fsRoute(res, async () => {
+      const preview = getStyle(req.params.id)?.previewVideoPath;
+      if (!preview) throw new FsError(404, "Estilo sem preview");
+      sendFile(req, res, await thumbnail(preview), "private, max-age=86400");
+    });
   });
 
   app.get("/api/threads", (_req, res) => {
@@ -132,10 +164,22 @@ export function createApp() {
         ? body.inputVideoPaths.filter((v): v is string => typeof v === "string")
         : [];
       const single = str(body.inputVideoPath);
+      // A picked style must be in the gallery; none picked = the gallery default.
+      const picked = str(body.styleId)?.trim();
+      const styleId = picked ? resolveStyleId(picked) : undefined;
+      if (picked && !styleId) {
+        res.status(400).json({ error: `Estilo "${picked}" não está na galeria` });
+        return;
+      }
+      const projectPath = str(body.projectPath)?.trim();
+      if (!projectPath) {
+        res.status(400).json({ error: "Escolha ou crie um projeto para a thread." });
+        return;
+      }
       const thread = createThread({
         title: str(body.title),
-        projectPath: str(body.projectPath),
-        styleId: str(body.styleId),
+        projectPath,
+        styleId: styleId ?? undefined,
         inputVideoPaths: list.length ? list : single ? [single] : [],
         briefing: str(body.briefing),
       });
@@ -187,7 +231,8 @@ export function createApp() {
     }
     if (trash) {
       try {
-        await trashProjectFolder(path, [getConfig().pipelineRoot, DATA_DIR, defaultProjectPath()]);
+        const config = getConfig();
+        await trashProjectFolder(path, [config.pipelineRoot, DATA_DIR, config.projectsRoot]);
       } catch (err) {
         res.status(err instanceof FsError ? err.status : 500).json({ error: err instanceof Error ? err.message : String(err) });
         return;
@@ -319,16 +364,12 @@ export function createApp() {
     await fsRoute(res, async () => res.json(await listDir(query(req, "path"))));
   });
 
-  app.post("/api/fs/mkdir", async (req, res) => {
-    const body = (req.body ?? {}) as Record<string, unknown>;
-    await fsRoute(res, async () => {
-      const path = await createFolder(String(body.parent ?? ""), String(body.name ?? ""));
-      res.status(201).json({ path });
-    });
-  });
-
   app.get("/api/fs/videos", async (req, res) => {
-    await fsRoute(res, async () => res.json(await listVideos(query(req, "root") ?? defaultProjectPath())));
+    await fsRoute(res, async () => {
+      const root = query(req, "root");
+      if (!root) throw new FsError(400, "root é obrigatório");
+      res.json(await listVideos(root));
+    });
   });
 
   app.get("/api/fs/thumb", async (req, res) => {

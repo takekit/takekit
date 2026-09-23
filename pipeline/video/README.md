@@ -7,7 +7,7 @@ Pipeline humano: **entender → storyboard → material → fala → composiçã
 |---|---|
 | [estilo-creator.md](estilo-creator.md) | Preferências do perfil ativo, referências e lacunas para entrevista |
 | [resolve/WORKFLOW.md](resolve/WORKFLOW.md) | Processo e critérios de conclusão |
-| [resolve/DEFAULT.md](resolve/DEFAULT.md) | Estilo default (09-jev): palco, caption, faixa, SFX, pipeline |
+| [styles/talking-head-motions/](../../styles/talking-head-motions/) | Estilo default (Talking Head + Motions, pacote Style Kit): palco, caption, faixa, SFX, pipeline |
 | [resolve/FORMATOS.md](resolve/FORMATOS.md) | YAP e outros formatos; explicação ilustrada = palco A/B/C (default 19/09) |
 | `projects/<slug>/briefing.md` | Conteúdo, objetivo, materiais e restrições; [modelo](resolve/references/briefing-template.md) |
 | `projects/<slug>/edit/plan.json` | Estado/storyboard da edição; [modelo](resolve/references/plan-template.json) |

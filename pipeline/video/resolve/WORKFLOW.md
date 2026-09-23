@@ -7,7 +7,7 @@ YAP percorre o mesmo fluxo com menos recursos visuais. Documentação técnica e
 
 Ler pedido, briefing, estado atual e [estilo do creator](../estilo-creator.md). Identificar objetivo,
 argumento, público, emoção e [formato](FORMATOS.md). Default do creator ativo: explicação ilustrada
-/ palco-abc, fechado no 09-jev — [DEFAULT.md](DEFAULT.md). A entrevista resolve só o que o default
+/ palco-abc, fechado no 09-jev — estilo [Talking Head + Motions](../../../styles/talking-head-motions/prompt.md). A entrevista resolve só o que o default
 não cobre; não reabre palco, caption, faixa nem SFX. Formato indefinido **não** vira YAP.
 
 Autoridade: pedido explícito do usuário → decisões específicas do vídeo → preferências do creator
@@ -111,7 +111,7 @@ Recursos em escada — parar no primeiro que resolve a função pedida:
    pronto e aprovado para aquela função.
 2. **Scripts do repo** (`../headless/`, `engine/`, `pipeline/`, `motion/`): `trim`, `palco_b`,
    `compose`, `frame`, `tighten_cuts`, `caption_jobs` + `captions_palco`, `motion/scaffold` +
-   `motion/render`, `map_sfx_cues`. Caminho já testado não se reescreve. Ver [DEFAULT.md](DEFAULT.md).
+   `motion/render`, `map_sfx_cues`. Caminho já testado não se reescreve. Ver o [estilo](../../../styles/talking-head-motions/prompt.md).
 3. **Camada nova no projeto**: última opção. Gerar a camada (`.mov` com alfa, PIL/FFmpeg/Remotion)
    ou o áudio que falta e entrar pelo `edit/compose.json`; validar num trecho curto antes de
    replicar. Acervos de terceiros ficam fora do processo. Resolve, MCP do Resolve e Fusion foram

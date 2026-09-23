@@ -16,9 +16,9 @@ import { PIPELINE_STEPS, type ActivityItem, type ActivityUpdate, type StepState 
 import {
   DATA_DIR,
   DEFAULT_STYLE_ID,
-  defaultProjectPath,
   writeJsonAtomic,
 } from "./config.js";
+import { defaultStyleId, resolveStyleId } from "./styles.js";
 
 /**
  * JSON-on-disk store.
@@ -66,6 +66,8 @@ function normalizeThread(raw: Thread): Thread {
   const inputs = raw.inputVideoPaths ?? (raw.inputVideoPath ? [raw.inputVideoPath] : []);
   return {
     ...raw,
+    // Threads keep working when their style was renamed out of an old id ("09-jev").
+    styleId: resolveStyleId(raw.styleId) ?? raw.styleId,
     briefing: raw.briefing ?? "",
     inputVideoPaths: inputs,
     inputVideoPath: inputs[0] ?? null,
@@ -87,8 +89,6 @@ function initialStages(hasInput: boolean): StageStatus {
 }
 
 function load(): void {
-  // Seed the guinea-pig thread on a fresh install only, not every time the list gets emptied.
-  const fresh = !existsSync(THREADS_DIR);
   mkdirSync(THREADS_DIR, { recursive: true });
   mkdirSync(JOBS_DIR, { recursive: true });
 
@@ -115,23 +115,6 @@ function load(): void {
       jobId: job.id,
     });
   }
-
-  if (fresh && threads.size === 0) seed();
-}
-
-function seed(): void {
-  const thread = createThread({
-    title: "09-jev (guinea pig)",
-    projectPath: defaultProjectPath(),
-    styleId: DEFAULT_STYLE_ID,
-    ensureLayout: false,
-  });
-  appendMessage(thread.id, {
-    role: "system",
-    content:
-      "Thread ligada ao projeto DEFAULT 09-jev (pipeline/video/projects/09-jev). " +
-      "Mensagens disparam o executor configurado (default: Claude Code, modelo opus) via ProjectRunner.",
-  });
 }
 
 export function listThreads(): Thread[] {
@@ -169,7 +152,7 @@ function ensureProjectLayout(projectPath: string, briefing: string): string[] {
 
 export function createThread(input: {
   title?: string;
-  projectPath?: string;
+  projectPath: string;
   styleId?: string;
   inputVideoPaths?: string[];
   briefing?: string;
@@ -177,7 +160,8 @@ export function createThread(input: {
 }): Thread {
   const picked = [...new Set((input.inputVideoPaths ?? []).map((p) => p.trim()).filter(Boolean))];
   const briefing = input.briefing?.trim() ?? "";
-  const projectPath = input.projectPath?.trim() || defaultProjectPath();
+  const projectPath = input.projectPath.trim();
+  if (!projectPath) throw new Error("projectPath is required");
   const notes: string[] = [];
   const warnings = input.ensureLayout === false ? [] : ensureProjectLayout(projectPath, briefing);
   // Footage from outside the project gets a link in input/, so the project stays self-contained.
@@ -201,7 +185,7 @@ export function createThread(input: {
     id: randomUUID(),
     title: input.title?.trim() || "Untitled project",
     projectPath,
-    styleId: input.styleId?.trim() || DEFAULT_STYLE_ID,
+    styleId: input.styleId?.trim() || defaultStyleId() || DEFAULT_STYLE_ID,
     briefing,
     inputVideoPaths: inputs,
     inputVideoPath: inputs[0] ?? null,

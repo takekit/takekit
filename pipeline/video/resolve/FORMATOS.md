@@ -21,7 +21,7 @@ Os formatos podem ser combinados com motivo no plano, sem construir uma taxonomi
 
 - Explicação ilustrada (**default**, 19/09/2026): [`09-jev` v3](../projects/09-jev/exports/09-jev-v3.mp4).
   Palco, caption, SFX e faixa aprovados. O objeto do canvas muda por vídeo
-  ([motion/README.md](motion/README.md)). Pipeline: [DEFAULT.md](DEFAULT.md).
+  ([motion/README.md](motion/README.md)). Pipeline: estilo [Talking Head + Motions](../../../styles/talking-head-motions/prompt.md).
   Estudo de origem: [`000-video-to-copy`](../projects/000-video-to-copy/index.html).
 - Explicação ilustrada (intensidade de câmera/SFX): [05 EDIT_v4](references/motion-host-baseline/README.md).
   Gancho Hulk/Loki representa a reação da frase; punch+whoosh, filmburn, split host-em-cima,

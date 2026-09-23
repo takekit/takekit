@@ -1,4 +1,7 @@
-const ENGINE_URL = import.meta.env.VITE_ENGINE_URL?.replace(/\/$/, "") ?? "";
+import { IS_TAURI } from "../lib/platform";
+
+// The desktop app has no Vite proxy: without VITE_ENGINE_URL it talks to the local engine directly.
+const ENGINE_URL = (import.meta.env.VITE_ENGINE_URL ?? (IS_TAURI ? "http://127.0.0.1:8787" : "")).replace(/\/$/, "");
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${ENGINE_URL}${path}`, {
@@ -82,7 +85,7 @@ export function engineBaseUrl(): string {
 export interface EngineHealth {
   ok: boolean;
   pipelineRoot: string;
-  defaultProject: string;
+  projectsRoot: string;
   dataDir: string;
 }
 
@@ -145,6 +148,8 @@ export interface EngineConfig {
   /** Reasoning effort in the executor's vocabulary; "" = CLI default. */
   effort: string;
   pipelineRoot: string;
+  /** Where "Novo projeto" creates NN-name folders. */
+  projectsRoot: string;
   claudeBin: string;
   /** Every executor runs without approval prompts. */
   skipPermissions: boolean;
@@ -185,14 +190,59 @@ export function putConfig(patch: Partial<EngineConfig>) {
 }
 
 export interface ProjectSummary {
-  id: string;
   path: string;
-  label: string;
-  styleId: string;
+  name: string;
 }
 
+/** Projects in the projects root, newest number first, + the number the next one gets. */
 export function listProjects() {
-  return request<{ projects: ProjectSummary[]; pipelineRoot: string }>("/api/projects");
+  return request<{ root: string; nextNumber: number; projects: ProjectSummary[] }>("/api/projects");
+}
+
+/** New project folder <projects root>/<NN>-<slug of name>, with input/, edit/, exports/. */
+export function createProject(name: string) {
+  return request<{ path: string }>("/api/projects", {
+    method: "POST",
+    body: JSON.stringify({ name }),
+  });
+}
+
+/** Same slug the engine uses for the folder: "Review do Grok 5!" → "review-do-grok-5". */
+export function projectSlug(name: string): string {
+  return name
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60)
+    .replace(/-+$/, "");
+}
+
+export const projectFolderName = (n: number, slug: string) => `${String(n).padStart(2, "0")}-${slug}`;
+
+// ── Style Kit gallery ──
+
+/** One package in styles/<id>/. The id never changes; the name can. */
+export interface StyleSummary {
+  id: string;
+  name: string;
+  hasPreview: boolean;
+  updatedAt: string;
+}
+
+export function listStyles() {
+  return request<{ styles: StyleSummary[]; defaultStyleId: string | null }>("/api/styles");
+}
+
+const styleAsset = (style: StyleSummary, file: "thumb" | "preview") =>
+  `${ENGINE_URL}/api/styles/${encodeURIComponent(style.id)}/${file}?v=${encodeURIComponent(style.updatedAt)}`;
+export const styleThumbUrl = (style: StyleSummary) => styleAsset(style, "thumb");
+export const stylePreviewUrl = (style: StyleSummary) => styleAsset(style, "preview");
+
+/** Display name of a style id (the id itself when the gallery doesn't have it). */
+export function styleName(styles: StyleSummary[], id: string): string {
+  return styles.find((s) => s.id === id)?.name ?? id;
 }
 
 export type TrackKind = "video" | "broll" | "title" | "caption" | "fx" | "voice" | "music" | "sfx";
@@ -254,13 +304,6 @@ export interface DirListing {
 /** Subfolders of `path` (default: the pipeline's video/projects). */
 export function listDir(path?: string) {
   return request<DirListing>(`/api/fs/list${path ? `?path=${encodeURIComponent(path)}` : ""}`);
-}
-
-export function makeDir(parent: string, name: string) {
-  return request<{ path: string }>("/api/fs/mkdir", {
-    method: "POST",
-    body: JSON.stringify({ parent, name }),
-  });
 }
 
 export interface VideoFile {

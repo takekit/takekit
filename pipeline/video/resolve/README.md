@@ -5,7 +5,7 @@
 > de rodar no Resolve (launcher, Fusion, `build_timeline.py`) são legado; captions, motion e SFX
 > continuam valendo.
 
-Default do creator: explicação ilustrada / palco A/B/C, fechado no 09-jev. Ver `DEFAULT.md`.
+Default do creator: explicação ilustrada / palco A/B/C, fechado no 09-jev: estilo Talking Head + Motions (`styles/talking-head-motions/` na raiz do repo).
 Canvas B/C em Remotion (`motion/`). Captions palco preservadas.
 
 Antes de cortes ou acabamento, ler o contrato de montagem em `WORKFLOW.md`, §3: roteiro obrigatório,
@@ -13,7 +13,7 @@ fala sem respiros entre cortes, seleção e inspeção nativas, verificação da
 O perfil visual não altera esse contrato. `--validate-only` verifica estrutura do manifesto;
 não verifica fala, roteiro ou ritmo e não libera a montagem como concluída.
 
-- `DEFAULT.md`: estilo default (09-jev) e pipeline de scripts.
+- `DEFAULT.md`: ponteiro para o estilo default (pacote Style Kit `talking-head-motions`).
 - `WORKFLOW.md`: fluxo atual e critérios de conclusão; `FORMATOS.md`: YAP e demais formatos.
 - `motion/README.md`: canvas B/C — skills de motion, faixa travada.
 - `BEHAVIORS.md`: padrões de execução visual + sonora; punch, texto, destaque e transição.

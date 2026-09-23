@@ -1,16 +1,16 @@
 import { execFile } from "node:child_process";
 import { createHash } from "node:crypto";
 import { createReadStream, existsSync, mkdirSync, statSync } from "node:fs";
-import { mkdir, readdir, rename, stat } from "node:fs/promises";
+import { mkdir, readdir, rename, stat, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { basename, dirname, extname, join, relative, resolve, sep } from "node:path";
 import type { Request, Response } from "express";
-import { DATA_DIR, pipelineRoot } from "./config.js";
+import { DATA_DIR, projectsRoot } from "./config.js";
 
 /**
  * Disk access for the pickers: browse folders (project picker), list the videos
  * inside a project with probe data + a poster frame (video picker), and stream
- * a video for hover previews. Read-only except `createFolder`.
+ * a video for hover previews. Writes only in `createProject` and `trashProjectFolder`.
  */
 
 const VIDEO_EXT = new Set([".mp4", ".mov", ".m4v", ".mkv", ".webm", ".avi", ".mts", ".mxf"]);
@@ -33,7 +33,7 @@ export function expandPath(raw: string): string {
 
 /** Where the project browser opens when nothing is picked yet. */
 export function defaultBrowseRoot(): string {
-  const projects = join(pipelineRoot(), "video", "projects");
+  const projects = projectsRoot();
   return existsSync(projects) ? projects : homedir();
 }
 
@@ -88,17 +88,71 @@ export async function listDir(raw?: string): Promise<DirListing> {
   };
 }
 
-/** mkdir <parent>/<name> (one level). Returns the new folder's path. */
-export async function createFolder(parentRaw: string, nameRaw: string): Promise<string> {
-  const name = nameRaw.trim();
-  if (!name || name === "." || name === ".." || /[/\\\0]/.test(name) || name.length > 120) {
-    throw new FsError(400, "Nome de pasta inválido");
+/** Folder name part of a project: "Review do Grok 5!" → "review-do-grok-5". */
+export function projectSlug(name: string): string {
+  return name
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60)
+    .replace(/-+$/, "");
+}
+
+/** Number the next project gets: one past the highest `NN-` prefix in the folder. */
+export function nextProjectNumber(names: string[]): number {
+  let max = 0;
+  for (const name of names) {
+    const n = /^(\d+)-/.exec(name)?.[1];
+    if (n) max = Math.max(max, Number(n));
   }
-  const parent = expandPath(parentRaw);
-  if (!(await isDir(parent))) throw new FsError(400, `Pasta não encontrada: ${parent}`);
-  const path = join(parent, name);
-  await mkdir(path);
-  return path;
+  return max + 1;
+}
+
+export const projectFolderName = (n: number, slug: string) => `${String(n).padStart(2, "0")}-${slug}`;
+
+export interface ProjectInfo {
+  path: string;
+  name: string;
+}
+
+/** Project folders in the projects root (numbered or with the project layout), newest number first. */
+export async function listProjects(): Promise<{ root: string; nextNumber: number; projects: ProjectInfo[] }> {
+  const root = projectsRoot();
+  const listing = await listDir(root).catch(() => null);
+  const entries = listing?.entries ?? [];
+  const projects = entries
+    .filter((e) => e.project || /^\d+-/.test(e.name))
+    .map((e) => ({ path: e.path, name: e.name }))
+    .sort((a, b) => b.name.localeCompare(a.name, "pt-BR", { numeric: true }));
+  return { root, nextNumber: nextProjectNumber(entries.map((e) => e.name)), projects };
+}
+
+/**
+ * New project `<projects root>/<NN>-<slug>` with the layout the pipeline expects
+ * (input/, edit/, exports/, briefing.md). NN = next number in the root, so the folder
+ * order is the creation order.
+ */
+export async function createProject(nameRaw: string): Promise<string> {
+  const slug = projectSlug(nameRaw);
+  if (!slug) throw new FsError(400, "Dê um nome ao projeto (letras ou números).");
+  const root = projectsRoot();
+  await mkdir(root, { recursive: true });
+  const first = nextProjectNumber(await safeReaddir(root));
+  for (let n = first; n < first + 50; n++) {
+    const path = join(root, projectFolderName(n, slug));
+    try {
+      await mkdir(path);
+    } catch (err) {
+      if ((err as NodeJS.ErrnoException).code === "EEXIST") continue; // taken meanwhile: next number
+      throw err;
+    }
+    for (const sub of ["input", "edit", "exports"]) await mkdir(join(path, sub), { recursive: true });
+    await writeFile(join(path, "briefing.md"), "", { flag: "wx" }).catch(() => undefined);
+    return path;
+  }
+  throw new FsError(409, "Não achei um número livre para o projeto.");
 }
 
 export interface VideoInfo {
@@ -338,7 +392,7 @@ export async function trashProjectFolder(raw: string, protectedPaths: string[]):
   const home = homedir();
   const covers = (p: string) => p === path || p.startsWith(`${path}${sep}`);
   if (path === "/" || path === home || protectedPaths.some((p) => covers(resolve(p)))) {
-    throw new FsError(400, "Essa pasta é protegida (contém o pipeline, os dados do engine ou é o projeto padrão).");
+    throw new FsError(400, "Essa pasta é protegida (contém o pipeline, os dados do engine ou é a pasta de projetos).");
   }
   const tracked = await run("git", ["-C", path, "ls-files", "--", "."]).catch(() => "");
   if (tracked.trim()) {

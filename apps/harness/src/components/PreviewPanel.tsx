@@ -12,6 +12,8 @@ import { IconButton } from "./ui";
 interface Props {
   thread: Thread | null;
   onClose: () => void;
+  /** Display name of the thread's style. */
+  styleName: string;
   resizeHandle?: ReactNode;
   annotations: TimelineAnnotation[];
   onAnnotate?: (annotation: TimelineAnnotation) => void;
@@ -42,7 +44,7 @@ function useTimeline(thread: Thread | null): Timeline | null {
 }
 
 /** Program monitor + read-only timeline of the latest export, plus pipeline state. */
-export function PreviewPanel({ thread, onClose, resizeHandle, annotations, onAnnotate }: Props) {
+export function PreviewPanel({ thread, onClose, styleName, resizeHandle, annotations, onAnnotate }: Props) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [duration, setDuration] = useState(0);
   const timeline = useTimeline(thread);
@@ -120,7 +122,7 @@ export function PreviewPanel({ thread, onClose, resizeHandle, annotations, onAnn
               {threadInputs(thread).map((path, i, all) => (
                 <Prop key={path} label={all.length > 1 ? `Entrada ${i + 1}` : "Entrada"} value={path} copy />
               ))}
-              <Prop label="Estilo" value={thread.styleId} />
+              <Prop label="Estilo" value={styleName} />
               {thread.previewPath ? <Prop label="Export" value={thread.previewPath} copy /> : null}
               {thread.lastJobId ? (
                 <Prop

@@ -24,7 +24,7 @@ from pathlib import Path
 
 from common import CREAM_HEX, FPS, H, KIT, W, die, load_cuts, need, palcos, probe, project_dir, rel, run, threads
 
-MUSIC_DEFAULT = "music/arpmedia-trap-trap-hype-569432.mp3"   # cama do 09-jev (DEFAULT.md)
+MUSIC_DEFAULT = "music/arpmedia-trap-trap-hype-569432.mp3"   # cama do Talking Head + Motions
 MUSIC_GAIN_DB = -25.0
 CANVAS_DIRS = ("edit/overlay", "edit/motion/out", "edit/motion", "edit/motion-v2")
 CAPTION_ORDER = ("face", "canvas", "hold")
@@ -311,7 +311,7 @@ def main() -> None:
     ap.add_argument("--project", required=True)
     ap.add_argument("--spec", help="spec próprio (ex.: edit/compose.json)")
     ap.add_argument("--out", help="default: exports/<slug>-vN.mp4 (próximo livre)")
-    ap.add_argument("--music", help="arquivo da cama ou `none` (default: trap-hype do 09-jev)")
+    ap.add_argument("--music", help="arquivo da cama ou `none` (default: trap-hype do Talking Head + Motions)")
     ap.add_argument("--draft", action="store_true", help="encode rápido para revisão (não é entrega)")
     ap.add_argument("--dry-run", action="store_true", help="só resolve o spec e mostra o comando")
     a = ap.parse_args()

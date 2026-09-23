@@ -1,12 +1,14 @@
-import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, renameSync, statSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defaultModelFor } from "./catalog.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-/** In-repo copy of the 09-jev / editor-reels pipeline (skill + video/resolve). */
+/** In-repo copy of the editor-reels pipeline (skill + video/resolve + video/headless). */
 const IN_REPO_PIPELINE = resolve(HERE, "../../pipeline");
+/** In-repo Style Kit gallery: one package per styles/<id>/ (docs/style-kit/SPEC.md). */
+const IN_REPO_STYLES = resolve(HERE, "../../styles");
 
 export const EXECUTOR_IDS = ["claude-code", "codex", "grok-build", "opencode"] as const;
 export type ExecutorId = (typeof EXECUTOR_IDS)[number];
@@ -16,6 +18,8 @@ export interface FileConfig {
   executorId?: ExecutorId | null;
   model?: string | null;
   pipelineRoot?: string | null;
+  /** Where new projects are created (NN-name). Default: <pipelineRoot>/video/projects. */
+  projectsRoot?: string | null;
   claudeBin?: string | null;
   /** Reasoning effort in the executor's own vocabulary (see catalog.ts). */
   effort?: string | null;
@@ -31,11 +35,13 @@ export interface EffectiveConfig {
   model: string;
   effort: string;
   pipelineRoot: string;
+  projectsRoot: string;
   claudeBin: string;
   skipPermissions: boolean;
 }
 
-export const DEFAULT_STYLE_ID = "09-jev";
+/** Suggested style for a new thread while it is in the gallery (else the first one). */
+export const DEFAULT_STYLE_ID = "talking-head-motions";
 export const DEFAULT_MODEL = "opus";
 
 export const PORT = Number(process.env.TAKEKIT_ENGINE_PORT ?? 8787);
@@ -76,6 +82,7 @@ export function envOverrides(): Array<keyof EffectiveConfig> {
   if (nonEmpty(process.env.TAKEKIT_MODEL)) out.push("model");
   if (process.env.TAKEKIT_EFFORT !== undefined) out.push("effort");
   if (nonEmpty(process.env.TAKEKIT_PIPELINE_ROOT)) out.push("pipelineRoot");
+  if (nonEmpty(process.env.TAKEKIT_PROJECTS_ROOT)) out.push("projectsRoot");
   if (nonEmpty(process.env.CLAUDE_BIN)) out.push("claudeBin");
   if (skipPermsEnv() !== undefined) out.push("skipPermissions");
   return out;
@@ -92,6 +99,10 @@ export function getConfig(): EffectiveConfig {
   const executorRaw =
     nonEmpty(process.env.TAKEKIT_EXECUTOR) ?? nonEmpty(file.executorId) ?? "claude-code";
   const skipEnv = skipPermsEnv();
+  const pipeline = resolve(
+    nonEmpty(process.env.TAKEKIT_PIPELINE_ROOT) ?? nonEmpty(file.pipelineRoot) ?? IN_REPO_PIPELINE,
+  );
+  const projects = nonEmpty(process.env.TAKEKIT_PROJECTS_ROOT) ?? nonEmpty(file.projectsRoot);
   return {
     executorId: executorRaw as ExecutorId,
     model:
@@ -99,11 +110,8 @@ export function getConfig(): EffectiveConfig {
       nonEmpty(file.model) ??
       (defaultModelFor(executorRaw) || DEFAULT_MODEL),
     effort: (process.env.TAKEKIT_EFFORT ?? file.effort ?? "").trim(),
-    pipelineRoot: resolve(
-      nonEmpty(process.env.TAKEKIT_PIPELINE_ROOT) ??
-        nonEmpty(file.pipelineRoot) ??
-        IN_REPO_PIPELINE,
-    ),
+    pipelineRoot: pipeline,
+    projectsRoot: projects ? expandHome(projects) : join(pipeline, "video", "projects"),
     claudeBin: nonEmpty(process.env.CLAUDE_BIN) ?? nonEmpty(file.claudeBin) ?? "claude",
     skipPermissions:
       skipEnv !== undefined
@@ -127,6 +135,13 @@ export function saveFileConfig(patch: Record<string, unknown>): FileConfig {
       throw new Error(`executorId must be one of: ${EXECUTOR_IDS.join(", ")}`);
     }
     next.executorId = v;
+  }
+  if ("projectsRoot" in patch) {
+    const v = patch.projectsRoot;
+    if (v !== null && typeof v !== "string") throw new Error("projectsRoot must be a string or null");
+    const path = nonEmpty(v as string | null);
+    if (path && !isDirectory(expandHome(path))) throw new Error(`Pasta não encontrada: ${path}`);
+    next.projectsRoot = path ? expandHome(path) : null;
   }
   for (const key of ["model", "effort", "pipelineRoot", "claudeBin"] as const) {
     if (key in patch) {
@@ -153,11 +168,28 @@ export function pipelineRoot(): string {
   return getConfig().pipelineRoot;
 }
 
-/** Default guinea-pig project (style 09-jev). */
-export function defaultProjectPath(): string {
-  return resolve(
-    process.env.TAKEKIT_DEFAULT_PROJECT ?? `${pipelineRoot()}/video/projects/09-jev`,
-  );
+/** Style Kit gallery root. Override with TAKEKIT_STYLES_DIR. */
+export function stylesDir(): string {
+  return resolve(nonEmpty(process.env.TAKEKIT_STYLES_DIR) ?? IN_REPO_STYLES);
+}
+
+/** Folder where new projects are created, numbered NN-name (effective config). */
+export function projectsRoot(): string {
+  return getConfig().projectsRoot;
+}
+
+/** `~` → home; anything else resolved to an absolute path. */
+function expandHome(path: string): string {
+  if (path === "~") return homedir();
+  return resolve(path.startsWith("~/") ? join(homedir(), path.slice(2)) : path);
+}
+
+function isDirectory(path: string): boolean {
+  try {
+    return statSync(path).isDirectory();
+  } catch {
+    return false;
+  }
 }
 
 /** Write temp + rename so a crash never leaves a half-written JSON file. */

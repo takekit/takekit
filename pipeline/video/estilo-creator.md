@@ -8,7 +8,7 @@ identificado abaixo. Processo de entrevista na skill, critérios de edição no 
 - Creator: **Oldaque**. Preferências preservadas de 15–16/09/2026, consolidação, e tratamento
   de explicação ilustrada **fechado no 09-jev em 19/09/2026**.
 - Escopo: vídeos curtos. Default = explicação ilustrada / palco A/B/C
-  ([DEFAULT.md](resolve/DEFAULT.md)). YAP ou outro formato só se o pedido disser.
+  (estilo [Talking Head + Motions](../../styles/talking-head-motions/prompt.md)). YAP ou outro formato só se o pedido disser.
 - Ao iniciar outro creator: usar arquivo de perfil separado com esta estrutura e campos indefinidos,
   apontado em `edit/plan.json`. Não aplicar as preferências abaixo como defaults universais.
 
@@ -16,7 +16,7 @@ identificado abaixo. Processo de entrevista na skill, critérios de edição no 
 
 | Aspecto | Direção registrada | Escopo / evidência |
 |---|---|---|
-| Explicação ilustrada | **Default.** Palco A/B/C, captions palco, canvas Remotion na safe zone, SFX por cue. 05 é intensidade de câmera/SFX, não o default | Fechado no **09-jev** (`exports/09-jev-v3.mp4`, 19/09/2026). Pipeline: [DEFAULT.md](resolve/DEFAULT.md) |
+| Explicação ilustrada | **Default.** Palco A/B/C, captions palco, canvas Remotion na safe zone, SFX por cue. 05 é intensidade de câmera/SFX, não o default | Fechado no **09-jev** (`exports/09-jev-v3.mp4`, 19/09/2026). Estilo: [Talking Head + Motions](../../styles/talking-head-motions/prompt.md) |
 | Base visual (intensidade 05) | Punch, whoosh, filmburn, split host-em-cima quando o vídeo pedir essa intensidade | [Baseline EDIT_v4](resolve/references/motion-host-baseline/README.md) |
 | Gancho ilustrado | Cena reconhecível que represente emoção/reação da fala, como Hulk/Loki no 05; neste tratamento o gancho troca de palco cedo (B→A→C) | Lógica editorial aprovada; não repetir clipe nem prometer viralização |
 | Câmera | Neste tratamento: estável no palco A, crop já fechado; punch só se a ênfase pedir. Zooms do 05 quando a intensidade for a do 05 | Pan não foi comprovado no 05 |

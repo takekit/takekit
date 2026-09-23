@@ -70,10 +70,3 @@ export interface Job {
   activitySeq?: number;
   cancelRequested?: boolean;
 }
-
-export interface ProjectSummary {
-  id: string;
-  path: string;
-  label: string;
-  styleId: string;
-}
