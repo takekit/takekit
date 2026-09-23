@@ -89,7 +89,8 @@ Documented CLI:
 Env:
 
 - `CLAUDE_BIN` — override binary path (default: `claude` on `PATH`)
-- `TAKEKIT_CLAUDE_SKIP_PERMS=1` — pass `--dangerously-skip-permissions` (sandboxes only)
+- `TAKEKIT_SKIP_PERMS=1` — full access for every executor (legacy name `TAKEKIT_CLAUDE_SKIP_PERMS` still read)
+- `TAKEKIT_EFFORT` — reasoning effort passed as `--effort`
 
 If the binary is missing, the adapter **fails with a clear error** (no fake success).
 
@@ -104,14 +105,17 @@ It does **not** reimplement FFmpeg/Resolve/captions scripts — those live under
 
 ## Pluggable executors
 
-| Adapter id | File | Status |
-|------------|------|--------|
-| `claude-code` | `adapters/claude-code.ts` | **Active** — spawns Claude Code CLI |
-| `codex` | `adapters/codex.ts` | Stub — throws “not implemented” |
-| `grok-build` | `adapters/grok-build.ts` | Stub — throws “not implemented” |
-| `opencode` | `adapters/opencode.ts` | Stub — throws “not implemented” |
+| Adapter id | File | Headless command | Effort flag | Full access | Binary override |
+|------------|------|------------------|-------------|-------------|-----------------|
+| `claude-code` | `adapters/claude-code.ts` | `claude -p` | `--effort` | `--dangerously-skip-permissions` | `CLAUDE_BIN` / `config.claudeBin` |
+| `codex` | `adapters/codex.ts` | `codex exec` | `-c model_reasoning_effort=…` | `--dangerously-bypass-approvals-and-sandbox` (else `--sandbox workspace-write`) | `CODEX_BIN` |
+| `grok-build` | `adapters/grok-build.ts` | `grok -p` | `--reasoning-effort` | `--always-approve` | `GROK_BIN` |
+| `opencode` | `adapters/opencode.ts` | `opencode run` | `--variant` | `--auto` | `OPENCODE_BIN` |
 
-Same `Executor` contract; swap via registry / `TAKEKIT_EXECUTOR` when ready.
+Same `Executor` contract; shared spawn/bin resolution in `adapters/spawn.ts`. Pick one via the UI
+model picker, Settings, `config.json` (`executorId` + `model` + `effort` + `skipPermissions`) or
+`TAKEKIT_EXECUTOR`. The model list per harness (`engine/src/catalog.ts`) is exposed in
+`GET /api/config` → `executors[]`; any other model id still works as a custom id.
 
 ## HTTP API (engine)
 
@@ -125,6 +129,15 @@ Same `Executor` contract; swap via registry / `TAKEKIT_EXECUTOR` when ready.
 | POST | `/api/threads/:id/messages` | Post chat; queues job (`run` default true) |
 | GET | `/api/jobs/:id` | Job status / stdout / stderr |
 | GET | `/api/threads/:id/preview` | Stream `previewPath` if set |
+| GET | `/api/threads/:id/timeline` | Read-only tracks from `edit/build.json` (or `edit/cuts.json`), `null` if none |
+
+### Timeline annotations → agent
+
+In the preview timeline, **Anotar** (or Shift + drag) picks a clip or a time range; the note is
+attached to the composer and sent as a `<timeline-context fonte=… fps=…>` block at the end of the
+chat message. Each item carries the track, timecode/seconds and the clip's `ref` in the source file
+(`cuts[4]`, `audio.sfx[3]`, `splits[1].broll[0]`…); ranges list every clip inside them.
+`composeAgentPrompt` adds instructions for the block whenever it's present.
 
 In-memory store only (scaffold). No secrets in repo — use env / `.env` locally (gitignored).
 
@@ -142,5 +155,4 @@ In-memory store only (scaffold). No secrets in repo — use env / `.env` locally
 - Discovering / attaching real export as `previewPath` after a run
 - Headless pipeline steps inside Takekit (today agent must drive `pipeline/video/resolve` scripts)
 - Persistence (DB), multi-user, auth
-- Codex / Grok Build / OpenCode adapters (stubs registered)
 - Parallel job scheduling / cancellation UX

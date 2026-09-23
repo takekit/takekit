@@ -54,5 +54,4 @@ Variáveis úteis: ver `engine/.env.example` e [docs/HARNESS.md](docs/HARNESS.md
 
 ## Status
 
-Scaffold: UI + API + adapter Claude Code + Tauri 2 desktop wrapper. Ainda **não** fecha o fluxo completo
-thread → chat → CI → pipeline → preview de vídeo. Detalhes em [docs/HARNESS.md](docs/HARNESS.md).
+MVP (fluxo cobaia thread → chat → CI → pipeline → preview, persistência em `~/.takekit/`, config CI/modelo): ver [docs/DEV_SPEC_MVP.md](docs/DEV_SPEC_MVP.md) e [docs/HARNESS.md](docs/HARNESS.md).
