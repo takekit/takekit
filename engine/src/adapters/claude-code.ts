@@ -1,8 +1,7 @@
-import { spawn } from "node:child_process";
-import { access } from "node:fs/promises";
-import { constants as fsConstants } from "node:fs";
-import { delimiter, dirname } from "node:path";
+import { dirname } from "node:path";
 import type { Executor, ExecutorRequest, ExecutorResult } from "./types.js";
+import { resolveBin, runCli } from "./spawn.js";
+import { anthropicStreamParser } from "../activity.js";
 
 /**
  * Claude Code CLI adapter.
@@ -12,40 +11,28 @@ import type { Executor, ExecutorRequest, ExecutorResult } from "./types.js";
  *   claude -p "<prompt>"    Non-interactive print mode (used here)
  *   claude --print ...      Alias of -p
  *
- * Extra flags we may pass:
+ * Flags we pass:
+ *   --output-format stream-json --verbose   Live events for the activity feed (activity.ts)
+ *   --model <model>         From config (TAKEKIT_MODEL / config.json), default "opus"
+ *   --effort <level>        From config (TAKEKIT_EFFORT / config.json), omitted when empty
  *   --add-dir <path>        Allow tool access to additional directories
- *   --dangerously-skip-permissions  Only when TAKEKIT_CLAUDE_SKIP_PERMS=1
+ *   --dangerously-skip-permissions  Only when skipPermissions / TAKEKIT_SKIP_PERMS=1
  *
- * Binary resolution: `claude` on PATH, or CLAUDE_BIN env override.
+ * Never passes --bare (the pipeline relies on skills / CLAUDE.md discovery).
+ *
+ * Binary resolution: request.bin (config.claudeBin / CLAUDE_BIN) or `claude` on PATH.
  * If missing → clear error (no silent mock success).
  */
-const DEFAULT_BIN = process.env.CLAUDE_BIN?.trim() || "claude";
-
-async function resolveClaudeBin(bin: string): Promise<string> {
-  if (bin.includes("/") || bin.includes("\\")) {
-    await access(bin, fsConstants.X_OK);
-    return bin;
-  }
-  const pathEnv = process.env.PATH ?? "";
-  for (const dir of pathEnv.split(delimiter)) {
-    if (!dir) continue;
-    const candidate = `${dir}/${bin}`;
-    try {
-      await access(candidate, fsConstants.X_OK);
-      return candidate;
-    } catch {
-      /* try next */
-    }
-  }
-  throw new Error(
-    `Claude Code CLI not found (looked for "${bin}" on PATH). ` +
-      `Install Claude Code and ensure \`claude\` is available, ` +
-      `or set CLAUDE_BIN to the binary path.`,
-  );
-}
-
 function buildArgs(request: ExecutorRequest): string[] {
-  const args: string[] = ["-p", request.prompt];
+  // stream-json (+ --verbose, required with -p) = live tool calls for the UI; final text in the `result` event.
+  const args: string[] = ["-p", request.prompt, "--output-format", "stream-json", "--verbose"];
+
+  if (request.model) {
+    args.push("--model", request.model);
+  }
+  if (request.effort) {
+    args.push("--effort", request.effort);
+  }
 
   // Allow the agent to touch the video project and pipeline trees
   args.push("--add-dir", request.projectPath);
@@ -53,7 +40,7 @@ function buildArgs(request: ExecutorRequest): string[] {
     args.push("--add-dir", request.pipelineRoot);
   }
 
-  if (process.env.TAKEKIT_CLAUDE_SKIP_PERMS === "1") {
+  if (request.skipPermissions) {
     args.push("--dangerously-skip-permissions");
   }
 
@@ -65,63 +52,30 @@ export class ClaudeCodeExecutor implements Executor {
   readonly label = "Claude Code";
 
   async run(request: ExecutorRequest): Promise<ExecutorResult> {
-    const bin = await resolveClaudeBin(DEFAULT_BIN);
-    const args = buildArgs(request);
+    const bin = await resolveBin(request.bin?.trim() || "claude", "Claude Code", "CLAUDE_BIN / config.claudeBin");
     const cwd = request.cwd ?? request.pipelineRoot;
-
-    return new Promise<ExecutorResult>((resolve, reject) => {
-      const child = spawn(bin, args, {
-        cwd,
-        env: { ...process.env },
-        stdio: ["ignore", "pipe", "pipe"],
-      });
-
-      let stdout = "";
-      let stderr = "";
-
-      child.stdout?.on("data", (chunk: Buffer) => {
-        stdout += chunk.toString("utf8");
-      });
-      child.stderr?.on("data", (chunk: Buffer) => {
-        stderr += chunk.toString("utf8");
-      });
-
-      const onAbort = () => {
-        child.kill("SIGTERM");
-      };
-      request.signal?.addEventListener("abort", onAbort, { once: true });
-
-      child.on("error", (err) => {
-        request.signal?.removeEventListener("abort", onAbort);
-        reject(
-          new Error(
-            `Failed to spawn Claude Code ("${bin}"): ${err.message}. ` +
-              `Is the CLI installed?`,
-          ),
-        );
-      });
-
-      child.on("close", (code) => {
-        request.signal?.removeEventListener("abort", onAbort);
-        resolve({
-          exitCode: code ?? 1,
-          stdout,
-          stderr,
-          previewPath: null,
-        });
-      });
+    return runCli({
+      cliName: "Claude Code",
+      bin,
+      args: buildArgs(request),
+      prompt: request.prompt,
+      cwd,
+      signal: request.signal,
+      logTag: this.id,
+      parser: anthropicStreamParser(request.onActivity ?? (() => {})),
     });
   }
 }
 
 /** Hint for docs / health checks */
-export function claudeCodeCliHelp(): string {
+export function claudeCodeCliHelp(bin = "claude", model?: string): string {
   return [
     "Claude Code CLI (adapter: claude-code)",
     "  Interactive:  claude",
-    "  Print mode:   claude -p \"<prompt>\"",
+    "  Print mode:   claude -p \"<prompt>\" --model <model>",
     "  Add dirs:     claude -p \"...\" --add-dir <project> --add-dir <pipeline>",
-    `  Binary:       ${DEFAULT_BIN} (override with CLAUDE_BIN)`,
-    `  Bin dir hint: ${dirname(DEFAULT_BIN)}`,
+    `  Binary:       ${bin} (override with CLAUDE_BIN or config.claudeBin)`,
+    `  Model:        ${model ?? "(none)"} (override with TAKEKIT_MODEL or config.model)`,
+    `  Bin dir hint: ${dirname(bin)}`,
   ].join("\n");
 }

@@ -1,12 +1,15 @@
 import { createApp } from "./server.js";
-import { HOST, PORT, PIPELINE_ROOT, DEFAULT_PROJECT_PATH } from "./config.js";
+import { DATA_DIR, HOST, PORT, defaultProjectPath, getConfig } from "./config.js";
 import { claudeCodeCliHelp } from "./adapters/claude-code.js";
 
 const app = createApp();
 
 app.listen(PORT, HOST, () => {
+  const config = getConfig();
   console.log(`[takekit-engine] http://${HOST}:${PORT}`);
-  console.log(`[takekit-engine] pipeline: ${PIPELINE_ROOT}`);
-  console.log(`[takekit-engine] default project: ${DEFAULT_PROJECT_PATH}`);
-  console.log(claudeCodeCliHelp());
+  console.log(`[takekit-engine] data dir: ${DATA_DIR}`);
+  console.log(`[takekit-engine] pipeline: ${config.pipelineRoot}`);
+  console.log(`[takekit-engine] default project: ${defaultProjectPath()}`);
+  console.log(`[takekit-engine] executor: ${config.executorId} (model ${config.model})`);
+  console.log(claudeCodeCliHelp(config.claudeBin, config.model));
 });

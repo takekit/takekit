@@ -3,6 +3,8 @@ import { ClaudeCodeExecutor } from "./claude-code.js";
 import { CodexExecutor } from "./codex.js";
 import { GrokBuildExecutor } from "./grok-build.js";
 import { OpenCodeExecutor } from "./opencode.js";
+import { getConfig } from "../config.js";
+import { CATALOG, type HarnessCatalog } from "../catalog.js";
 
 const registry = new Map<string, Executor>();
 
@@ -16,7 +18,7 @@ register(new GrokBuildExecutor());
 register(new OpenCodeExecutor());
 
 export function getExecutor(id?: string): Executor {
-  const key = id ?? process.env.TAKEKIT_EXECUTOR ?? "claude-code";
+  const key = id ?? getConfig().executorId;
   const executor = registry.get(key);
   if (!executor) {
     throw new Error(
@@ -26,8 +28,13 @@ export function getExecutor(id?: string): Executor {
   return executor;
 }
 
-export function listExecutors(): Array<{ id: string; label: string }> {
-  return [...registry.values()].map((e) => ({ id: e.id, label: e.label }));
+/** Executors plus the models/efforts the UI picker offers for each. */
+export function listExecutors(): Array<{ id: string; label: string } & HarnessCatalog> {
+  return [...registry.values()].map((e) => ({
+    id: e.id,
+    label: e.label,
+    ...(CATALOG[e.id] ?? { defaultModel: "", models: [] }),
+  }));
 }
 
 export type { Executor, ExecutorRequest, ExecutorResult } from "./types.js";
