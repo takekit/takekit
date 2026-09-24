@@ -1,26 +1,26 @@
 {
-  "_doc": "Palcos A/B/C em 1080x1920@30. Faixas em px (y de cima para baixo). Fonte de verdade do canvas: video/resolve/motion/src/kit/tokens.ts.",
+  "_doc": "Palcos A/B/C em 1080x1920@30. Faixas em px (y de cima para baixo). Fonte de verdade do canvas: video/kit/motion/src/kit/tokens.ts.",
   "frame": { "width": 1080, "height": 1920, "fps": 30 },
   "igSafeTop": 180,
   "stages": {
     "A": {
       "name": "host",
       "layout": "talking head tela cheia, crop fechado, câmera estável",
-      "caption": { "style": "video/resolve/styles/palco-face.json", "y": 1180 }
+      "caption": { "style": "video/kit/styles/palco-face.json", "y": 1180 }
     },
     "B": {
       "name": "host + canvas",
-      "layout": "video/resolve/presets/host-bottom-split.json",
-      "composite": ["video/headless/palco_b.py", "video/resolve/engine/palco_b_composite.py"],
+      "layout": "video/kit/presets/host-bottom-split.json",
+      "composite": ["video/headless/palco_b.py", "video/kit/engine/palco_b_composite.py"],
       "splitY": 960,
       "graphic": { "x": [80, 1000], "y": [180, 620] },
-      "caption": { "style": "video/resolve/styles/palco-canvas.json", "y": [640, 800] }
+      "caption": { "style": "video/kit/styles/palco-canvas.json", "y": [640, 800] }
     },
     "C": {
       "name": "canvas cheio",
       "layout": "creme opaco full frame",
       "graphic": { "x": [80, 1000], "y": [200, 1400] },
-      "caption": { "style": "video/resolve/styles/palco-canvas.json", "y": [1500, 1750] }
+      "caption": { "style": "video/kit/styles/palco-canvas.json", "y": [1500, 1750] }
     }
   },
   "palette": {
@@ -29,5 +29,5 @@
     "muted": "#5A544E",
     "gold": "#F4B400"
   },
-  "motionKit": "video/resolve/motion/README.md"
+  "motionKit": "video/kit/motion/README.md"
 }

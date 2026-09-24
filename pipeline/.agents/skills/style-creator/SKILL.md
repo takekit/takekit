@@ -35,13 +35,13 @@ Biblioteca: `styles/_presets/<módulo>/` (`caption`, `stage`, `cuts`, `sound-eff
 `transitions`). Use o preset mais próximo quando a diferença não for visível no celular.
 Quando for, crie um preset novo **no rascunho**, em `presets/<módulo>/<id>.json`, com o mesmo
 schema dos da biblioteca (campos da legenda: `font`, `size`, `position`, `color`, `outline`,
-`shadow`, `box`, `animation`, `timing`). Fontes vêm de `video/resolve/assets/fonts/`; não
+`shadow`, `box`, `animation`, `timing`). Fontes vêm de `video/kit/assets/fonts/`; não
 invente arquivo que não existe.
 
 Confira a legenda desenhada pelo renderer real ao lado de um frame da referência:
 
 ```bash
-.venv/bin/python video/resolve/engine/caption_preview.py --preset <preset.json> \
+.venv/bin/python video/kit/engine/caption_preview.py --preset <preset.json> \
   --text "Isso *muda* tudo" --layout face --bg <frame-da-referencia.png> --out review/legenda.png
 ```
 

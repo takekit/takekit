@@ -1,7 +1,7 @@
 {
-  "_doc": "SFX por cue do motion: cada beat marca { uid, kind, t_local_f } em edit/motion/sfx-cues.json e map_sfx_cues.py troca o kind pelo id do catálogo. Ganho relativo à voz por categoria em rel_db do catálogo. Paths de assets relativos a video/resolve/.",
-  "mapper": "video/resolve/pipeline/map_sfx_cues.py",
-  "prep": "video/resolve/engine/sfx_prep.py",
+  "_doc": "SFX por cue do motion: cada beat marca { uid, kind, t_local_f } em edit/motion/sfx-cues.json e map_sfx_cues.py troca o kind pelo id do catálogo. Ganho relativo à voz por categoria em rel_db do catálogo. Paths de assets relativos a video/kit/.",
+  "mapper": "video/kit/pipeline/map_sfx_cues.py",
+  "prep": "video/kit/engine/sfx_prep.py",
   "catalog": "assets/sfx/catalog.json",
   "kindToCatalogId": {
     "snap": "snap/snap_finger",

@@ -179,7 +179,7 @@ export function createApp() {
     res.json({ presets: Object.fromEntries(MODULES.map((m) => [m, listPresets(m, style)])) });
   });
 
-  // Fonts the caption builder can pick (relative to video/resolve/).
+  // Fonts the caption builder can pick (relative to video/kit/).
   app.get("/api/presets/fonts", (_req, res) => {
     res.json({ fonts: listFonts(getConfig().pipelineRoot) });
   });

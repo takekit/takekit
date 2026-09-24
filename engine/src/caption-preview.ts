@@ -8,7 +8,7 @@ import { runScript } from "./pipeline.js";
 
 const run = promisify(execFile);
 const CACHE = join(DATA_DIR, "cache", "captions");
-const SCRIPT = "video/resolve/engine/caption_preview.py";
+const SCRIPT = "video/kit/engine/caption_preview.py";
 
 /** Sample phrases for animated previews: enough text to see entrance, hold, exit and pacing. */
 export const SAMPLE_TEXT = "Isso *muda* tudo|no seu próximo vídeo|e quase ninguém percebe|comenta *EU QUERO*";

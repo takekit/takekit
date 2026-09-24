@@ -1,4 +1,4 @@
-"""Base do pipeline headless (sem DaVinci Resolve): ffprobe/ffmpeg, cortes, timeline, pastas.
+"""Base do pipeline headless: ffprobe/ffmpeg, cortes, timeline, pastas.
 
 Tudo roda por projeto e sem estado global: cada job escreve só dentro do próprio
 `<projeto>/edit/`, então N projetos rodam em paralelo (ver batch.py).
@@ -12,7 +12,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent      # video/headless
 VIDEO = HERE.parent                          # video/
 ROOT = VIDEO.parent                          # raiz do pipeline (cwd do agente)
-KIT = VIDEO / "resolve"                      # docs, presets, engine e assets (nome legado da pasta)
+KIT = VIDEO / "kit"                          # docs, presets, engine e assets
 
 W, H, FPS = 1080, 1920, 30
 CREAM_HEX = "0xF4EFE6"                       # creme do palco (engine/palco_b_composite.py)
@@ -275,7 +275,7 @@ def stage_presets(style: dict) -> dict[str, dict]:
 
 
 def kit_file(path: str | None) -> Path | None:
-    """Arquivo de um preset: absoluto, relativo a video/resolve/ ou, para assets fora do repo
+    """Arquivo de um preset: absoluto, relativo a video/kit/ ou, para assets fora do repo
     (assets/OMITTED.md), em $TAKEKIT_ASSETS."""
     if not path:
         return None

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Câmera sem Resolve: punch, zoom in, zoom out e face tracking sobre o a-roll (módulo `camera`).
+"""Câmera: punch, zoom in, zoom out e face tracking sobre o a-roll (módulo `camera`).
 
 O preset vem de `modules.camera` no edit/style.resolved.json (styles/_presets/camera/<id>.json):
 `moves` (punch|zoomIn|zoomOut, em rodízio), `intensity` (escala máxima; 1.0 = nenhuma),
@@ -17,8 +17,8 @@ Movimento por unidade (cuts.json), só nos palcos de `applyTo` (storyboard do pl
     Com face tracking, tudo × `baseScale` (crop constante que segue o rosto mesmo sem movimento).
 O enquadramento segue o rosto (centro na horizontal, na altura em que ele já está no quadro),
 suavizado sem atraso (EMA ida e volta com `smoothing`, zerado a cada corte) e preso para o quadro
-escalado sempre cobrir a saída (sem borda preta). Sem tracking, o pivot é a linha dos olhos do
-punch do Resolve (0.5, 0.36 do topo; [0.5, 0.64] na Fusion).
+escalado sempre cobrir a saída (sem borda preta). Sem tracking, o pivot é a linha dos olhos
+(0.5, 0.36 do topo), a mesma do punch aprovado no 02.
 
 Rosto: Ultra-Light-Fast-Generic-Face-Detector-1MB (RFB-320, MIT, ONNX via onnxruntime) a cada 3
 frames num quadro reduzido, maior rosto. Sem o modelo: topo da máscara do RVM; sem os dois:
@@ -55,7 +55,7 @@ ALIASES = {"punch": "punch", "punchin": "punch", "zoomin": "zoomIn", "zoomout": 
 GAP_S = {"poucos": 6.0, "medio": 3.5, "muitos": 2.0}   # intervalo médio entre movimentos (tempo em A/D)
 CREDIT_CAP = 1.5                 # uma unidade longa não enfileira vários movimentos seguidos
 MIN_FRAMES = {"punch": 10, "zoomIn": 20, "zoomOut": 20}   # unidade mínima para um movimento automático
-PIVOT = (0.5, 0.36)              # sem tracking / sem rosto: linha dos olhos (punch.json do Resolve)
+PIVOT = (0.5, 0.36)              # sem tracking / sem rosto: linha dos olhos (punch aprovado no 02)
 ANCHOR_Y = (0.30, 0.45)          # altura aceita para o rosto no quadro (mediana do track)
 EPS = 1e-4
 

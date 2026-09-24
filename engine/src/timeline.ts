@@ -7,8 +7,7 @@ import { basename, join } from "node:path";
  * Sources, first match wins:
  *   1. <project>/edit/compose.json or compose.resolved.json (newest)  what the
  *      headless compose.py rendered
- *   2. <project>/edit/build.json  legacy: what build_timeline.py fed DaVinci Resolve
- *   3. <project>/edit/cuts.json   provisional cuts (+ motion-v2/sfx-cues.json)
+ *   2. <project>/edit/cuts.json   provisional cuts (+ motion-v2/sfx-cues.json)
  * Times are seconds on the edited (record) timeline, which is what the export plays.
  */
 export type TrackKind = "video" | "broll" | "title" | "caption" | "fx" | "voice" | "music" | "sfx";
@@ -37,7 +36,7 @@ export interface TimelineMarker {
 }
 
 export interface Timeline {
-  source: "compose" | "build.json" | "cuts.json";
+  source: "compose" | "cuts.json";
   /** Source file relative to the project, e.g. "edit/compose.resolved.json". */
   sourcePath: string;
   fps: number;
@@ -63,28 +62,12 @@ const arr = (v: unknown): unknown[] => (Array.isArray(v) ? v : []);
 const obj = (v: unknown): Json => (v && typeof v === "object" && !Array.isArray(v) ? (v as Json) : {});
 const fileLabel = (file: unknown) => basename(str(file)).replace(/\.[^.]+$/, "") || "clip";
 
-function kindOf(name: string, audio: boolean): TrackKind {
-  const n = name.toUpperCase();
-  if (audio) {
-    if (n.includes("MÚSICA") || n.includes("MUSICA") || n.includes("MUSIC")) return "music";
-    if (n.includes("SFX")) return "sfx";
-    return "voice";
-  }
-  if (n.includes("B-ROLL")) return "broll";
-  if (n.includes("LEGENDA") || n.includes("CAPTION")) return "caption";
-  if (n.includes("FX")) return "fx";
-  if (n.includes("A-ROLL")) return "video";
-  return "title";
-}
-
 export function readTimeline(projectPath: string): Timeline | null {
   const spec = newest(projectPath, ["edit/compose.json", "edit/compose.resolved.json"]);
   if (spec) {
     const raw = readJson(join(projectPath, spec));
     if (raw && typeof raw === "object") return fromCompose(obj(raw), spec);
   }
-  const build = readJson(join(projectPath, "edit", "build.json"));
-  if (build && typeof build === "object") return fromBuild(obj(build));
   const cuts = readJson(join(projectPath, "edit", "cuts.json"));
   if (cuts && typeof cuts === "object") {
     return fromCuts(obj(cuts), readJson(join(projectPath, "edit", "motion-v2", "sfx-cues.json")));
@@ -175,135 +158,6 @@ function fromCompose(c: Json, sourcePath: string): Timeline {
     { id: "A3", slot: "A3", name: "MÚSICA", kind: "music" as const, clips: musicClips },
   ].filter((t) => t.clips.some((clip) => clip.end > clip.start));
   return { source: "compose", sourcePath, fps, duration: s(total), tracks, markers: [] };
-}
-
-function fromBuild(b: Json): Timeline {
-  const fps = num(b.fps, 30);
-  const s = (frames: number) => frames / fps;
-  const tracksDef = obj(b.tracks);
-  const videoNames = arr(tracksDef.video).map((v) => str(v));
-  const audioNames = arr(tracksDef.audio).map((v) => str(v));
-  const clipsBy = new Map<string, TimelineClip[]>();
-  const add = (track: string, clip: TimelineClip) => {
-    if (!track || !(clip.end > clip.start)) return;
-    const list = clipsBy.get(track) ?? [];
-    list.push(clip);
-    clipsBy.set(track, list);
-  };
-
-  // A-roll: cuts laid end to end on V1 (and their original sound on A1).
-  const aroll = videoNames[0] ?? "A-ROLL";
-  const voice = audioNames[0] ?? "VOZ";
-  let cursor = 0;
-  arr(b.cuts).forEach((c, i) => {
-    const [a, z] = arr(c).map((v) => num(v));
-    const len = Math.max(0, z - a);
-    add(aroll, { start: s(cursor), end: s(cursor + len), label: `Clip ${i + 1}`, ref: `cuts[${i}]` });
-    add(voice, { start: s(cursor), end: s(cursor + len), label: `Clip ${i + 1}`, ref: `cuts[${i}]` });
-    cursor += len;
-  });
-  const total = s(cursor);
-
-  const markers: TimelineMarker[] = [];
-  arr(b.splits)
-    .map(obj)
-    .forEach((split, si) => {
-      markers.push({ at: s(num(split.from)), label: str(split.beat) });
-      arr(split.broll)
-        .map(obj)
-        .forEach((br, bi) => {
-          const rec = num(br.rec);
-          add("B-ROLL", {
-            start: s(rec),
-            end: s(rec + num(br.src_frames)),
-            label: fileLabel(br.file),
-            ref: `splits[${si}].broll[${bi}]`,
-          });
-        });
-    });
-  arr(b.overlays)
-    .map(obj)
-    .forEach((ov, i) => {
-      const rec = num(ov.rec);
-      add(str(ov.track, "TÍTULO"), {
-        start: s(rec),
-        end: s(rec + num(ov.frames)),
-        label: fileLabel(ov.file),
-        ref: `overlays[${i}]`,
-      });
-    });
-  const burn = obj(b.hook_burn);
-  if (burn.file) {
-    const rec = num(burn.rec);
-    add(videoNames.find((n) => n.includes("FX")) ?? "FX", {
-      start: s(rec),
-      end: s(rec + num(burn.frames)),
-      label: fileLabel(burn.file),
-      ref: "hook_burn",
-    });
-  }
-  const captions = obj(b.captions);
-  if (captions.file) {
-    add(str(captions.track, "LEGENDAS"), { start: 0, end: total, label: fileLabel(captions.file), ref: "captions" });
-  }
-
-  const audio = obj(b.audio);
-  const voiceMaster = obj(audio.voice);
-  if (voiceMaster.file) {
-    add(str(voiceMaster.track, "VOZ MASTER"), {
-      start: 0,
-      end: total,
-      label: fileLabel(voiceMaster.file),
-      ref: "audio.voice",
-    });
-  }
-  const music = obj(audio.music);
-  if (music.file) {
-    add(str(music.track, "MÚSICA"), { start: 0, end: total, label: fileLabel(music.file), ref: "audio.music" });
-  }
-  arr(audio.sfx)
-    .map(obj)
-    .forEach((fx, i) => {
-      const rec = num(fx.rec);
-      add(str(fx.track, "SFX"), {
-        start: s(rec),
-        end: s(rec + num(fx.frames)),
-        label: fileLabel(fx.file),
-        ref: `audio.sfx[${i}]`,
-      });
-    });
-  const muted = new Set(arr(voiceMaster.mute_tracks).map((v) => str(v)));
-
-  // Declared order first, then anything the build referenced that wasn't declared.
-  const known = new Set([...videoNames, ...audioNames]);
-  const extraVideo = [...clipsBy.keys()].filter((n) => !known.has(n) && !audioLike(n));
-  const extraAudio = [...clipsBy.keys()].filter((n) => !known.has(n) && audioLike(n));
-  const video = [...videoNames, ...extraVideo];
-  const audioTracks = [...audioNames, ...extraAudio];
-
-  const tracks: TimelineTrack[] = [
-    // Highest video layer on top, like an NLE.
-    ...video
-      .map((name, i) => ({ name, slot: `V${i + 1}`, audio: false }))
-      .reverse(),
-    ...audioTracks.map((name, i) => ({ name, slot: `A${i + 1}`, audio: true })),
-  ]
-    .map(({ name, slot, audio: isAudio }) => ({
-      id: slot,
-      slot,
-      name,
-      kind: kindOf(name, isAudio),
-      muted: muted.has(name) || undefined,
-      clips: (clipsBy.get(name) ?? []).sort((x, y) => x.start - y.start),
-    }))
-    .filter((t) => t.clips.length);
-
-  return { source: "build.json", sourcePath: "edit/build.json", fps, duration: total, tracks, markers };
-}
-
-function audioLike(name: string): boolean {
-  const n = name.toUpperCase();
-  return n.includes("SFX") || n.includes("VOZ") || n.includes("MÚSICA") || n.includes("MUSIC");
 }
 
 function fromCuts(c: Json, cuesRaw: unknown): Timeline {

@@ -478,9 +478,9 @@ function readPreset(path: string, id: string): Preset | null {
   return { ...raw, id, name: typeof raw.name === "string" && raw.name.trim() ? raw.name.trim() : id } as Preset;
 }
 
-/** Font files the caption renderer can use, relative to video/resolve/ (assets/fonts/…). */
+/** Font files the caption renderer can use, relative to video/kit/ (assets/fonts/…). */
 export function listFonts(pipelineRoot: string): string[] {
-  const base = join(pipelineRoot, "video", "resolve");
+  const base = join(pipelineRoot, "video", "kit");
   const out: string[] = [];
   const walk = (rel: string, depth: number) => {
     let entries;

@@ -9,7 +9,7 @@ takekit/
 ├── apps/harness/   # Vite + React UI + Tauri 2 desktop shell
 │   └── src-tauri/  # Rust bridge (spawn CI CLIs, local fs)
 ├── engine/         # Node orchestrator + Claude Code adapter
-├── pipeline/       # etapas headless (editor-reels / resolve / 09-jev)
+├── pipeline/       # skill editor-reels + pipeline headless (video/headless, video/kit)
 ├── styles/         # (reservado) presets portáteis (ex.: 09-jev)
 ├── docs/
 │   ├── SPEC.md     # produto

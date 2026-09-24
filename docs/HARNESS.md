@@ -2,7 +2,7 @@
 
 The harness is a **chat-orchestrated multi-project video editor** UI (Codex-app style) plus a thin **engine** that schedules agent runs against the **in-repo pipeline**.
 
-This document covers **CI / coding-agent adapters**. Product layout lives in [SPEC.md](./SPEC.md); the ported editing skill + Resolve scripts live in [PIPELINE.md](./PIPELINE.md).
+This document covers **CI / coding-agent adapters**. Product layout lives in [SPEC.md](./SPEC.md); the ported editing skill + pipeline scripts live in [PIPELINE.md](./PIPELINE.md).
 
 ## Pieces
 
@@ -10,7 +10,7 @@ This document covers **CI / coding-agent adapters**. Product layout lives in [SP
 |------|------|
 | `apps/harness` | Vite + React + TypeScript UI (dark mode) wrapped by **Tauri 2** desktop shell (`src-tauri/`). Left: threads. Center: chat. Right: toggleable timeline/preview (**play only**). |
 | `engine` | Node/TypeScript HTTP API + `ProjectRunner` + pluggable `Executor` adapters. |
-| `pipeline/` | In-repo copy of editor-reels + `video/resolve` (09-jev). See [PIPELINE.md](./PIPELINE.md). Not a rewrite of script logic. |
+| `pipeline/` | In-repo copy of editor-reels + `video/kit` (09-jev). See [PIPELINE.md](./PIPELINE.md). Not a rewrite of script logic. |
 
 ```
 ┌─────────────┐     HTTP /api/*      ┌──────────────┐     spawn      ┌─────────────────┐
@@ -21,7 +21,7 @@ This document covers **CI / coding-agent adapters**. Product layout lives in [SP
 └─────────────┘                                                               ▼
                                                                     takekit/pipeline
                                                                     (editor-reels /
-                                                                     resolve / 09-jev)
+                                                                     headless / kit)
 ```
 
 
@@ -97,11 +97,11 @@ If the binary is missing, the adapter **fails with a clear error** (no fake succ
 `ProjectRunner` composes a prompt that points the agent at:
 
 - `.agents/skills/editor-reels/SKILL.md`
-- `video/resolve/DEFAULT.md` (09-jev)
-- `video/resolve/WORKFLOW.md`
+- `video/kit/DEFAULT.md` (09-jev)
+- `video/kit/WORKFLOW.md`
 - the thread’s `projectPath`
 
-It does **not** reimplement FFmpeg/Resolve/captions scripts — those live under `pipeline/video/resolve/`.
+It does **not** reimplement FFmpeg/captions scripts — those live under `pipeline/video/headless/` and `pipeline/video/kit/`.
 
 ## Pluggable executors
 
@@ -195,7 +195,7 @@ running agent (`delivery` on the message and a "Você" row in the activity feed)
 | POST | `/api/threads/:id/render/cancel` | Stop the running render |
 | GET | `/api/threads/:id/export/file` | Last export as a download (`?inline=1` to play) |
 | POST | `/api/threads/:id/export/reveal` | Show the last export in Finder |
-| GET | `/api/threads/:id/timeline` | Read-only tracks from `edit/build.json` (or `edit/cuts.json`), `null` if none |
+| GET | `/api/threads/:id/timeline` | Read-only tracks from `edit/compose.json` / `compose.resolved.json` (or `edit/cuts.json`), `null` if none |
 
 ### Timeline annotations → agent
 
@@ -219,6 +219,6 @@ In-memory store only (scaffold). No secrets in repo — use env / `.env` locally
 **Still missing for first guinea-pig video end-to-end**
 
 - Discovering / attaching real export as `previewPath` after a run
-- Headless pipeline steps inside Takekit (today agent must drive `pipeline/video/resolve` scripts)
+- Headless pipeline steps inside Takekit (today agent must drive `pipeline/video/kit` scripts)
 - Persistence (DB), multi-user, auth
 - Parallel job scheduling / cancellation UX

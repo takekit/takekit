@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Preview e export sem Resolve: FFmpeg empilha os palcos e masteriza o áudio.
+"""Preview e export: FFmpeg empilha os palcos e masteriza o áudio.
 
 Dois estágios, mesmo spec (docs/preview-export/SPEC.md):
     --quality preview (default)  edit/preview.mp4, sobrescrito a cada vez. Qualidade `quality.preview`
@@ -56,7 +56,7 @@ MUSIC_DEFAULT = "assets/music/arpmedia-trap-trap-hype-569432.mp3"   # cama do Ta
 MUSIC_GAIN_DB = -25.0
 CANVAS_DIRS = ("edit/overlay", "edit/motion/out", "edit/motion", "edit/motion-v2")
 CAPTION_ORDER = ("face", "canvas", "hold")
-FILMBURN_PRESET = "video/resolve/presets/filmburn-hook.json"
+FILMBURN_PRESET = "video/kit/presets/filmburn-hook.json"
 TRANSITIONS_DEFAULT = {"filmburn": {"preset": FILMBURN_PRESET, "hook": True, "onStageChange": "marked"}}
 STILL_EXT = {".png", ".jpg", ".jpeg", ".webp"}
 BROLL_EXT = (".mov", ".mp4", ".png", ".jpg", ".jpeg")
@@ -403,7 +403,7 @@ def split_unit(g: Graph, i: int, u: dict, aroll: int, fps: int, clean: str, spec
 
 
 def video_graph(g: Graph, spec: dict, size: tuple[int, int], fast: bool, out_fps: int) -> str:
-    """Final: palcos no tamanho do spec e escala por segmento (como validado contra o Resolve).
+    """Final: palcos no tamanho do spec e escala por segmento (validado no espelho do 05, headless/README).
     Preview (`fast`): cada camada já entra no tamanho de saída, em 8 bits, e o grafo todo
     trabalha pequeno."""
     fps = spec["fps"]

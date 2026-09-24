@@ -8,12 +8,11 @@ description: Editar vídeos curtos sem GUI (FFmpeg + RVM + Remotion, pipeline he
 ## Entrada
 
 Ler o briefing e o estado do vídeo, [estilo do creator](../../../video/estilo-creator.md),
-[workflow](../../../video/resolve/WORKFLOW.md) e o estilo da thread (pacote Style Kit indicado no
+[workflow](../../../video/kit/WORKFLOW.md) e o estilo da thread (pacote Style Kit indicado no
 prompt; sem indicação, o default [Talking Head + Motions](../../../../styles/talking-head-motions/prompt.md)).
 Carregar as demais referências por necessidade.
-Tudo roda por linha de comando no [pipeline headless](../../../video/headless/README.md); o
-DaVinci Resolve (e Fusion/MCP do Resolve) foi removido em 23/09/2026 e não é aberto. Vários
-vídeos podem rodar ao mesmo tempo, cada um só no próprio projeto. Nenhum harness específico é
+Tudo roda por linha de comando no [pipeline headless](../../../video/headless/README.md), sem
+GUI. Vários vídeos podem rodar ao mesmo tempo, cada um só no próprio projeto. Nenhum harness específico é
 necessário para entender o processo.
 
 ## Descobrir estilo e formato
@@ -45,7 +44,7 @@ Amostras são úteis quando a dúvida não se resolve por descrição ou preview
    D split com `broll` no beat), caption `seguir`/`segurar`, objeto da cláusula, e câmera quando a
    ênfase pedir (`"camera": "punch" | "zoom_in" | "zoom_out" | "none"`; o preset de câmera da
    thread decide o resto e o `compose.py` aplica, centrado no rosto);
-   ritmo das trocas com `beat-sync-editing`. Vista: `python3 video/resolve/pipeline/storyboard_html.py --project video/projects/<slug>`.
+   ritmo das trocas com `beat-sync-editing`. Vista: `python3 video/kit/pipeline/storyboard_html.py --project video/projects/<slug>`.
    Não escrever HTML. Não pedir aprovação do storyboard.
 3. Buscar e inspecionar material somente onde o storyboard pedir; preferir YouTube e X/Twitter.
 4. Montar a fala (`tighten_cuts.py` → `video/headless/trim.py`) e reconciliar os tempos reais
@@ -54,7 +53,7 @@ Amostras são úteis quando a dúvida não se resolve por descrição ou preview
    `video/headless/palco_b.py` (RVM + `palco_b_composite.py`). Canvas B/C: skills de motion
    (`motion-art-direction`, `shot-composition`, `animation-principles`, `kinetic-typography`,
    `color-motion`, `motion-background`, `logo-animation`, `remotion-video`) dentro de
-   `<StageB>`/`<StageC>` ([motion/README.md](../../../video/resolve/motion/README.md)) — a cena
+   `<StageB>`/`<StageC>` ([motion/README.md](../../../video/kit/motion/README.md)) — a cena
    não é catálogo; a faixa sim. Captions: `captions_palco.py`. SFX: `map_sfx_cues.py --prep`.
    Capacidade fora desse kit vira camada própria no `edit/compose.json`.
 6. Gerar o **preview** com `video/headless/compose.py` (default `--quality preview`: 720p rápido,
@@ -72,15 +71,14 @@ Storyboard não é entregável nem checkpoint de aprovação: fica no plano para
 | Necessidade | Referência |
 |---|---|
 | Estilo default travado (Talking Head + Motions) | [pacote](../../../../styles/talking-head-motions/) · [prompt.md](../../../../styles/talking-head-motions/prompt.md) |
-| Formato e intensidade de edição | [FORMATOS.md](../../../video/resolve/FORMATOS.md) |
-| Briefing de entrada | [Modelo de briefing](../../../video/resolve/references/briefing-template.md) |
-| Estado/storyboard de nova edição | [Modelo de plano](../../../video/resolve/references/plan-template.json); preservar contratos de planos legados |
-| Escolher/compor recursos | [BEHAVIORS.md](../../../video/resolve/BEHAVIORS.md) e `python3 video/resolve/presets.py list` |
-| Canvas B/C (Remotion + safe zone) | [motion/README.md](../../../video/resolve/motion/README.md) |
+| Formato e intensidade de edição | [FORMATOS.md](../../../video/kit/FORMATOS.md) |
+| Briefing de entrada | [Modelo de briefing](../../../video/kit/references/briefing-template.md) |
+| Estado/storyboard de nova edição | [Modelo de plano](../../../video/kit/references/plan-template.json); preservar contratos de planos legados |
+| Escolher/compor recursos | [BEHAVIORS.md](../../../video/kit/BEHAVIORS.md) e `python3 video/kit/presets.py list` |
+| Canvas B/C (Remotion + safe zone) | [motion/README.md](../../../video/kit/motion/README.md) |
 | Texto animado, cor, fundo, ritmo | skills `kinetic-typography`, `color-motion`, `motion-background`, `beat-sync-editing` (etapa de cada uma no `prompt.md` do estilo) |
 | Trim, máscara, preview/export, captura, jobs em paralelo | [headless/README.md](../../../video/headless/README.md) |
 | Criar estilo novo de vídeos de referência | skill `style-creator` |
-| Receitas antigas do Resolve/Fusion (só referência) | [API-NOTES.md](../../../video/resolve/API-NOTES.md), [FUSION.md](../../../video/resolve/FUSION.md) |
 
 Consultar exemplos apontados pelo perfil ativo. Creator atual: default = Talking Head + Motions.
 O 05 é intensidade de câmera, não o default. Não copiar as cenas do 09-jev; copiar palco,

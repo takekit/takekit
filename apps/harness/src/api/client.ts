@@ -415,7 +415,7 @@ export function getPreset<T = Record<string, unknown>>(module: ModuleKey, id: st
   return request<{ preset: T }>(`/api/presets/${module}/${encodeURIComponent(id)}${q}`);
 }
 
-/** Font files for the caption builder, relative to video/resolve/. */
+/** Font files for the caption builder, relative to video/kit/. */
 export function listFonts() {
   return request<{ fonts: string[] }>("/api/presets/fonts");
 }
@@ -584,8 +584,8 @@ export interface TimelineTrack {
 
 /** Read-only edit timeline (seconds on the record timeline). */
 export interface Timeline {
-  source: "compose" | "build.json" | "cuts.json";
-  /** Source file relative to the project, e.g. "edit/build.json". */
+  source: "compose" | "cuts.json";
+  /** Source file relative to the project, e.g. "edit/compose.resolved.json". */
   sourcePath?: string;
   fps: number;
   duration: number;

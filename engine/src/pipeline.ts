@@ -6,7 +6,7 @@ import { getConfig } from "./config.js";
 /**
  * Pipeline scripts the engine runs itself, without an agent: the final export, a preview
  * re-render after a preset swap, caption stills for the builder. Same scripts the agent
- * runs (video/headless, video/resolve), same venv, cwd = pipeline root.
+ * runs (video/headless, video/kit), same venv, cwd = pipeline root.
  */
 
 /** The pipeline's venv python (video/headless/setup.sh), else python3 on PATH. */

@@ -1,12 +1,12 @@
 {
   "_doc": "Legenda o vídeo inteiro no ataque da fala. Os motores leem os style JSON abaixo; aqui fica o resumo e onde mexer.",
-  "engine": "video/resolve/engine/captions_palco.py",
-  "drafter": "video/resolve/pipeline/caption_jobs.py",
-  "config": "video/resolve/styles/caption-style-config.json",
+  "engine": "video/kit/engine/captions_palco.py",
+  "drafter": "video/kit/pipeline/caption_jobs.py",
+  "config": "video/kit/styles/caption-style-config.json",
   "styles": {
-    "face": "video/resolve/styles/palco-face.json",
-    "canvas": "video/resolve/styles/palco-canvas.json",
-    "hold": "video/resolve/styles/palco-hold.json"
+    "face": "video/kit/styles/palco-face.json",
+    "canvas": "video/kit/styles/palco-canvas.json",
+    "hold": "video/kit/styles/palco-hold.json"
   },
   "fonts": {
     "sans": "assets/fonts/hetrixotypeface-extrabold.otf",

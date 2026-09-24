@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Captura de frame sem Resolve: FFmpeg tira o quadro exato de qualquer vídeo do projeto.
+"""Captura de frame: FFmpeg tira o quadro exato de qualquer vídeo do projeto.
 
-Substitui o capture_frame.py (still do Resolve). Aceita frame (`72`), timecode
+Aceita frame (`72`), timecode
 (`00:00:02:12`) ou segundos (`2.4s`); repita --at para vários. Com --sheet, monta uma
 prancha lado a lado para revisão. Um still não valida movimento, áudio ou cortes (WORKFLOW §5).
 

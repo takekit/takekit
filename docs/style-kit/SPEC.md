@@ -97,7 +97,7 @@ styles/<id>/
 
 Pasta segue o **`id`**, nunca o nome (`styles/talking-head-motions/`, não `styles/Talking Head + Motions/`).
 
-Caminhos dentro dos arquivos do pacote são relativos à raiz do pipeline (cwd do agente); assets, relativos a `video/resolve/` (ou `TAKEKIT_ASSETS`).
+Caminhos dentro dos arquivos do pacote são relativos à raiz do pipeline (cwd do agente); assets, relativos a `video/kit/` (ou `TAKEKIT_ASSETS`).
 
 ### Mapeamento legado → Style Kit (orientação)
 
@@ -160,7 +160,7 @@ Aceite futuro: sobe referências → nasce pacote com `id` novo → aparece na g
 
 * Engine: `engine/src/styles.ts` lê a galeria do disco a cada request (`TAKEKIT_STYLES_DIR`, default `styles/` na raiz). Rotas: `GET /api/styles`, `GET /api/styles/:id` (pacote completo), `/api/styles/:id/preview`, `/api/styles/:id/thumb`. `POST /api/threads` recusa `styleId` fora da galeria (400).
 * Agente: o runner carrega o pacote pelo `styleId` da thread e injeta o `prompt.md` no prompt (`<style-brief>`), com o caminho do pacote para o resto. Estilo ausente da galeria = job falha com mensagem.
-* Pipeline: `video/resolve/DEFAULT.md` virou ponteiro para o pacote; a skill editor-reels lê o estilo da thread.
+* Pipeline: `video/kit/DEFAULT.md` virou ponteiro para o pacote; a skill editor-reels lê o estilo da thread.
 
 ***
 
@@ -172,5 +172,5 @@ Aceite futuro: sobe referências → nasce pacote com `id` novo → aparece na g
 * Expansão (módulos, presets, palco D, caption builder, criar estilo de referências): [SPEC-EXPANSION.md](./SPEC-EXPANSION.md)
 * Preview / export final (`quality.json`): [../preview-export/SPEC.md](../preview-export/SPEC.md)
 * Pacote: [styles/talking-head-motions/](../../styles/talking-head-motions/)
-* Legado: `video/resolve/DEFAULT.md` (agora ponteiro), skill editor-reels
+* Legado: `video/kit/DEFAULT.md` (agora ponteiro), skill editor-reels
 

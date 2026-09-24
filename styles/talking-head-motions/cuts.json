@@ -1,7 +1,7 @@
 {
   "_doc": "Fala montada: Whisper escolhe o take, tighten_cuts.py aperta as bordas na energia do waveform, trim.py corta em frame exato.",
   "tighten": {
-    "script": "video/resolve/pipeline/tighten_cuts.py",
+    "script": "video/kit/pipeline/tighten_cuts.py",
     "fps": 30,
     "threshDb": -40,
     "padFrames": 1

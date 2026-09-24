@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fala montada sem Resolve: corta os ranges do cuts.json com FFmpeg, num passe só.
+"""Fala montada: corta os ranges do cuts.json com FFmpeg, num passe só.
 
 Substitui o AppendToTimeline. Decodifica a fonte uma vez, recorta cada unidade no
 frame exato (fim exclusivo, como no cuts.json), aplica microfade de 4 ms no áudio

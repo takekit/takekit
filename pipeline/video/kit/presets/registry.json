@@ -1,0 +1,157 @@
+{
+  "_doc": "Registro único de presets. Toda vez que um efeito é APROVADO num vídeo, entra aqui (presets.py add). `presets.py list` mostra o catálogo; `presets.py table` regenera a tabela em `presets/GALLERY.md` (entre os marcadores presets:start/end). Nunca editar a tabela à mão.",
+  "presets": [
+    {
+      "id": "fx/filmburn-hook",
+      "kind": "hook",
+      "file": "presets/filmburn-hook.json",
+      "engine": null,
+      "status": "approved",
+      "created": "2026-09-12",
+      "approved_in": [
+        "02-muse-v2"
+      ],
+      "summary": "Film burn real (ITC 11) em Screen, pico no frame 0, 18f + SFX burn",
+      "preview": null,
+      "notes": ""
+    },
+    {
+      "id": "sfx/filmburn",
+      "kind": "sfx",
+      "file": "assets/sfx/filmburn_yt_l2pxVBGIxSs.wav",
+      "engine": null,
+      "status": "deprecated",
+      "created": "2026-09-12",
+      "approved_in": [
+        "02-muse-v2"
+      ],
+      "summary": "SFX de film burn (0.6s) extraído de short; normalizado -16 LUFS",
+      "preview": null,
+      "notes": "Removido 12/09: overlays de film burn baixados já trazem som; não adicionar SFX extra."
+    },
+    {
+      "id": "sfx/library-peu",
+      "kind": "sfx",
+      "file": "assets/sfx/catalog.json",
+      "engine": null,
+      "status": "approved",
+      "created": "2026-09-12",
+      "approved_in": [
+        "02-muse-v2"
+      ],
+      "summary": "Biblioteca de SFX por categoria (taxonomia do Peu) + ganhos relativos; Mixkit só fallback",
+      "preview": null,
+      "notes": ""
+    },
+    {
+      "id": "library/brainstorm-reels",
+      "kind": "other",
+      "file": "assets/packs/brainstorm-academy/README.md",
+      "engine": null,
+      "status": "draft",
+      "created": "2026-09-15",
+      "approved_in": [],
+      "summary": "Pack local: 10 fundos, 3 guias, 15 SFX; fontes e presets Adobe de referência. Uso no pipeline headless ainda não validado.",
+      "preview": null,
+      "notes": ""
+    },
+    {
+      "id": "caption/palco-face",
+      "kind": "caption",
+      "file": "styles/palco-face.json",
+      "engine": "engine/captions_palco.py",
+      "status": "approved",
+      "created": "2026-09-18",
+      "approved_in": [
+        "09-jev"
+      ],
+      "summary": "Palco A: 1-3 palavras numa linha, peito, sem tetris",
+      "preview": null,
+      "notes": "Default de caption no palco A desde 19/09 (09-jev)."
+    },
+    {
+      "id": "caption/palco-canvas",
+      "kind": "caption",
+      "file": "styles/palco-canvas.json",
+      "engine": "engine/captions_palco.py",
+      "status": "approved",
+      "created": "2026-09-18",
+      "approved_in": [
+        "09-jev"
+      ],
+      "summary": "Palco B/C: Hetrixo no canvas, 1-3 palavras, faixa quieta da caption",
+      "preview": null,
+      "notes": "Default de caption nos palcos B/C desde 19/09 (09-jev). Y B=700, C=1580."
+    },
+    {
+      "id": "caption/palco-hold",
+      "kind": "caption",
+      "file": "styles/palco-hold.json",
+      "engine": "engine/captions_palco.py",
+      "status": "approved",
+      "created": "2026-09-18",
+      "approved_in": [
+        "09-jev"
+      ],
+      "summary": "CTA hold comment + keyword ouro radial",
+      "preview": null,
+      "notes": "Default de hold no CTA desde 19/09 (09-jev). Keyword vem do vídeo."
+    },
+    {
+      "id": "layout/host-bottom-split",
+      "kind": "ui",
+      "file": "presets/host-bottom-split.json",
+      "engine": null,
+      "status": "approved",
+      "created": "2026-09-18",
+      "approved_in": [
+        "09-jev"
+      ],
+      "summary": "Palco B: canvas em cima, host no card embaixo",
+      "preview": null,
+      "notes": "Default do palco B desde 19/09 (09-jev). Receita: engine/palco_b_composite.py."
+    },
+    {
+      "id": "kit/brands",
+      "kind": "other",
+      "file": "assets/brands/catalog.json",
+      "engine": null,
+      "status": "approved",
+      "created": "2026-09-18",
+      "approved_in": [
+        "09-jev"
+      ],
+      "summary": "Slot de marcas PNG+alfa para o canvas",
+      "preview": null,
+      "notes": ""
+    },
+    {
+      "id": "motion/canvas-kit",
+      "kind": "macro",
+      "file": "motion/README.md",
+      "engine": "motion/render.py",
+      "status": "approved",
+      "created": "2026-09-19",
+      "approved_in": [
+        "09-jev"
+      ],
+      "summary": "Canvas B/C Remotion: skills de motion, faixa travada (B 180–620 / C 200–1400), caption intocável",
+      "preview": null,
+      "notes": ""
+    },
+    {
+      "id": "sfx/palco-cues",
+      "kind": "sfx",
+      "file": "pipeline/map_sfx_cues.py",
+      "engine": null,
+      "status": "approved",
+      "created": "2026-09-19",
+      "approved_in": [
+        "09-jev"
+      ],
+      "summary": "kind snap/click/whoosh/riser/reveal → catálogo; tempo local do beat",
+      "preview": null,
+      "notes": ""
+    }
+  ]
+}

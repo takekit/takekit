@@ -111,7 +111,7 @@ continua carregando (`modules: null`); os scripts caem nos defaults de antes.
 
 Estilos **+** › **Nova legenda** (ou **Criar legenda…** no menu de legenda). Formulário
 campo a campo com o desenho do renderer real ao lado (`POST /api/presets/caption/preview`
-→ `video/resolve/engine/caption_preview.py`), sobre fundo escuro, creme ou um frame do vídeo da
+→ `video/kit/engine/caption_preview.py`), sobre fundo escuro, creme ou um frame do vídeo da
 thread; **Ver animação** renderiza a entrada. Salvar grava em `styles/_presets/caption/<id>.json`
 e, se veio de uma thread, já aplica nela.
 

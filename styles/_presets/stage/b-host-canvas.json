@@ -7,7 +7,7 @@
   "bRoll": null,
   "composite": [
     "video/headless/palco_b.py",
-    "video/resolve/engine/palco_b_composite.py"
+    "video/kit/engine/palco_b_composite.py"
   ],
   "safeZones": {
     "graphic": {

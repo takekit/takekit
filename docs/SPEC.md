@@ -39,22 +39,16 @@ Cada thread do harness aponta para um projeto.
 - **Esquerda:** lista de threads (projetos)
 - **Direita:** sidebar com **toggle** para a timeline (view detalhada)
 
-## 6. Pipeline headless (sair do DaVinci Resolve)
+## 6. Pipeline headless
 
-Substituições planejadas (com base no pipeline real do `ai-content-agent` / DEFAULT 09-jev):
-
-| Hoje (Resolve / acoplado) | Direção Takekit |
-|---------------------------|-----------------|
-| Trim / ripple fino na timeline | **FFmpeg** + `tighten_cuts` (RMS) |
-| DepthMap (Fusion) → matte Palco B | **Robust Video Matting** (ou equivalente headless) |
-| Parallax / captura de frame | Etapas posteriores no pipeline (ainda a especificar por script) |
-| Estilo 09-jev “travado” no projeto Resolve | Vira **config** (LUT, preset, template) em `/styles` |
-
-Já headless no legado e a reutilizar: captions (PIL+ffmpeg), SFX prep, Remotion motion, loudnorm, composite Palco B *depois* do matte.
+Feito (23/09/2026): trim com **FFmpeg** + `tighten_cuts` (RMS), matte do palco B com **Robust Video
+Matting**, captura de frame, preview e export com FFmpeg; captions (PIL+ffmpeg), SFX prep, Remotion
+motion e loudnorm no mesmo fluxo. Estilo vira **config** em `/styles`. Detalhes em
+[pipeline headless](../pipeline/video/headless/README.md).
 
 ## 7. Estilo como ativo portátil
 
-Estilo não vive “dentro do projeto Resolve”. É um **ativo versionável** (pasta `/styles`, ex. `09-jev`): LUT, preset, template, regras de palco/caption. Projetos **referenciam** o estilo; dá pra trocar sem reescrever o engine.
+Estilo não vive dentro do projeto de edição. É um **ativo versionável** (pasta `/styles`, ex. `09-jev`): LUT, preset, template, regras de palco/caption. Projetos **referenciam** o estilo; dá pra trocar sem reescrever o engine.
 
 ## 8. Público
 
@@ -69,7 +63,7 @@ Estilo não vive “dentro do projeto Resolve”. É um **ativo versionável** (
 ## 10. Próximos passos
 
 1. Prototipar a **view compacta** (chat + threads)
-2. Desacoplar **2–4 etapas** do Resolve no pipeline headless
+2. ~~Pipeline headless~~ (feito em 23/09/2026)
 3. Testar **2 vídeos em paralelo** no harness
 
 ## Mapa de pastas (scaffold)

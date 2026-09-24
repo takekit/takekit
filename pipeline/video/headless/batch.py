@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-"""N vídeos em paralelo, sem Resolve: trim → palco B → compose por projeto.
+"""N vídeos em paralelo: trim → palco B → compose por projeto.
 
-Com o Resolve, um job travava a aplicação inteira (um projeto aberto por vez, GUI).
-Aqui cada projeto é um processo independente que só escreve no próprio edit/ e
+Cada projeto é um processo independente que só escreve no próprio edit/ e
 exports/; o batch divide os núcleos (TAKEKIT_JOB_THREADS) para N jobs não brigarem.
 
     python3 video/headless/batch.py --jobs 3 video/projects/a video/projects/b video/projects/c

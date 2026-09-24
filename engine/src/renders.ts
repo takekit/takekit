@@ -21,7 +21,7 @@ import type { RenderTask, Thread } from "./types.js";
 
 const running = new Map<string, { task: RenderTask; controller: AbortController }>();
 const COMPOSE = "video/headless/compose.py";
-const CAPTIONS = "video/resolve/engine/captions_palco.py";
+const CAPTIONS = "video/kit/engine/captions_palco.py";
 /** Caption layers compose picks up (edit/overlay/captions_<layer>.mov) and their styles. */
 const CAPTION_LAYERS = ["face", "canvas", "hold"] as const;
 
@@ -113,7 +113,7 @@ export function startPreviewRender(threadId: string, opts: { captions: boolean }
           CAPTIONS,
           [
             "--job", join(edit, `job_${layer}.json`),
-            "--style", `video/resolve/styles/palco-${layer}.json`,
+            "--style", `video/kit/styles/palco-${layer}.json`,
             "--out", join(edit, "overlay", `captions_${layer}.mov`),
             "--progress",
           ],

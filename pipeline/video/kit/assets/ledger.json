@@ -1,0 +1,367 @@
+{
+  "_doc": "Ledger de assets externos: origem, autor, licença declarada. Nunca usar asset sem entrada aqui.",
+  "assets": [
+    {
+      "id": "yt_DTVSfxqepHM",
+      "kind": "filmburn+sfx",
+      "source": "https://www.youtube.com/watch?v=DTVSfxqepHM",
+      "author": "Filmmaking ",
+      "title": "video editing sound effect /film burn effect #film #effects #effect #sound #editing #capcut #edit",
+      "license": "YouTube: 'free download' declarado pelo autor",
+      "files": [
+        "filmburns/src/yt_user/DTVSfxqepHM.mp4",
+        "sfx/filmburn_yt_DTVSfxqepHM.wav"
+      ],
+      "added": "2026-09-12"
+    },
+    {
+      "id": "yt_l2pxVBGIxSs",
+      "kind": "filmburn+sfx",
+      "source": "https://www.youtube.com/watch?v=l2pxVBGIxSs",
+      "author": "Visuals By Haris",
+      "title": "Film Burn Overlay With Sound Effect #lightleak #lightleakeffect #soundeffects #aftereffects",
+      "license": "YouTube: 'free download' declarado pelo autor",
+      "files": [
+        "filmburns/src/yt_user/l2pxVBGIxSs.mp4",
+        "sfx/filmburn_yt_l2pxVBGIxSs.wav"
+      ],
+      "added": "2026-09-12"
+    },
+    {
+      "id": "yt_p1EBp_BxibI",
+      "kind": "filmburn+sfx",
+      "source": "https://www.youtube.com/watch?v=p1EBp_BxibI",
+      "author": "Free stock footage",
+      "title": "Film burn effect - video editing sound effect    #film #effects #effect #sound #editing",
+      "license": "YouTube: 'free download' declarado pelo autor",
+      "files": [
+        "filmburns/src/yt_user/p1EBp_BxibI.mp4",
+        "sfx/filmburn_yt_p1EBp_BxibI.wav"
+      ],
+      "added": "2026-09-12"
+    },
+    {
+      "id": "yt_mVKWHeId9QU",
+      "kind": "filmburn+sfx",
+      "source": "https://www.youtube.com/watch?v=mVKWHeId9QU",
+      "author": "Sfx shorts",
+      "title": "vidio editing sound effect /film burn effect    #film #effects #effect #sound #editing",
+      "license": "YouTube: 'free download' declarado pelo autor",
+      "files": [
+        "filmburns/src/yt_user/mVKWHeId9QU.mp4",
+        "sfx/filmburn_yt_mVKWHeId9QU.wav"
+      ],
+      "added": "2026-09-12"
+    },
+    {
+      "id": "yt_Wc3G6i0xa8o",
+      "kind": "filmburn+sfx",
+      "source": "https://www.youtube.com/watch?v=Wc3G6i0xa8o",
+      "author": "kareem q goma",
+      "title": "Film Burn Overlay Free Download - vertical        #filmdirector #video_editing #lighting #effects",
+      "license": "YouTube: 'free download' declarado pelo autor",
+      "files": [
+        "filmburns/src/yt_user/Wc3G6i0xa8o.mp4",
+        "sfx/filmburn_yt_Wc3G6i0xa8o.wav",
+        "filmburns/src/yt_user/Wc3G6i0xa8o_clean.mp4"
+      ],
+      "added": "2026-09-12",
+      "note": "botão Subscribe queimado em 11.7–15.6 s → removido no _clean (26 s)"
+    },
+    {
+      "id": "yt_o8xwVwbTaNg",
+      "kind": "filmburn-pack",
+      "source": "https://www.youtube.com/watch?v=o8xwVwbTaNg",
+      "author": "ITC FILMS",
+      "title": "Film Burn Transitions Free Download 50 Pack 4K Cinematic Overlays",
+      "license": "ITC FILMS: 'Free for commercial and personal use' (descrição); pack via Google Drive 1Jkno6k2ZEzTYEytLO4lWjjugucIX8tQf",
+      "files": [
+        "filmburns/src/itc_filmburns50/",
+        "filmburns/itc_11.mp4",
+        "filmburns/itc_12.mp4",
+        "filmburns/itc_17.mp4",
+        "filmburns/itc_02.mp4"
+      ],
+      "added": "2026-09-12",
+      "note": "47/50 baixados; itc_XX = versão vertical 1080x1920@30 (crop central)"
+    },
+    {
+      "id": "lightleak_procedural",
+      "kind": "filmburn",
+      "source": "kit/engine/lightleak.py",
+      "author": "próprio (procedural)",
+      "license": "próprio",
+      "files": [
+        "filmburns/lightleak_gold_s3.mov",
+        "filmburns/lightleak_gold_s7.mov"
+      ],
+      "added": "2026-09-12",
+      "note": "fallback; preferir burns reais"
+    },
+    {
+      "id": "mixkit_sfx",
+      "kind": "sfx",
+      "source": "https://mixkit.co/free-sound-effects/",
+      "author": "Mixkit (Envato)",
+      "license": "Mixkit Sound Effects Free License — uso comercial, sem atribuição",
+      "files": [
+        "sfx/mixkit_whoosh_1.wav",
+        "sfx/mixkit_whoosh_2.wav",
+        "sfx/mixkit_notification_1.wav",
+        "sfx/mixkit_notification_2.wav",
+        "sfx/mixkit_click_1.wav",
+        "sfx/mixkit_pop_1.wav",
+        "sfx/mixkit_pop_2.wav"
+      ],
+      "added": "2026-09-12"
+    },
+    {
+      "id": "playfair_display",
+      "kind": "font",
+      "source": "https://github.com/google/fonts/tree/main/ofl/playfairdisplay",
+      "author": "Claus Eggers Sørensen",
+      "license": "SIL OFL 1.1",
+      "files": [
+        "fonts/PlayfairDisplay.ttf",
+        "fonts/PlayfairDisplay-Italic.ttf"
+      ],
+      "added": "2026-09-12"
+    },
+    {
+      "id": "mixkit_music",
+      "kind": "music",
+      "source": "https://mixkit.co/free-stock-music/",
+      "author": "Mixkit (Envato)",
+      "license": "Mixkit Stock Music Free License — uso comercial em vídeo, sem atribuição",
+      "files": [
+        "music/mixkit_130.mp3",
+        "music/mixkit_123.mp3",
+        "music/mixkit_162.mp3"
+      ],
+      "added": "2026-09-12"
+    },
+    {
+      "id": "peu_sfx_pack",
+      "kind": "sfx-library",
+      "source": "(OPEU) Projeto - Sound Effects — Peu / Menino do Urso (aula 'guia de efeitos sonoros')",
+      "author": "vários (Artlist, Blackguard Sound, Glitchedtones, Sonic Bat, Udi Zisser) via pack do Peu",
+      "license": "verificar por item; uso interno autorizado pelo Oldaque (12/09)",
+      "files": [
+        "sfx/<categoria>/*.wav",
+        "sfx/catalog.json"
+      ],
+      "added": "2026-09-12"
+    },
+    {
+      "id": "iphone_notification",
+      "kind": "sfx",
+      "source": "https://www.myinstants.com/en/instant/iphone-notification-71441/ (download manual)",
+      "author": "Apple (som de sistema)",
+      "license": "som de sistema; uso corrente em redes",
+      "files": [
+        "sfx/notification/iphone_notification.wav"
+      ],
+      "added": "2026-09-12"
+    },
+    {
+      "id": "brainstorm-academy-reels",
+      "kind": "backgrounds+guides+sfx+fonts+adobe-reference",
+      "source": "/Users/oldaquerios/Downloads/pack-de-edicao-de-reels-by-brainstorm-academy",
+      "author": "Mateus Ferreira / Brainstorm Academy",
+      "title": "Pack de edição de reels",
+      "license": "Transcrição fornecida declara pack gratuito para uso; não acompanha termo individual de licença dos arquivos. Não inferir licença de redistribuição.",
+      "files": [
+        "backgrounds/brainstorm-academy/background-01.mp4",
+        "backgrounds/brainstorm-academy/background-02-alpha.mov",
+        "backgrounds/brainstorm-academy/background-03.mp4",
+        "backgrounds/brainstorm-academy/background-04.mp4",
+        "backgrounds/brainstorm-academy/background-05.mp4",
+        "backgrounds/brainstorm-academy/background-06.mp4",
+        "backgrounds/brainstorm-academy/background-07.mp4",
+        "backgrounds/brainstorm-academy/background-08.mp4",
+        "backgrounds/brainstorm-academy/background-09.mp4",
+        "backgrounds/brainstorm-academy/background-10.mp4",
+        "sfx/brainstorm-academy/originals/among-us.mp3",
+        "sfx/brainstorm-academy/originals/camera-shutter-click-5.mp3",
+        "sfx/brainstorm-academy/originals/cartoon-boing.aac",
+        "sfx/brainstorm-academy/originals/dinheiro.aac",
+        "sfx/brainstorm-academy/originals/fahhh.mp3",
+        "sfx/brainstorm-academy/originals/gong.mp3",
+        "sfx/brainstorm-academy/originals/impact.aac",
+        "sfx/brainstorm-academy/originals/mouse-click.mp3",
+        "sfx/brainstorm-academy/originals/piano-note.aac",
+        "sfx/brainstorm-academy/originals/pop.aac",
+        "sfx/brainstorm-academy/originals/relogio.mp3",
+        "sfx/brainstorm-academy/originals/riser-collection-15.mp3",
+        "sfx/brainstorm-academy/originals/shocked.mp3",
+        "sfx/brainstorm-academy/originals/teclado.mp3",
+        "sfx/brainstorm-academy/originals/tiktok-core.mp3",
+        "fonts/brainstorm-academy/BodoniflfBold-MVZx.ttf",
+        "fonts/brainstorm-academy/BodoniflfBolditalic-K7dD.ttf",
+        "fonts/brainstorm-academy/BodoniflfItalic-2OEw.ttf",
+        "fonts/brainstorm-academy/BodoniflfRoman-vmAD.ttf",
+        "fonts/brainstorm-academy/Brigends Expanded.otf",
+        "fonts/brainstorm-academy/Gotham-Black.otf",
+        "fonts/brainstorm-academy/Gotham-Thin.otf",
+        "fonts/brainstorm-academy/Gotham-ThinItalic.otf",
+        "fonts/brainstorm-academy/Gotham-UltraItalic.otf",
+        "fonts/brainstorm-academy/GothamBold.ttf",
+        "fonts/brainstorm-academy/GothamBoldItalic.ttf",
+        "fonts/brainstorm-academy/GothamBook.ttf",
+        "fonts/brainstorm-academy/GothamBookItalic.ttf",
+        "fonts/brainstorm-academy/GothamLight.ttf",
+        "fonts/brainstorm-academy/GothamLightItalic.ttf",
+        "fonts/brainstorm-academy/GothamMedium.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-Black.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-BlackIta.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-Bold.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-BoldIta.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-ExtBdIta.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-ExtBlk.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-ExtBlkIta.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-ExtLt.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-ExtLtIta.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-ExtraBold.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-Light.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-LightIta.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-MedIta.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-Medium.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-RegIta.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-Regular.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-Thin.ttf",
+        "fonts/brainstorm-academy/HelveticaNowDisplay-ThinIta.ttf",
+        "fonts/brainstorm-academy/Roboto-Black.ttf",
+        "fonts/brainstorm-academy/Roboto-BlackItalic.ttf",
+        "fonts/brainstorm-academy/Roboto-Bold.ttf",
+        "fonts/brainstorm-academy/Roboto-BoldItalic.ttf",
+        "fonts/brainstorm-academy/Roboto-Italic.ttf",
+        "fonts/brainstorm-academy/Roboto-Light.ttf",
+        "fonts/brainstorm-academy/Roboto-LightItalic.ttf",
+        "fonts/brainstorm-academy/Roboto-Medium.ttf",
+        "fonts/brainstorm-academy/Roboto-MediumItalic.ttf",
+        "fonts/brainstorm-academy/Roboto-Regular.ttf",
+        "fonts/brainstorm-academy/Roboto-Thin.ttf",
+        "fonts/brainstorm-academy/Roboto-ThinItalic.ttf",
+        "fonts/brainstorm-academy/RobotoCondensed-Bold.ttf",
+        "fonts/brainstorm-academy/RobotoCondensed-BoldItalic.ttf",
+        "fonts/brainstorm-academy/RobotoCondensed-Italic.ttf",
+        "fonts/brainstorm-academy/RobotoCondensed-Light.ttf",
+        "fonts/brainstorm-academy/RobotoCondensed-LightItalic.ttf",
+        "fonts/brainstorm-academy/RobotoCondensed-Regular.ttf",
+        "fonts/brainstorm-academy/TikTokSans-VariableFont_opsz,slnt,wdth,wght.ttf",
+        "fonts/brainstorm-academy/georgia.ttf",
+        "fonts/brainstorm-academy/georgiab.ttf",
+        "fonts/brainstorm-academy/georgiai.ttf",
+        "fonts/brainstorm-academy/georgiaz.ttf",
+        "guides/brainstorm-academy/guia-reels.png",
+        "guides/brainstorm-academy/guia-tiktok.png",
+        "guides/brainstorm-academy/guia-ytshorts.png",
+        "packs/brainstorm-academy/adobe/premiere/Reels - Animações de Texto - brainstorm.academy.mogrt",
+        "packs/brainstorm-academy/adobe/premiere/Reels Presets - Adobe Premiere by brainstorm academy.prfpset",
+        "packs/brainstorm-academy/adobe/after-effects/[Text] Da Esquerda - Palavra única.ffx",
+        "packs/brainstorm-academy/adobe/after-effects/[Text] Da Esquerda - Por Palavra.ffx",
+        "packs/brainstorm-academy/adobe/after-effects/[Text] De baixo - Por Palavra.ffx",
+        "packs/brainstorm-academy/adobe/after-effects/[Text] Decode - Por Letra.ffx",
+        "packs/brainstorm-academy/adobe/after-effects/[Text] Desfoque - Por Palavra.ffx",
+        "packs/brainstorm-academy/adobe/after-effects/[Text] Escala - Por Letra.ffx",
+        "packs/brainstorm-academy/adobe/after-effects/[Text] Glitch - Por Letra.ffx",
+        "packs/brainstorm-academy/adobe/after-effects/[Text] Glitch - Por Palavra.ffx",
+        "packs/brainstorm-academy/adobe/after-effects/[Text] Opacidade - Por Letra.ffx",
+        "packs/brainstorm-academy/adobe/after-effects/[Text] Stretch - Por Letra.ffx",
+        "packs/brainstorm-academy/adobe/after-effects/[Text] Stretch - Por Palavra.ffx",
+        "sfx/brainstorm-academy/among-us.wav",
+        "sfx/brainstorm-academy/camera-shutter-click-5.wav",
+        "sfx/brainstorm-academy/cartoon-boing.wav",
+        "sfx/brainstorm-academy/dinheiro.wav",
+        "sfx/brainstorm-academy/fahhh.wav",
+        "sfx/brainstorm-academy/gong.wav",
+        "sfx/brainstorm-academy/impact.wav",
+        "sfx/brainstorm-academy/mouse-click.wav",
+        "sfx/brainstorm-academy/piano-note.wav",
+        "sfx/brainstorm-academy/pop.wav",
+        "sfx/brainstorm-academy/relogio.wav",
+        "sfx/brainstorm-academy/riser-collection-15.wav",
+        "sfx/brainstorm-academy/shocked.wav",
+        "sfx/brainstorm-academy/teclado.wav",
+        "sfx/brainstorm-academy/tiktok-core.wav"
+      ],
+      "catalog": "packs/brainstorm-academy/catalog.json",
+      "added": "2026-09-15"
+    },
+    {
+      "id": "brand_chatgpt",
+      "kind": "brand",
+      "source": "https://commons.wikimedia.org/wiki/File:ChatGPT_logo.svg",
+      "author": "OpenAI (via Wikimedia)",
+      "title": "ChatGPT logo",
+      "license": "editorial use; see Wikimedia file page",
+      "files": [
+        "brands/chatgpt/logo.png",
+        "brands/chatgpt/logo.svg"
+      ],
+      "added": "2026-09-18"
+    },
+    {
+      "id": "brand_claude",
+      "kind": "brand",
+      "source": "https://commons.wikimedia.org/wiki/File:Claude_AI_symbol.svg",
+      "author": "Anthropic (via Wikimedia)",
+      "title": "Claude AI symbol",
+      "license": "editorial use; see Wikimedia file page",
+      "files": [
+        "brands/claude/logo.png",
+        "brands/claude/logo.svg"
+      ],
+      "added": "2026-09-18"
+    },
+    {
+      "id": "brand_grok",
+      "kind": "brand",
+      "source": "https://commons.wikimedia.org/wiki/File:XAI-Logo.svg",
+      "author": "xAI (via Wikimedia)",
+      "title": "xAI logo",
+      "license": "editorial use; see Wikimedia file page",
+      "files": [
+        "brands/grok/logo.png",
+        "brands/grok/logo.svg"
+      ],
+      "added": "2026-09-18"
+    },
+    {
+      "id": "brand_jev",
+      "kind": "brand",
+      "source": "https://typesafe.ai/",
+      "author": "TypeSafe AI",
+      "title": "Jev / TypeSafe mark and wordmark",
+      "license": "marca TypeSafe; uso editorial no canvas quando o assunto é Jev",
+      "files": [
+        "brands/jev/logo.png",
+        "brands/jev/wordmark.png",
+        "brands/jev/mark.svg",
+        "brands/jev/wordmark.svg"
+      ],
+      "added": "2026-09-18"
+    },
+    {
+      "id": "reels-covers",
+      "kind": "reels-cover-reference+portrait-source",
+      "source": "Oldaque's IMG_8334.JPG, IMG_8374.JPG, and IMG_8393.JPG; studio retouches and approved cover revisions from 2026-09-22",
+      "author": "Oldaque / approved cover workflow",
+      "title": "Instagram Reels cover preset",
+      "license": "creator-owned project assets; internal reuse",
+      "files": [
+        "reels-covers/base-photos/IMG_8334-retocada.png",
+        "reels-covers/base-photos/IMG_8374-retocada.png",
+        "reels-covers/base-photos/IMG_8393-retocada.png",
+        "reels-covers/approved-examples/reels-template-sorriso-final.png",
+        "reels-covers/approved-examples/reels-template-segredo-final.png",
+        "reels-covers/approved-examples/reels-template-apontando-final.png",
+        "reels-covers/README.md",
+        "reels-covers/GENERATION.md",
+        "reels-covers/request-template.md"
+      ],
+      "added": "2026-09-22",
+      "note": "Approved examples use the neutral background; base portraits preserve identity for new covers. Previous assets are archived in reels-covers/temporarias/anteriores-2026-09-22."
+    }
+  ]
+}

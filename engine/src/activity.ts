@@ -59,7 +59,7 @@ export const PIPELINE_STEPS: Array<{ key: string; label: string; doing: string; 
   { key: "cuts", label: "Cortes", doing: "ajustando os cortes", match: /tighten_cuts\.py/ },
   { key: "trim", label: "Trim", doing: "cortando a fala", match: /headless\/trim\.py|\btrim\.py/ },
   { key: "sfx", label: "SFX", doing: "preparando os efeitos sonoros", match: /map_sfx_cues\.py|sfx_prep\.py/ },
-  { key: "captions", label: "Legendas", doing: "renderizando as legendas", match: /captions_palco\.py|render_overlays\.py/ },
+  { key: "captions", label: "Legendas", doing: "renderizando as legendas", match: /captions_palco\.py/ },
   { key: "motion", label: "Motion", doing: "renderizando os canvases", match: /motion\/render\.py|remotion\s+render/i },
   { key: "palco_b", label: "Palco B", doing: "recortando o fundo (RVM)", match: /palco_b\.py|matte\.py/ },
   { key: "compose", label: "Preview", doing: "montando o preview", match: /compose\.py|batch\.py/ },

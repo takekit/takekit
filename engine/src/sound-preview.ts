@@ -86,10 +86,10 @@ export async function soundPreview(preset: Preset, footage: string | null): Prom
   return out;
 }
 
-/** Asset paths in presets are relative to video/resolve/ ("assets/music/…"), else $TAKEKIT_ASSETS. */
+/** Asset paths in presets are relative to video/kit/ ("assets/music/…"), else $TAKEKIT_ASSETS. */
 function asset(rel: string): string | null {
   const inner = rel.replace(/^assets\//, "");
-  const roots = [join(getConfig().pipelineRoot, "video", "resolve", "assets")];
+  const roots = [join(getConfig().pipelineRoot, "video", "kit", "assets")];
   if (process.env.TAKEKIT_ASSETS) roots.push(process.env.TAKEKIT_ASSETS);
   for (const root of roots) {
     const p = join(root, inner);
@@ -106,7 +106,7 @@ function catalogFile(id: string | undefined): string | null {
   if (!catalog) {
     catalog = new Map();
     try {
-      const path = join(getConfig().pipelineRoot, "video", "resolve", "assets", "sfx", "catalog.json");
+      const path = join(getConfig().pipelineRoot, "video", "kit", "assets", "sfx", "catalog.json");
       const items = (JSON.parse(readFileSync(path, "utf8")) as { items?: Array<{ id: string; file: string }> }).items ?? [];
       for (const item of items) catalog.set(item.id, item.file);
     } catch {

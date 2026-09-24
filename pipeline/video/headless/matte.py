@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Máscara da pessoa com Robust Video Matting (RVM), sem Resolve/DepthMap.
+"""Máscara da pessoa com Robust Video Matting (RVM).
 
 Lê um trecho de vídeo com FFmpeg, roda o RVM (ONNX, CPU) quadro a quadro com o
 estado recorrente e grava o alfa. O primeiro quadro é repetido algumas vezes antes

@@ -545,8 +545,8 @@ function composeAgentPrompt(input: {
     `Estilo da thread: ${input.style.name} (id ${input.style.id}). Pacote Style Kit: ${input.style.dir}/`,
     "  prompt.md (abaixo), storyboard.md, stage-scheme.json, caption.json, cuts.json, sound-effects.json,",
     "  transitions.json, engine-scripts.json. O pacote substitui o default citado na skill.",
-    "Workflow: video/resolve/WORKFLOW.md",
-    "Render sem Resolve: video/headless/README.md (Python: .venv/bin/python; trim.py → palco_b.py → compose.py)",
+    "Workflow: video/kit/WORKFLOW.md",
+    "Render: video/headless/README.md (Python: .venv/bin/python; trim.py → palco_b.py → compose.py)",
     `Projeto de vídeo: ${input.projectPath}`,
     ...(input.inputVideoPaths.length > 1
       ? ["Vídeos de entrada (na ordem escolhida):", ...input.inputVideoPaths.map((p, i) => `  ${i + 1}) ${p}`)]
@@ -742,7 +742,7 @@ function annotationNotes(userPrompt: string): string[] {
         "Anotações na timeline (bloco <timeline-context>):",
         "- Cada item [n] marca um clipe ou intervalo da timeline editada; a linha `nota:` diz o que mudar ali.",
         "- Tempos são da timeline gravada (= tempo do export), em timecode hh:mm:ss:ff e segundos, no fps indicado.",
-        "- `ref` aponta o item no arquivo-fonte indicado (ex.: cuts[4] em edit/build.json); num intervalo, as faixas",
+        "- `ref` aponta o item no arquivo-fonte indicado (ex.: units[4] em edit/compose.resolved.json); num intervalo, as faixas",
         "  listadas são o que está dentro dele.",
         "- Fonte edit/compose.resolved.json é gerada pelo compose.py a cada export: não edite ela. `units[i]` é a",
         "  unidade (cuts.json + beat do storyboard em plan.json), `fx[i]` o filmburn (`transicao` do beat),",

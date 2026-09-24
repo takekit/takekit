@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Palco B sem Resolve: RVM recorta a pessoa, palco_b_composite.py monta card + cabeça vazando.
+"""Palco B: RVM recorta a pessoa, palco_b_composite.py monta card + cabeça vazando.
 
 Para cada unidade de palco B do storyboard (plan.json), lê o trecho do edit/aroll.mov,
 gera o alfa com o RVM e grava edit/overlay/hostB_<unidade>.mov (ProRes 4444), o mesmo

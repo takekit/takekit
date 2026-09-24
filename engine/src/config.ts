@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { defaultModelFor } from "./catalog.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-/** In-repo copy of the editor-reels pipeline (skill + video/resolve + video/headless). */
+/** In-repo copy of the editor-reels pipeline (skill + video/kit + video/headless). */
 const IN_REPO_PIPELINE = resolve(HERE, "../../pipeline");
 /** In-repo Style Kit gallery: one package per styles/<id>/ (docs/style-kit/SPEC.md). */
 const IN_REPO_STYLES = resolve(HERE, "../../styles");
