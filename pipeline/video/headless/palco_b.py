@@ -53,12 +53,20 @@ def main() -> None:
         u, t0 = by_id[uid], time.time()
         wdir = work(pdir, "palco_b", uid)
         n = matte_range(aroll, u.start, u.end, wdir, fps or FPS, rgb=True, matter=matter)
+        ref = pbc.hard_matte(wdir / f"matte_{n // 2:04d}.png", a.thresh)
+        geo = pbc.layout_from_matte(ref)
+        if geo is None:
+            print(f"aviso: {uid} matte sem cabeça confiável; encaixe legado", flush=True)
+        else:
+            span = pbc.person_span(ref)
+            print(f"{uid}: cabeça na fonte y={span[0]}  escala {geo[0]:.3f}  "
+                  f"coroa em y={pbc.CARD[1] - pbc.HEAD_CLEAR}", flush=True)
         dest = overlay / f"hostB_{uid}.mov"
         tmp = overlay / f".hostB_{uid}.tmp.mov"
-        pbc.encode((pbc.composite_frame(wdir / f"rgb_{i:04d}.png", wdir / f"matte_{i:04d}.png", a.thresh)
+        pbc.encode((pbc.composite_frame(wdir / f"rgb_{i:04d}.png", wdir / f"matte_{i:04d}.png", a.thresh, geo)
                     for i in range(n)), tmp)
         tmp.replace(dest)
-        mid = pbc.composite_frame(wdir / f"rgb_{n // 2:04d}.png", wdir / f"matte_{n // 2:04d}.png", a.thresh)
+        mid = pbc.composite_frame(wdir / f"rgb_{n // 2:04d}.png", wdir / f"matte_{n // 2:04d}.png", a.thresh, geo)
         mid.convert("RGB").save(overlay / f"hostB_{uid}.png")
         if not a.keep:
             shutil.rmtree(wdir, ignore_errors=True)
