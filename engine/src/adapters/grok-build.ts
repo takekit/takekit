@@ -16,6 +16,8 @@ import { anthropicStreamParser } from "../activity.js";
  */
 function buildArgs(request: ExecutorRequest, cwd: string): string[] {
   const args = ["-p", request.prompt, "--cwd", cwd, "--output-format", "streaming-messages-json"];
+  // -s names a new session; -r continues it (headless keeps one turn per process).
+  if (request.session?.id) args.push(request.session.resume ? "--resume" : "--session-id", request.session.id);
   if (request.model) args.push("--model", request.model);
   if (request.effort) args.push("--reasoning-effort", request.effort);
   if (request.skipPermissions) args.push("--always-approve");
@@ -37,6 +39,7 @@ export class GrokBuildExecutor implements Executor {
       cwd,
       signal: request.signal,
       logTag: this.id,
+      live: request.live,
       parser: anthropicStreamParser(request.onActivity ?? (() => {})),
     });
   }

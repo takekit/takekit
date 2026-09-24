@@ -33,7 +33,8 @@ export function Composer({
   const [draft, setDraft] = useState("");
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const hasAttachments = Boolean(attachments?.length);
-  const canSend = (Boolean(draft.trim()) || hasAttachments) && !busy && !disabled;
+  // While a job runs the message still goes: the engine hands it to the working agent.
+  const canSend = (Boolean(draft.trim()) || hasAttachments) && !disabled;
 
   useLayoutEffect(() => {
     const el = inputRef.current;
@@ -44,7 +45,7 @@ export function Composer({
 
   async function submit() {
     const text = draft.trim();
-    if ((!text && !hasAttachments) || busy || disabled) return;
+    if ((!text && !hasAttachments) || disabled) return;
     setDraft("");
     const ok = await onSubmit(text);
     // Give the text back if the engine refused it.
@@ -98,7 +99,7 @@ export function Composer({
           onChange={(e) => setDraft(e.target.value)}
           placeholder={
             busy
-              ? "Aguardando o job atual terminar…"
+              ? "Mande um ajuste; o agente recebe enquanto trabalha…"
               : hasAttachments
                 ? "Algo mais? Enter envia as anotações."
                 : placeholder
@@ -120,10 +121,10 @@ export function Composer({
             type="submit"
             className="send-btn"
             disabled={!canSend}
-            aria-label={busy ? "Job em andamento" : "Enviar"}
-            title={busy ? "Job em andamento" : "Enviar  ↵"}
+            aria-label={busy && !canSend ? "Job em andamento" : "Enviar"}
+            title={busy ? (canSend ? "Enviar ao agente que está trabalhando  ↵" : "Job em andamento") : "Enviar  ↵"}
           >
-            {busy ? (
+            {busy && !canSend ? (
               <LoaderCircle size={15} strokeWidth={2.25} className="spin" />
             ) : (
               <ArrowUp size={16} strokeWidth={2.25} />

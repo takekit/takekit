@@ -4155,3 +4155,37 @@ body.is-resizing * {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* ── Messages sent while the agent works ── */
+
+.msg-delivery {
+  margin: 0;
+  color: var(--fg-4);
+  font-size: 11.5px;
+}
+
+.feed-user {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 5px 0;
+  color: var(--fg-2);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.feed-user-icon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--accent);
+}
+
+.feed-user-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.feed-user-label {
+  color: var(--fg);
+  font-weight: 500;
+}

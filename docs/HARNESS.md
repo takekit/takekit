@@ -117,6 +117,32 @@ model picker, Settings, `config.json` (`executorId` + `model` + `effort` + `skip
 `TAKEKIT_EXECUTOR`. The model list per harness (`engine/src/catalog.ts`) is exposed in
 `GET /api/config` → `executors[]`; any other model id still works as a custom id.
 
+### Sessions (resume per harness)
+
+Each thread keeps one CLI session per executor (`thread.sessions[executorId]`: id, cwd, `seen`).
+The first message of a harness in a thread starts a session with the full prompt (skill, style
+brief, rules, recent turns). The next ones **resume** it with the model selected now, sending only
+the new request plus the turns another harness answered meanwhile, so the agent keeps what it
+already read and ran. If the saved session is gone, the job starts a new one with the full prompt.
+
+| Adapter | New session | Resume |
+|---------|-------------|--------|
+| `claude-code` | `--session-id <uuid>` | `--resume <uuid>` |
+| `grok-build` | `-s <uuid>` | `-r <uuid>` |
+| `codex` | id from `thread.started` | `codex exec resume … -- <id> "<prompt>"` (sandbox via `-c`) |
+| `opencode` | id from `sessionID` in events | `--session <id>` |
+
+### Messages while a job runs
+
+`POST /api/threads/:id/messages` during a job no longer returns 409: the message goes to the
+running agent (`delivery` on the message and a "Você" row in the activity feed).
+
+- **live** (Claude): `--input-format stream-json` keeps stdin open; the message is written to it
+  and the agent reads it at the next step. Stdin closes on the `result` event.
+- **interrupt** (Codex, Grok, OpenCode, or Claude after its turn ended): the current turn is
+  stopped and the same session resumes at once with the message.
+- **next**: the CLI hadn't reported its session yet; the message goes in as soon as the turn ends.
+
 ## HTTP API (engine)
 
 | Method | Path | Purpose |

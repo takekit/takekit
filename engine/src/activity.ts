@@ -14,7 +14,8 @@ import { basename } from "node:path";
  *   OpenCode     run --format json                       (step/tool_use/text parts)
  */
 
-export type ActivityKind = "message" | "command" | "read" | "edit" | "search" | "web" | "agent" | "plan" | "tool" | "error";
+/** "user" = a message the user sent while the run was going (see steerJob). */
+export type ActivityKind = "message" | "user" | "command" | "read" | "edit" | "search" | "web" | "agent" | "plan" | "tool" | "error";
 export type ActivityStatus = "running" | "done" | "failed";
 export type StepState = "pending" | "running" | "done" | "failed";
 
@@ -48,6 +49,8 @@ export interface StreamParser {
   line(text: string): void;
   /** Final answer of the run (what `-p` text mode would have printed). */
   finalText(): string;
+  /** The CLI's session / thread id, once the stream has shown it (for resume). */
+  sessionId(): string | undefined;
 }
 
 /** Pipeline scripts → step key + what the step does, in pipeline order. */
@@ -176,6 +179,7 @@ function resultText(content: unknown): string {
 export function anthropicStreamParser(emit: Emit): StreamParser {
   let final = "";
   let lastText = "";
+  let session: string | undefined;
   let n = 0;
   const shown = new Set<string>(); // tool_use ids that have a row
   // Claude's task list (TaskCreate / TaskUpdate) becomes the plan card.
@@ -188,6 +192,7 @@ export function anthropicStreamParser(emit: Emit): StreamParser {
       const ev = parse(text);
       if (!ev) return;
       const type = str(ev.type);
+      session = str(ev.session_id) || session;
       if (type === "assistant") {
         for (const block of arr(obj(ev.message).content).map(obj)) {
           if (block.type === "text" && str(block.text).trim()) {
@@ -257,6 +262,7 @@ export function anthropicStreamParser(emit: Emit): StreamParser {
       }
     },
     finalText: () => final || lastText,
+    sessionId: () => session,
   };
 }
 
@@ -273,11 +279,13 @@ function readTail(path: string, max = 4000): string {
 /** `codex exec --json`: thread.started / turn.* / item.started|updated|completed. */
 export function codexParser(emit: Emit): StreamParser {
   let lastText = "";
+  let thread: string | undefined;
   return {
     line(text) {
       const ev = parse(text);
       if (!ev) return;
       const type = str(ev.type);
+      if (type === "thread.started") thread = str(ev.thread_id) || thread;
       if (type === "error" || type === "turn.failed") {
         const message = str(ev.message) || str(obj(ev.error).message) || "Erro no Codex";
         emit({ id: `err-${Date.now()}`, kind: "error", title: oneLine(message, 200), status: "failed" });
@@ -332,17 +340,20 @@ export function codexParser(emit: Emit): StreamParser {
       }
     },
     finalText: () => lastText,
+    sessionId: () => thread,
   };
 }
 
 /** `opencode run --format json`: step_start / tool_use / text / step_finish / error. */
 export function opencodeParser(emit: Emit): StreamParser {
   let lastText = "";
+  let session: string | undefined;
   return {
     line(text) {
       const ev = parse(text);
       if (!ev) return;
       const type = str(ev.type);
+      session = str(ev.sessionID) || session;
       const part = obj(ev.part);
       if (type === "text" && str(part.text).trim()) {
         lastText = str(part.text).trim();
@@ -373,6 +384,7 @@ export function opencodeParser(emit: Emit): StreamParser {
       }
     },
     finalText: () => lastText,
+    sessionId: () => session,
   };
 }
 

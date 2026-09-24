@@ -21,12 +21,16 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return (await res.json()) as T;
 }
 
+/** How a message sent while the agent worked reached it (see the engine's steerJob). */
+export type SteerDelivery = "live" | "interrupt" | "next";
+
 export interface Message {
   id: string;
   role: "user" | "assistant" | "system";
   content: string;
   createdAt: string;
   jobId?: string;
+  delivery?: SteerDelivery;
 }
 
 export type JobStatus = "queued" | "running" | "succeeded" | "failed";
@@ -113,8 +117,9 @@ export function createThread(body: {
   });
 }
 
+/** While a job runs, the message goes to the working agent (`delivery` says how). */
 export function postMessage(threadId: string, content: string, run = true) {
-  return request<{ message: Message; job: Job | null }>(
+  return request<{ message: Message; job: Job | null; delivery?: SteerDelivery }>(
     `/api/threads/${threadId}/messages`,
     {
       method: "POST",
@@ -333,7 +338,7 @@ export const videoFileUrl = (path: string) => `${ENGINE_URL}/api/fs/video?path=$
 // ── Live job activity ──
 
 export type StepState = "pending" | "running" | "done" | "failed";
-export type ActivityKind = "message" | "command" | "read" | "edit" | "search" | "web" | "agent" | "plan" | "tool" | "error";
+export type ActivityKind = "message" | "user" | "command" | "read" | "edit" | "search" | "web" | "agent" | "plan" | "tool" | "error";
 
 export interface PlanEntry {
   text: string;
@@ -360,6 +365,8 @@ export interface ActivityPage {
   seq: number;
   status: JobStatus;
   mode: JobMode | null;
+  /** Continued the thread's CLI session (vs a new one). */
+  resumed: boolean;
   startedAt: string | null;
   finishedAt: string | null;
 }

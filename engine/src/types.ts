@@ -9,12 +9,33 @@ export type JobStatus = "queued" | "running" | "succeeded" | "failed";
  */
 export type JobMode = "chat" | "edit";
 
+/**
+ * How a message sent while a job ran reached the agent: "live" straight into the running
+ * CLI, "interrupt" by stopping the current turn and resuming the session with it, "next"
+ * right after the current turn (the CLI hadn't shown its session id yet).
+ */
+export type SteerDelivery = "live" | "interrupt" | "next";
+
 export interface Message {
   id: string;
   role: "user" | "assistant" | "system";
   content: string;
   createdAt: string;
   jobId?: string;
+  /** Set on user messages sent while a job was running. */
+  delivery?: SteerDelivery;
+}
+
+/** A harness CLI session this thread can resume (one per executor). */
+export interface HarnessSession {
+  /** Claude / Grok session id, Codex thread id, OpenCode session id. */
+  id: string;
+  /** CLIs file sessions by directory: only resumed from the same cwd. */
+  cwd: string;
+  model?: string;
+  /** thread.messages.length when this session last ran: later turns are news to it. */
+  seen: number;
+  updatedAt: string;
 }
 
 export type StageState = "pending" | "running" | "done" | "failed";
@@ -47,6 +68,8 @@ export interface Thread {
   pipeline?: Record<string, StepState>;
   /** Hidden from the thread list (kept on disk; can be restored). */
   archivedAt?: string | null;
+  /** CLI session per executor id, so the next message resumes instead of starting over. */
+  sessions?: Record<string, HarnessSession>;
 }
 
 export interface Job {
@@ -69,4 +92,6 @@ export interface Job {
   activity?: ActivityItem[];
   activitySeq?: number;
   cancelRequested?: boolean;
+  /** Continued the thread's CLI session instead of starting a new one. */
+  resumed?: boolean;
 }

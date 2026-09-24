@@ -6,6 +6,7 @@ const POLL_MS = 1000;
 export interface JobActivity {
   items: ActivityItem[];
   mode: JobMode | null;
+  resumed: boolean;
   startedAt: string | null;
   finishedAt: string | null;
   /** When the feed last changed (for "Pensando · 12s"). */
@@ -21,6 +22,7 @@ export function useJobActivity(jobId: string, live: boolean, enabled: boolean): 
   const [state, setState] = useState<JobActivity>({
     items: [],
     mode: null,
+    resumed: false,
     startedAt: null,
     finishedAt: null,
     lastChange: Date.now(),
@@ -35,7 +37,14 @@ export function useJobActivity(jobId: string, live: boolean, enabled: boolean): 
 
     const apply = (page: ActivityPage) =>
       setState((prev) => {
-        if (!page.items.length && prev.loaded && prev.finishedAt === page.finishedAt && prev.mode === page.mode) return prev;
+        if (
+          !page.items.length &&
+          prev.loaded &&
+          prev.finishedAt === page.finishedAt &&
+          prev.mode === page.mode &&
+          prev.resumed === page.resumed
+        )
+          return prev;
         const byId = new Map(prev.items.map((it) => [it.id, it] as const));
         const order = prev.items.map((it) => it.id);
         for (const it of page.items) {
@@ -45,6 +54,7 @@ export function useJobActivity(jobId: string, live: boolean, enabled: boolean): 
         return {
           items: order.map((id) => byId.get(id)!),
           mode: page.mode,
+          resumed: page.resumed,
           startedAt: page.startedAt,
           finishedAt: page.finishedAt,
           lastChange: page.items.length ? Date.now() : prev.lastChange,

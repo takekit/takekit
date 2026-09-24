@@ -11,7 +11,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { basename, extname, join, relative, resolve } from "node:path";
-import type { Job, JobMode, Message, StageStatus, Thread } from "./types.js";
+import type { HarnessSession, Job, JobMode, Message, StageStatus, Thread } from "./types.js";
 import { PIPELINE_STEPS, type ActivityItem, type ActivityUpdate, type StepState } from "./activity.js";
 import {
   DATA_DIR,
@@ -246,6 +246,7 @@ export function appendMessage(
     content: message.content,
     createdAt: message.createdAt ?? now(),
     jobId: message.jobId,
+    ...(message.delivery ? { delivery: message.delivery } : {}),
   };
   thread.messages.push(msg);
   thread.updatedAt = now();
@@ -361,6 +362,17 @@ export function setThreadPipelineStep(threadId: string, step: string, state: Ste
       .map((k) => [k, next[k]]),
   );
   thread.updatedAt = now();
+  persistThread(thread);
+}
+
+/** Remember (or forget, with null) the CLI session an executor used in this thread. */
+export function setThreadSession(threadId: string, executorId: string, session: HarnessSession | null): void {
+  const thread = threads.get(threadId);
+  if (!thread) return;
+  const sessions = { ...(thread.sessions ?? {}) };
+  if (session) sessions[executorId] = session;
+  else delete sessions[executorId];
+  thread.sessions = sessions;
   persistThread(thread);
 }
 

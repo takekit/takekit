@@ -14,6 +14,8 @@ import { opencodeParser } from "../activity.js";
  */
 function buildArgs(request: ExecutorRequest, cwd: string): string[] {
   const args = ["run", "--dir", cwd, "--format", "json"];
+  // New sessions get their id from the CLI (sessionID in the events); --session continues one.
+  if (request.session?.resume && request.session.id) args.push("--session", request.session.id);
   if (request.model) args.push("--model", request.model);
   if (request.effort) args.push("--variant", request.effort);
   if (request.skipPermissions) args.push("--auto");
@@ -36,6 +38,7 @@ export class OpenCodeExecutor implements Executor {
       cwd,
       signal: request.signal,
       logTag: this.id,
+      live: request.live,
       parser: opencodeParser(request.onActivity ?? (() => {})),
     });
   }

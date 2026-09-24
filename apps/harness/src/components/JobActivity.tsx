@@ -7,6 +7,7 @@ import {
   CircleCheck,
   CircleDashed,
   CircleX,
+  CornerDownRight,
   FilePenLine,
   FileText,
   Globe,
@@ -29,6 +30,7 @@ type RowStatus = JobStatus | "unknown";
 
 const KIND_ICON: Record<ActivityKind, ComponentType<LucideProps>> = {
   message: Bot,
+  user: CornerDownRight,
   command: SquareTerminal,
   read: FileText,
   edit: FilePenLine,
@@ -75,7 +77,12 @@ export function JobBlock({
     let rows = activity.items.filter((it) => it.kind !== "plan");
     // The final answer is posted as the chat message right below; don't repeat it.
     if (!live && rows.at(-1)?.kind === "message") rows = rows.slice(0, -1);
-    return { rows, plan, steps: pipelineOf(activity.items), tools: rows.filter((r) => r.kind !== "message").length };
+    return {
+      rows,
+      plan,
+      steps: pipelineOf(activity.items),
+      tools: rows.filter((r) => r.kind !== "message" && r.kind !== "user").length,
+    };
   }, [activity.items, live]);
 
   useLayoutEffect(() => {
@@ -85,17 +92,19 @@ export function JobBlock({
   const started = activity.startedAt ?? since;
   const took = activity.finishedAt ? elapsed(started, new Date(activity.finishedAt).getTime()) : null;
   const passos = tools ? ` · ${tools} ${tools === 1 ? "passo" : "passos"}` : "";
+  // Continued the thread's CLI session: the agent already had the context.
+  const resumed = activity.resumed ? " · sessão retomada" : "";
   // The agent decides: answering a question ("chat") or changing the video ("edit").
   const mode = activity.mode;
   const label =
     status === "queued"
       ? `Na fila · ${executor}`
       : status === "running"
-        ? `${executor} ${mode === "edit" ? "editando" : "trabalhando"}`
+        ? `${executor} ${mode === "edit" ? "editando" : "trabalhando"}${resumed}`
         : status === "failed"
-          ? `Falhou${took ? ` após ${took}` : ""} · ${executor}${passos}`
+          ? `Falhou${took ? ` após ${took}` : ""} · ${executor}${passos}${resumed}`
           : status === "succeeded"
-            ? `${mode === "chat" ? "Respondido" : "Concluído"}${took ? ` em ${took}` : ""} · ${executor}${passos}`
+            ? `${mode === "chat" ? "Respondido" : "Concluído"}${took ? ` em ${took}` : ""} · ${executor}${passos}${resumed}`
             : `Job · ${executor}`;
 
   const running = rows.filter((r) => r.status === "running");
@@ -164,6 +173,18 @@ function ActivityRow({ item, now }: { item: ActivityItem; now: number }) {
     return (
       <li className={`feed-msg${open ? " is-open" : ""}`} onClick={() => setOpen((v) => !v)}>
         <RichText text={item.title} />
+      </li>
+    );
+  }
+
+  // A message the user sent while the agent worked, where it reached the run.
+  if (item.kind === "user") {
+    return (
+      <li className="feed-user" title={item.detail}>
+        <CornerDownRight size={13} strokeWidth={1.75} className="feed-user-icon" />
+        <span className="feed-user-text">
+          <span className="feed-user-label">Você</span> {item.title}
+        </span>
       </li>
     );
   }

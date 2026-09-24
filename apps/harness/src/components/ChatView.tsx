@@ -165,6 +165,7 @@ function ChatItem({
       return (
         <div className="msg-user">
           <UserBubble content={item.msg.content} />
+          {item.msg.delivery ? <p className="msg-delivery">{DELIVERY_LABEL[item.msg.delivery]}</p> : null}
           <MessageMeta text={item.msg.content} createdAt={item.msg.createdAt} align="end" />
         </div>
       );
@@ -215,6 +216,13 @@ function ChatItem({
       );
   }
 }
+
+/** Messages sent while the agent worked: how they reached it. */
+const DELIVERY_LABEL: Record<NonNullable<Message["delivery"]>, string> = {
+  live: "Entregue ao agente no meio do trabalho",
+  interrupt: "Interrompeu o passo atual; o agente retoma com ela",
+  next: "Entra quando o passo atual terminar",
+};
 
 /** User text plus any timeline annotations it carried, shown as a numbered list. */
 function UserBubble({ content }: { content: string }) {

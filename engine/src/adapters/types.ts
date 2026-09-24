@@ -25,6 +25,21 @@ export interface ExecutorRequest {
   signal?: AbortSignal;
   /** Live activity (tool calls, messages, plan) while the CLI runs. */
   onActivity?: (update: ActivityUpdate) => void;
+  /**
+   * CLI session to use. `resume: true` continues `id`; otherwise a new session, named `id`
+   * when the CLI lets us pick it (Claude, Grok) or whatever the CLI assigns (Codex, OpenCode).
+   */
+  session?: { id?: string; resume: boolean };
+  /** Filled by adapters whose CLI takes user messages mid-run (Claude stream-json input). */
+  live?: LiveInput;
+}
+
+/** Hand-off for messages sent while the run is going. */
+export interface LiveInput {
+  /** Delivers a user message to the running CLI; false once it stopped taking input. Null = not supported. */
+  send: ((text: string) => boolean) | null;
+  /** Session id as soon as the stream shows it (so a turn can be interrupted and resumed). */
+  sessionId?: string;
 }
 
 export interface ExecutorResult {
@@ -35,6 +50,8 @@ export interface ExecutorResult {
   previewPath?: string | null;
   /** Final answer, when stdout is a JSON event stream (else read stdout). */
   text?: string;
+  /** Session the run used (to resume it next time). */
+  sessionId?: string;
 }
 
 export interface Executor {

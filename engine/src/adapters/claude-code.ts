@@ -12,7 +12,9 @@ import { anthropicStreamParser } from "../activity.js";
  *   claude --print ...      Alias of -p
  *
  * Flags we pass:
+ *   --input-format stream-json              Prompt on stdin; more user messages can follow mid-run
  *   --output-format stream-json --verbose   Live events for the activity feed (activity.ts)
+ *   --session-id <uuid> | --resume <uuid>   New named session, or continue the thread's one
  *   --model <model>         From config (TAKEKIT_MODEL / config.json), default "opus"
  *   --effort <level>        From config (TAKEKIT_EFFORT / config.json), omitted when empty
  *   --add-dir <path>        Allow tool access to additional directories
@@ -25,7 +27,9 @@ import { anthropicStreamParser } from "../activity.js";
  */
 function buildArgs(request: ExecutorRequest): string[] {
   // stream-json (+ --verbose, required with -p) = live tool calls for the UI; final text in the `result` event.
-  const args: string[] = ["-p", request.prompt, "--output-format", "stream-json", "--verbose"];
+  // The prompt goes in on stdin (stream-json input), so messages sent mid-run can follow it.
+  const args: string[] = ["-p", "--input-format", "stream-json", "--output-format", "stream-json", "--verbose"];
+  if (request.session?.id) args.push(request.session.resume ? "--resume" : "--session-id", request.session.id);
 
   if (request.model) {
     args.push("--model", request.model);
@@ -63,6 +67,8 @@ export class ClaudeCodeExecutor implements Executor {
       signal: request.signal,
       logTag: this.id,
       parser: anthropicStreamParser(request.onActivity ?? (() => {})),
+      streamInput: true,
+      live: request.live,
     });
   }
 }

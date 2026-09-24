@@ -14,7 +14,7 @@ import {
   threadHasActiveJob,
   threadsOfProject,
 } from "./store.js";
-import { cancelJob, runProjectJob } from "./project-runner.js";
+import { cancelJob, runProjectJob, steerJob } from "./project-runner.js";
 import { readTimeline } from "./timeline.js";
 import { defaultStyleId, getStyle, listStyles, resolveStyleId } from "./styles.js";
 import {
@@ -256,7 +256,15 @@ export function createApp() {
 
     const run = req.body?.run !== false;
     if (run && threadHasActiveJob(thread.id)) {
-      res.status(409).json({ error: "Thread já tem um job em andamento; aguarde terminar." });
+      // Sent while the agent works: goes to the running session (live, or by resuming it).
+      const active = thread.lastJobId ? getJob(thread.lastJobId) : undefined;
+      const delivery = active ? steerJob(active.id, content) : null;
+      if (!active || !delivery) {
+        res.status(409).json({ error: "Thread já tem um job em andamento; aguarde terminar." });
+        return;
+      }
+      const message = appendMessage(thread.id, { role: "user", content, delivery });
+      res.status(202).json({ message, job: active, delivery });
       return;
     }
 
@@ -309,6 +317,7 @@ export function createApp() {
       ...activitySince(job.id, after),
       status: job.status,
       mode: job.mode ?? null,
+      resumed: Boolean(job.resumed),
       startedAt: job.startedAt ?? null,
       finishedAt: job.finishedAt ?? null,
     });
