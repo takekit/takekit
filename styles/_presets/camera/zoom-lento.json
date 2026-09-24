@@ -1,0 +1,20 @@
+{
+  "id": "zoom-lento",
+  "name": "Zoom lento",
+  "description": "Aproximação lenta e suave em poucas partes do vídeo. Dá vida sem chamar atenção.",
+  "moves": [
+    "zoomIn"
+  ],
+  "intensity": 1.07,
+  "frequency": "poucos",
+  "punchFrames": 2,
+  "faceTracking": {
+    "enabled": true,
+    "baseScale": 1.0,
+    "smoothing": 0.9
+  },
+  "applyTo": [
+    "A",
+    "D"
+  ]
+}

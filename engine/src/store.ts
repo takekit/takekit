@@ -11,14 +11,14 @@ import {
   writeFileSync,
 } from "node:fs";
 import { basename, extname, join, relative, resolve } from "node:path";
-import type { HarnessSession, Job, JobMode, Message, StageStatus, Thread } from "./types.js";
+import type { HarnessSession, Job, JobMode, Message, RenderTask, StageStatus, Thread } from "./types.js";
 import { PIPELINE_STEPS, type ActivityItem, type ActivityUpdate, type StepState } from "./activity.js";
 import {
   DATA_DIR,
   DEFAULT_STYLE_ID,
   writeJsonAtomic,
 } from "./config.js";
-import { defaultStyleId, resolveStyleId } from "./styles.js";
+import { defaultStyleId, normalizeSelection, resolveStyleId, type ModuleSelection } from "./styles.js";
 
 /**
  * JSON-on-disk store.
@@ -77,13 +77,25 @@ function normalizeThread(raw: Thread): Thread {
     stageStatus: raw.stageStatus ?? initialStages(inputs.length > 0),
     lastJobId: raw.lastJobId ?? null,
     lastJobStatus: raw.lastJobStatus ?? null,
+    kind: raw.kind ?? "video",
+    modules: normalizeSelection(raw.modules),
+    lastExport: interrupted(raw.lastExport),
+    lastRender: interrupted(raw.lastRender),
   };
+}
+
+/** A render still "running" in a thread file died with the previous engine. */
+function interrupted(task: RenderTask | null | undefined): RenderTask | null {
+  if (!task) return null;
+  if (task.status !== "running") return task;
+  return { ...task, status: "failed", finishedAt: now(), error: "Engine reiniciado durante o render." };
 }
 
 function initialStages(hasInput: boolean): StageStatus {
   return {
     ingest: hasInput ? "done" : "pending",
     edit: "pending",
+    preview: "pending",
     export: "pending",
   };
 }
@@ -157,6 +169,9 @@ export function createThread(input: {
   inputVideoPaths?: string[];
   briefing?: string;
   ensureLayout?: boolean;
+  modules?: ModuleSelection | null;
+  kind?: Thread["kind"];
+  styleDraft?: Thread["styleDraft"];
 }): Thread {
   const picked = [...new Set((input.inputVideoPaths ?? []).map((p) => p.trim()).filter(Boolean))];
   const briefing = input.briefing?.trim() ?? "";
@@ -197,6 +212,9 @@ export function createThread(input: {
     stageStatus: initialStages(inputs.length > 0),
     lastJobId: null,
     lastJobStatus: null,
+    kind: input.kind ?? "video",
+    modules: input.modules ?? null,
+    styleDraft: input.styleDraft ?? null,
   };
   threads.set(thread.id, thread);
 
@@ -282,6 +300,9 @@ export function createJob(input: {
     thread.lastJobId = job.id;
     thread.lastJobStatus = job.status;
     thread.lastJobMode = null;
+    // Writing to a concluded or snoozed thread puts it back in the list.
+    thread.archivedAt = null;
+    thread.snoozedUntil = null;
     thread.updatedAt = now();
     persistThread(thread);
   }
@@ -376,10 +397,64 @@ export function setThreadSession(threadId: string, executorId: string, session: 
   persistThread(thread);
 }
 
+/**
+ * Swap presets on the thread: a key set to an id overrides the style's, a key set to
+ * null goes back to the style's. Keys not in the patch stay as they were.
+ */
+export function setThreadModules(threadId: string, patch: ModuleSelection): Thread | undefined {
+  const thread = threads.get(threadId);
+  if (!thread) return undefined;
+  const next: Record<string, unknown> = { ...(thread.modules ?? {}) };
+  for (const [key, value] of Object.entries(patch)) {
+    if (value === null || (Array.isArray(value) && !value.length)) delete next[key];
+    else if (value !== undefined) next[key] = value;
+  }
+  thread.modules = Object.keys(next).length ? (next as ModuleSelection) : null;
+  thread.updatedAt = now();
+  persistThread(thread);
+  return thread;
+}
+
+/** Record the thread's export / preview render (in memory while it runs; on disk at each change). */
+export function setThreadRender(threadId: string, task: RenderTask, persist = true): void {
+  const thread = threads.get(threadId);
+  if (!thread) return;
+  if (task.kind === "export") thread.lastExport = task;
+  else thread.lastRender = task;
+  if (persist) {
+    thread.updatedAt = now();
+    persistThread(thread);
+  }
+}
+
+/** A style draft saved to the gallery: the thread now refines the published package. */
+export function markStyleDraftPublished(threadId: string, packageDir: string): Thread | undefined {
+  const thread = threads.get(threadId);
+  if (!thread?.styleDraft) return undefined;
+  thread.styleDraft = { ...thread.styleDraft, publishedAt: now() };
+  thread.projectPath = packageDir;
+  thread.styleId = thread.styleDraft.id;
+  // CLI sessions were filed under the draft path in their prompt; keep them (cwd is the pipeline).
+  thread.updatedAt = now();
+  persistThread(thread);
+  return thread;
+}
+
 export function setThreadArchived(threadId: string, archived: boolean): Thread | undefined {
   const thread = threads.get(threadId);
   if (!thread) return undefined;
   thread.archivedAt = archived ? now() : null;
+  thread.snoozedUntil = null;
+  persistThread(thread);
+  return thread;
+}
+
+/** Snooze until `until` (ISO), or null to bring it back now / clear a snooze that ended. */
+export function setThreadSnoozed(threadId: string, until: string | null): Thread | undefined {
+  const thread = threads.get(threadId);
+  if (!thread) return undefined;
+  thread.snoozedUntil = until;
+  if (until) thread.archivedAt = null;
   persistThread(thread);
   return thread;
 }

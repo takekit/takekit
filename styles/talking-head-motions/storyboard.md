@@ -24,8 +24,10 @@ transita entre três palcos; cada beat do `plan.json` diz em qual está.
 ## Canvas
 
 B e C sempre animados. **O objeto é do vídeo**: cada beat cria o seu (placar, lista, logo,
-número, comparação) com as skills de motion; não copiar as cenas do 09-jev. Palco, faixa,
-paleta e tipografia são do estilo.
+número, comparação) com as skills de motion (mapa por etapa no `prompt.md`); não copiar as
+cenas do 09-jev. Palco, faixa, paleta e tipografia são do estilo. Texto em movimento segue
+`kinetic-typography`; cor em movimento, `color-motion`; fundo vivo, só com `motion-background`
+e sutil sobre o creme.
 
 - Paleta: creme `#F4EFE6`, tinta `#1C1A18`, cinza `#5A544E`, ouro `#F4B400` como acento.
   Sem neon, sem chroma, sem glow.

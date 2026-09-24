@@ -1,0 +1,11 @@
+{
+  "id": "filmburn-trocas",
+  "name": "Filmburn em toda troca",
+  "description": "Filmburn no gancho e em toda troca de palco, sem precisar marcar o beat. Mais energia.",
+  "default": "cut",
+  "filmburn": {
+    "preset": "video/resolve/presets/filmburn-hook.json",
+    "hook": true,
+    "onStageChange": "all"
+  }
+}

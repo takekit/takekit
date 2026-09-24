@@ -169,6 +169,8 @@ Aceite futuro: sobe referências → nasce pacote com `id` novo → aparece na g
 * Produto: [SPEC.md](../SPEC.md) (§ estilo portátil)
 * MVP cobaia: [DEV\_SPEC\_MVP.md](../DEV_SPEC_MVP.md)
 * Pipeline: [PIPELINE.md](../PIPELINE.md)
+* Expansão (módulos, presets, palco D, caption builder, criar estilo de referências): [SPEC-EXPANSION.md](./SPEC-EXPANSION.md)
+* Preview / export final (`quality.json`): [../preview-export/SPEC.md](../preview-export/SPEC.md)
 * Pacote: [styles/talking-head-motions/](../../styles/talking-head-motions/)
 * Legado: `video/resolve/DEFAULT.md` (agora ponteiro), skill editor-reels
 

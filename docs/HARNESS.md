@@ -132,6 +132,22 @@ already read and ran. If the saved session is gone, the job starts a new one wit
 | `codex` | id from `thread.started` | `codex exec resume … -- <id> "<prompt>"` (sandbox via `-c`) |
 | `opencode` | id from `sessionID` in events | `--session <id>` |
 
+### Preview and final export
+
+docs/preview-export. The agent's jobs end in a **preview** (`compose.py`, default
+`--quality preview`: 720p, fast, `edit/preview.mp4`); the prompt tells it not to render the final.
+The final export is the creator's: **Exportar vídeo final** in the preview panel runs
+`compose.py --quality final --from-preview --progress` on the engine (same spec as the preview,
+the style's `quality.json`, into `exports/`). Progress comes from `TAKEKIT_PROGRESS=` lines, the
+file from `TAKEKIT_EXPORT=`. One render per thread; a job sent meanwhile waits for it.
+
+### Presets (Style Kit modules)
+
+docs/style-kit/SPEC-EXPANSION.md. Before every job and render the engine writes
+`<project>/edit/style.resolved.json` (style + the thread's presets + quality); the pipeline
+scripts read it. Swapping caption / transitions / SFX in the panel can be applied to the preview
+without the agent (`POST /api/threads/:id/render`).
+
 ### Messages while a job runs
 
 `POST /api/threads/:id/messages` during a job no longer returns 409: the message goes to the
@@ -153,12 +169,32 @@ running agent (`delivery` on the message and a "Você" row in the activity feed)
 | GET | `/api/styles` | Style Kit gallery (`styles/<id>/`) + default id |
 | GET | `/api/styles/:id` | Full style package (id or alias) |
 | GET | `/api/styles/:id/preview`, `/thumb` | Preview loop / its thumbnail |
+| GET | `/api/presets` | Module presets (`caption`, `stage`, `camera`, `cuts`, `soundEffects`, `transitions`); `?styleId=` adds the style's own |
+| GET | `/api/presets/:module/:id`, `/api/presets/fonts` | One preset / fonts the caption builder can use |
+| POST | `/api/presets/:module` | Save a preset to `styles/_presets/` (`{ preset, overwrite? }`) |
+| POST | `/api/presets/caption/preview` | Caption preset (object) drawn by the real renderer (PNG; `?clip=1` = mp4 of a few sample phrases) |
+| GET | `/api/presets/caption/:id/clip`, `/still` | Library caption as a looping mp4 / poster, over recent footage (`?bg=auto\|dark\|cream\|thread:<id>`) |
+| GET | `/api/presets/camera/:id/clip` | Camera preset on recent footage (punch / zoom / face tracking), mp4 (`?thread=`) |
+| GET | `/api/presets/soundEffects/:id/demo` | "Ouvir": ~7 s of recent footage with the preset's effects and music (m4a; `?thread=`) |
+| POST | `/api/styles/:id/duplicate` | New style from a gallery one with other presets `{ name, modules }` (no agent) |
+| PATCH | `/api/styles/:id` | Edit a gallery style in place `{ name?, modules? }`; the first edit keeps `original.json` |
+| POST | `/api/styles/:id/restore` | Back to `original.json` (undo the Estúdio edits) |
+| POST | `/api/style-drafts` | New style from example videos `{ name, references, segments?, note? }` → draft + `kind: "style"` thread + job |
+| GET | `/api/style-drafts/:id` | Proposed package, resolved presets, what still blocks saving |
+| POST | `/api/style-drafts/:id/publish` | Validate and move `styles/_drafts/<id>` → `styles/<id>` |
 | GET | `/api/threads` | List threads |
 | POST | `/api/threads` | Create thread (`projectPath` required; `styleId` must be in the gallery, omitted = default) |
 | GET | `/api/threads/:id` | Thread + messages |
 | POST | `/api/threads/:id/messages` | Post chat; queues job (`run` default true) |
 | GET | `/api/jobs/:id` | Job status / stdout / stderr |
-| GET | `/api/threads/:id/preview` | Stream `previewPath` if set |
+| PATCH | `/api/threads/:id` | `{ archived }` (Concluir / Reabrir), `{ snoozedUntil: ISO \| null }` (Adiar; `null` = back now), or `{ modules }` (swap presets; `null` = the style's). A new message clears both. |
+| GET | `/api/threads/:id/preview` | Stream `previewPath` if set (the 720p preview, `edit/preview.mp4`) |
+| POST | `/api/threads/:id/export` | Exportar: final render of the last preview's spec, no agent (202 + task) |
+| POST | `/api/threads/:id/render` | Redraw the preview with the thread's presets (captions + compose), no agent |
+| GET | `/api/threads/:id/render` | Running render (progress, phase) + last export / last re-render |
+| POST | `/api/threads/:id/render/cancel` | Stop the running render |
+| GET | `/api/threads/:id/export/file` | Last export as a download (`?inline=1` to play) |
+| POST | `/api/threads/:id/export/reveal` | Show the last export in Finder |
 | GET | `/api/threads/:id/timeline` | Read-only tracks from `edit/build.json` (or `edit/cuts.json`), `null` if none |
 
 ### Timeline annotations → agent

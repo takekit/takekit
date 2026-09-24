@@ -1,0 +1,43 @@
+{
+  "id": "editorial-serif",
+  "name": "Editorial serif",
+  "description": "Helvetica Now Bold com a palavra de ênfase em Bodoni itálica, entra desfocando para nítido. Tom de revista.",
+  "font": {
+    "sans": "assets/fonts/brainstorm-academy/HelveticaNowDisplay-Bold.ttf",
+    "accent": "assets/fonts/brainstorm-academy/BodoniflfBolditalic-K7dD.ttf",
+    "case": "sentence",
+    "tracking": -2
+  },
+  "size": {
+    "sans": 70,
+    "accent": 92
+  },
+  "position": {
+    "y": 1180
+  },
+  "color": {
+    "fill": "#FFFFFF",
+    "accent": "#F4EFE6",
+    "canvasFill": "#1C1A18",
+    "canvasAccent": "#8C5400"
+  },
+  "outline": null,
+  "shadow": {
+    "dx": 0,
+    "dy": 4,
+    "blur": 8,
+    "alpha": 140
+  },
+  "box": null,
+  "animation": {
+    "in": "blur",
+    "out": "fade",
+    "inFrames": 6,
+    "outFrames": 3
+  },
+  "timing": {
+    "maxWords": 3,
+    "maxChars": 20,
+    "leadFrames": 2
+  }
+}

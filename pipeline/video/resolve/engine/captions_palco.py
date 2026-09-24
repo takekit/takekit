@@ -7,6 +7,13 @@ Contrato visual: video/resolve/styles/caption-style-config.json
     profundidade e cor da ênfase vêm do bloco, não da família.
 
   --style styles/palco-face.json | palco-canvas.json | palco-hold.json
+  --preset <caption preset .json | none>   (default: modules.caption de edit/style.resolved.json,
+                                            ao lado do --job; styles/_presets/caption/)
+
+O preset (docs/style-kit/SPEC-EXPANSION.md) troca fonte, tamanho, caixa, tracking, cores,
+contorno, sombra, caixa de fundo, animação (rise|pop|fade|blur|cut → fade|cut) e lead sem
+reescrever os blocos. `position.y` vale só para blocos de palco A. O hold/CTA mantém tamanhos,
+cores e y próprios e pega fontes, contorno e animação. Sem preset, sai igual a antes.
 """
 from __future__ import annotations
 import argparse, json, math, os, sys
@@ -19,6 +26,9 @@ import captions_engine as ce
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = os.path.dirname(os.path.dirname(ROOT))
 STYLE = {}
+A_Y = 1180          # y legado do palco A (caption_jobs.Y); blocos sem `palco` nesse y são de A
+POP_FROM = 0.82     # escala inicial do `pop`
+BLUR_FROM = 14      # raio inicial do `blur` (px em 1080)
 _fonts = {}
 _cmap = {}
 
@@ -205,11 +215,19 @@ def text_size(draw, text, fnt, tracking):
     return int(math.ceil(w))
 
 
-def draw_tracked(draw, xy, text, fnt, fill, tracking):
+def draw_tracked(draw, xy, text, fnt, fill, tracking, stroke=0):
     x, y = xy
     for i, ch in enumerate(text):
-        draw.text((x, y), ch, font=fnt, fill=fill)
+        if stroke:
+            draw.text((x, y), ch, font=fnt, fill=fill, stroke_width=stroke, stroke_fill=fill)
+        else:
+            draw.text((x, y), ch, font=fnt, fill=fill)
         x += draw.textlength(ch, font=fnt) + (tracking if i < len(text) - 1 else 0)
+
+
+def outline_px(spec):
+    ol = spec.get("outline") or {}
+    return int(round(float(ol.get("width") or 0) * ce.SCALE))
 
 
 def vis_bounds(img, thr=12):
@@ -255,7 +273,8 @@ def render_line(spec):
     blur = int(sh.get("blur_px", 0) or 0) if sh.get("enabled") else 0
     dx = int(sh.get("offset_x_px", 0) or 0) if sh.get("enabled") else 0
     dy = int(sh.get("offset_y_px", 0) or 0) if sh.get("enabled") else 0
-    pad = max(blur * 3, abs(dx), abs(dy), 16)
+    stroke = outline_px(spec)
+    pad = max(blur * 3, abs(dx), abs(dy), 16, stroke + int(spec.get("extra_pad") or 0))
     img_w = tw + pad * 2 + 8
     img_h = asc + desc + pad * 2 + abs(dy) + 8
     fill_img = Image.new("RGBA", (img_w, img_h), (0, 0, 0, 0))
@@ -275,13 +294,21 @@ def render_line(spec):
         col = hex_rgba(fill.get("color") or fill.get("color_on_dark") or "#FFFFFF")
         draw_tracked(td, origin, text, fnt, col, tracking)
         vis = vis_bounds(fill_img)
+    if stroke:
+        # contorno numa camada própria, por baixo de todos os preenchimentos (o traço de uma
+        # letra não cobre a vizinha com tracking negativo)
+        stroke_img = Image.new("RGBA", (img_w, img_h), (0, 0, 0, 0))
+        draw_tracked(ImageDraw.Draw(stroke_img), origin, text, fnt,
+                     hex_rgba((spec.get("outline") or {}).get("color") or "#000000"), tracking, stroke)
+        fill_img = Image.alpha_composite(stroke_img, fill_img)
+        vis = vis_bounds(fill_img)
     shadow_img = None
     if sh.get("enabled") and (blur or sh.get("opacity", 0)):
         shadow_img = Image.new("RGBA", (img_w, img_h), (0, 0, 0, 0))
         sd = ImageDraw.Draw(shadow_img)
         alpha = int(round(float(sh.get("opacity", 0.5)) * 255))
         scol = hex_rgba(sh.get("color", "#000000"), alpha)
-        draw_tracked(sd, (origin[0] + dx, origin[1] + dy), text, fnt, scol, tracking)
+        draw_tracked(sd, (origin[0] + dx, origin[1] + dy), text, fnt, scol, tracking, stroke)
         if blur:
             shadow_img = shadow_img.filter(ImageFilter.GaussianBlur(blur))
     return {
@@ -299,7 +326,7 @@ def tokens(block):
 
 def line_spec_from_style(role_style, text, fill_override=None):
     fill = fill_override or role_style.get("fill")
-    return {
+    spec = {
         "text": text,
         "font": role_style.get("font", "sans"),
         "size_px": role_style.get("size_px"),
@@ -309,14 +336,34 @@ def line_spec_from_style(role_style, text, fill_override=None):
         "shadow": role_style.get("shadow") or {"enabled": False},
         "z_index": role_style.get("z_index", 1),
     }
+    if STYLE.get("outline"):
+        spec["outline"] = STYLE["outline"]
+    if STYLE.get("anim_in") == "blur":
+        spec["extra_pad"] = int(BLUR_FROM * 2 * ce.SCALE)
+    return spec
 
 
 def _items_for_line(line, x, y, delay, z_fill, z_shadow):
     items = []
+    anchor = ((line["vis"][0] + line["vis"][2]) / 2.0, (line["vis"][1] + line["vis"][3]) / 2.0)
+    if line.get("box") is not None:
+        items.append({"img": line["box"], "x": x, "y": y, "pad": 0, "delay": delay, "z": z_shadow - 1, "anchor": anchor})
     if line["shadow"] is not None:
-        items.append({"img": line["shadow"], "x": x, "y": y, "pad": 0, "delay": delay, "z": z_shadow})
-    items.append({"img": line["fill"], "x": x, "y": y, "pad": 0, "delay": delay, "z": z_fill})
+        items.append({"img": line["shadow"], "x": x, "y": y, "pad": 0, "delay": delay, "z": z_shadow, "anchor": anchor})
+    items.append({"img": line["fill"], "x": x, "y": y, "pad": 0, "delay": delay, "z": z_fill, "anchor": anchor})
     return items
+
+
+def box_image(line, box):
+    """Caixa arredondada atrás da linha: glifos visíveis + padding, cor e alpha do preset."""
+    img = line["fill"]
+    x0, y0, x1, y1 = line["vis"]
+    px, py = float(box.get("padX", 20)) * ce.SCALE, float(box.get("padY", 12)) * ce.SCALE
+    out = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    ImageDraw.Draw(out).rounded_rectangle(
+        (x0 - px, y0 - py, x1 + px - 1, y1 + py - 1), radius=float(box.get("radius", 0)) * ce.SCALE,
+        fill=hex_rgba(box.get("color") or "#000000", box.get("alpha", 255)))
+    return out
 
 
 def layout_double(block, recipe):
@@ -394,7 +441,19 @@ def layout_single(block):
     }
     if STYLE.get("case") == "sentence" and spec["text"]:
         spec["text"] = spec["text"][:1].upper() + spec["text"][1:]
+    if STYLE.get("outline"):
+        spec["outline"] = STYLE["outline"]
+    box = STYLE.get("box")
+    extra = 0
+    if box:
+        extra = int(math.ceil(max(float(box.get("padX", 20)), float(box.get("padY", 12))) * ce.SCALE)) + 2
+    if STYLE.get("anim_in") == "blur":
+        extra = max(extra, int(BLUR_FROM * 2 * ce.SCALE))
+    if extra:
+        spec["extra_pad"] = extra
     line = render_line(spec)
+    if box:
+        line["box"] = box_image(line, box)
     vis = line["vis"]
     yc = block.get("y", STYLE["y"]) * (ce.H / 1920)
     vh, vw = vis[3] - vis[1], vis[2] - vis[0]
@@ -414,21 +473,43 @@ def layout_block(block):
     return layout_single(block)
 
 
+def scaled(img, s, anchor):
+    """`img` escalado por `s` em torno de `anchor` (centro visível), no mesmo quadro."""
+    w, h = img.size
+    sw, sh = max(1, int(round(w * s))), max(1, int(round(h * s)))
+    ax, ay = anchor or (w / 2.0, h / 2.0)
+    out = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    out.paste(img.resize((sw, sh), Image.BICUBIC), (int(round(ax - ax * s)), int(round(ay - ay * s))))
+    return out
+
+
 def transform(el, f_i, t_in, t_out):
+    """Entrada `anim_in` (rise|pop|fade|blur|cut) e saída `anim_out` (fade|cut) do preset;
+    sem preset é o rise + fade de sempre."""
     IN, OUT = STYLE["in_frames"], STYLE["out_frames"]
+    mode_in, mode_out = STYLE.get("anim_in", "rise"), STYLE.get("anim_out", "fade")
     delay = int(el.get("delay") or 0)
     t_in = t_in + delay
     img, op = el["img"], 1.0
     k = (f_i - t_in) / max(1, IN)
-    if k < 1:
+    if mode_in == "cut":
+        op = 0.0 if k < 0 else 1.0
+    elif k < 1:
         e = ease_out(max(0.0, k))
         op = e
-        rise = int((1 - e) * img.size[1] * 0.45)
-        if rise > 0:
-            shifted = Image.new("RGBA", img.size, (0, 0, 0, 0))
-            shifted.paste(img, (0, rise))
-            img = shifted
-    if f_i >= t_out:
+        if mode_in == "pop":
+            img = scaled(img, POP_FROM + (1 - POP_FROM) * ce.ease_back(max(0.0, k)), el.get("anchor"))
+        elif mode_in == "blur":
+            r = BLUR_FROM * ce.SCALE * (1 - e)
+            if r >= 0.5:
+                img = img.filter(ImageFilter.GaussianBlur(r))
+        elif mode_in != "fade":
+            rise = int((1 - e) * img.size[1] * 0.45)
+            if rise > 0:
+                shifted = Image.new("RGBA", img.size, (0, 0, 0, 0))
+                shifted.paste(img, (0, rise))
+                img = shifted
+    if f_i >= t_out and mode_out != "cut":    # cut: fica cheio até o fim (frame_canvas corta)
         e = min(1.0, (f_i - t_out + 1) / max(1, OUT))
         op = min(op, 1 - e)
     return img, op
@@ -453,9 +534,20 @@ def blit(canvas, img, x, y, pad, op):
     dst[..., 3:4] = (oa * 255).astype(np.uint8)
 
 
+def is_palco_a(block):
+    """Bloco de palco A: `palco` explícito, ou legado sem `palco` no y do rosto (1180)."""
+    if block.get("palco"):
+        return str(block["palco"]).upper().startswith("A")
+    layout = block.get("layout") or STYLE.get("layout", "face")
+    return layout not in ("hold", "cta", "canvas") and STYLE.get("layout", "face") == "face" \
+        and int(block.get("y", STYLE.get("y", A_Y))) == A_Y
+
+
 def build(data, range_a=0, range_b=None):
     range_b = data.total if range_b is None else range_b
     blocks = sorted(data.plan["blocks"], key=lambda b: b["start_f"])
+    if STYLE.get("preset_y") is not None:
+        blocks = [{**b, "y": STYLE["preset_y"]} if is_palco_a(b) else b for b in blocks]
     items = []
     for i, b in enumerate(blocks):
         if b["end_f"] < range_a or b["start_f"] > range_b:
@@ -482,18 +574,36 @@ def frame_canvas(items, f_i):
     return canvas
 
 
-def render(items, a, b, path):
+def render(items, a, b, path, progress=False):
+    """ProRes 4444 com alpha. Grava num temporário ao lado e troca por rename: o .mov
+    anterior só some quando o novo está completo (e nunca se escreve através de um symlink)."""
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    stem, ext = os.path.splitext(os.path.basename(path))
+    # com ponto na frente: um temporário que sobre não casa com o glob captions_*.mov do compose
+    tmp = os.path.join(os.path.dirname(path), f".{stem}.{os.getpid()}.tmp{ext or '.mov'}")
     cmd = ["ffmpeg", "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgba",
            "-s", f"{ce.W}x{ce.H}", "-r", str(ce.FPS), "-i", "-",
            "-c:v", "prores_ks", "-profile:v", "4444", "-alpha_bits", "16",
-           "-vendor", "apl0", "-pix_fmt", "yuva444p10le", path]
+           "-vendor", "apl0", "-pix_fmt", "yuva444p10le", tmp]
+    import signal
     import subprocess
+    signal.signal(signal.SIGTERM, lambda *_: sys.exit("erro: interrompido"))   # cancelar limpa o temporário
     proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
-    for f_i in range(a, b):
-        proc.stdin.write(frame_canvas(items, f_i).tobytes())
-    proc.stdin.close()
-    proc.wait()
+    try:
+        for f_i in range(a, b):
+            proc.stdin.write(frame_canvas(items, f_i).tobytes())
+            if progress and (f_i - a) % 15 == 0:
+                print(f"TAKEKIT_PROGRESS={(f_i - a) / max(1, b - a):.3f}", flush=True)
+        proc.stdin.close()
+        if proc.wait() != 0:
+            sys.exit(f"erro: ffmpeg falhou ao gravar {path}")
+        os.replace(tmp, path)
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+            proc.wait()
+        if os.path.exists(tmp):
+            os.remove(tmp)
 
 
 def save_still(canvas, path, under=None):
@@ -506,19 +616,124 @@ def save_still(canvas, path, under=None):
         cap.save(path)
 
 
+def asset_path(p):
+    """Fonte do preset: absoluta, `video/...` (raiz do pipeline), relativa a video/resolve/ ou em $TAKEKIT_ASSETS."""
+    p = os.path.expanduser(str(p))
+    if os.path.isabs(p):
+        return p
+    cands = [os.path.join(REPO, p) if p.startswith("video/") else os.path.join(ROOT, p)]
+    if os.environ.get("TAKEKIT_ASSETS"):
+        rel = p[len("assets/"):] if p.startswith("assets/") else p
+        cands.append(os.path.join(os.path.expanduser(os.environ["TAKEKIT_ASSETS"]), rel))
+    return next((c for c in cands if os.path.isfile(c)), cands[0])
+
+
+def rgba_list(c):
+    return tuple(hex_rgba(c))
+
+
+def apply_preset(st, preset):
+    """CaptionPreset (styles/_presets/caption/*.json) sobre o style carregado."""
+    if not preset:
+        return st
+    st = dict(st)
+    layout = st.get("layout", "face")
+    hold = layout in ("hold", "cta")
+    canvas = layout == "canvas"
+    font = preset.get("font") or {}
+    if font.get("sans"):
+        st["font_sans"] = asset_path(font["sans"])
+    if font.get("accent"):
+        st["font_script"] = st["font_accent"] = asset_path(font["accent"])
+    for k in ("font_sans", "font_script"):
+        if not os.path.isfile(st[k]):
+            sys.exit(f"erro: fonte do preset não encontrada: {st[k]}")
+    anim = preset.get("animation") or {}
+    if anim.get("in"):
+        st["anim_in"] = str(anim["in"]).lower()
+    if anim.get("out"):
+        st["anim_out"] = str(anim["out"]).lower()
+    for src, dst in (("inFrames", "in_frames"), ("outFrames", "out_frames")):
+        if anim.get(src) is not None:
+            st[dst] = int(anim[src])
+    if "outline" in preset:
+        ol = preset.get("outline")
+        st["outline"] = {"width": float(ol.get("width") or 0), "color": ol.get("color") or "#000000"} \
+            if ol and ol.get("width") else None
+    if hold:        # CTA: tamanhos, cores, sombra, caixa e y próprios
+        return st
+    if font.get("case"):
+        st["case"] = font["case"]
+    tracking = dict(st.get("tracking") or {})
+    if font.get("tracking") is not None:
+        tracking["sans"] = float(font["tracking"])
+    if font.get("accentTracking") is not None:
+        tracking["script"] = tracking["accent"] = float(font["accentTracking"])
+    st["tracking"] = tracking
+    size = dict(st.get("size") or {})
+    sz = preset.get("size") or {}
+    for key in ("sans", "accent"):
+        v = sz.get("canvas" + key.capitalize()) if canvas else None
+        v = v if v is not None else sz.get(key)
+        if v is not None:
+            size[key] = v
+    st["size"] = size
+    color = preset.get("color") or {}
+    fill, accent = (color.get("canvasFill"), color.get("canvasAccent")) if canvas else (color.get("fill"), color.get("accent"))
+    if fill:
+        st["color_sans"] = rgba_list(fill)
+    if accent:
+        st["color_accent"] = rgba_list(accent)
+    shadow_key = "canvasShadow" if canvas else "shadow"   # sombra escura no creme só se o preset pedir
+    if shadow_key in preset:
+        sh = preset.get(shadow_key)
+        st["shadow"] = {"dx": sh.get("dx", 0), "dy": sh.get("dy", 0), "blur": sh.get("blur", 0),
+                        "alpha": sh.get("alpha", 0)} if sh else {"dx": 0, "dy": 0, "blur": 0, "alpha": 0}
+    st["box"] = preset.get("box") or None
+    timing = preset.get("timing") or {}
+    if timing.get("leadFrames") is not None:
+        st["lead"] = int(timing["leadFrames"])
+    if (preset.get("position") or {}).get("y") is not None and layout == "face":
+        st["preset_y"] = int(preset["position"]["y"])
+    return st
+
+
+def load_preset(arg, job):
+    """--preset <arquivo|-|none>; sem ele, modules.caption do style.resolved.json ao lado do job."""
+    if arg == "none":
+        return None
+    if arg == "-":
+        return json.load(sys.stdin)
+    if arg:
+        with open(arg, encoding="utf-8") as fh:
+            return json.load(fh)
+    sr = os.path.join(os.path.dirname(os.path.abspath(job)), "style.resolved.json") if job else None
+    if sr and os.path.isfile(sr):
+        with open(sr, encoding="utf-8") as fh:
+            cap = (json.load(fh).get("modules") or {}).get("caption")
+        return cap if isinstance(cap, dict) else None
+    return None
+
+
 def main():
     global STYLE
     ap = argparse.ArgumentParser()
     ap.add_argument("--job", required=True)
     ap.add_argument("--style", required=True)
+    ap.add_argument("--preset", help="caption preset (.json, `-` = stdin) ou `none`; default: "
+                    "modules.caption de style.resolved.json ao lado do --job")
     ap.add_argument("--out")
     ap.add_argument("--range", nargs=2, type=int)
     ap.add_argument("--stills")
     ap.add_argument("--stills-dir")
     ap.add_argument("--under-dir", help="PNG fXXXX.png de frame real para composite")
+    ap.add_argument("--progress", action="store_true", help="imprime TAKEKIT_PROGRESS=<0..1> enquanto renderiza")
     a = ap.parse_args()
-    STYLE = load_style(a.style)
+    preset = load_preset(a.preset, a.job)
+    STYLE = apply_preset(load_style(a.style), preset)
     ce.STYLE = STYLE
+    print(f"preset de legenda: {preset.get('name') or preset.get('id')} ({preset.get('id')})" if preset
+          else "sem preset", flush=True)
     data = ce.Data(job=a.job)
     r0, r1 = (a.range if a.range else (0, data.total))
     items = build(data, r0, r1)
@@ -533,7 +748,7 @@ def main():
             save_still(canvas, os.path.join(d, f"f{f_i:04d}.png"), under)
         return
     out = a.out or os.path.join(os.path.dirname(a.job), f"captions_{os.path.splitext(os.path.basename(a.style))[0]}.mov")
-    render(items, r0, r1, out)
+    render(items, r0, r1, out, progress=a.progress)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,44 @@
+{
+  "id": "caixa",
+  "name": "Caixa",
+  "description": "Frase curta em Helvetica Now Bold, texto escuro sobre caixa clara arredondada, no terço de baixo. Entra com fade.",
+  "font": {
+    "sans": "assets/fonts/brainstorm-academy/HelveticaNowDisplay-Bold.ttf",
+    "accent": "assets/fonts/brainstorm-academy/HelveticaNowDisplay-ExtraBold.ttf",
+    "case": "sentence",
+    "tracking": -1
+  },
+  "size": {
+    "sans": 56,
+    "accent": 60
+  },
+  "position": {
+    "y": 1470
+  },
+  "color": {
+    "fill": "#141414",
+    "accent": "#141414",
+    "canvasFill": "#141414",
+    "canvasAccent": "#141414"
+  },
+  "outline": null,
+  "shadow": null,
+  "box": {
+    "color": "#FFFFFF",
+    "alpha": 238,
+    "padX": 24,
+    "padY": 14,
+    "radius": 16
+  },
+  "animation": {
+    "in": "fade",
+    "out": "fade",
+    "inFrames": 4,
+    "outFrames": 3
+  },
+  "timing": {
+    "maxWords": 4,
+    "maxChars": 26,
+    "leadFrames": 2
+  }
+}

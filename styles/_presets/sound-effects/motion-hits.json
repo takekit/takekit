@@ -1,0 +1,18 @@
+{
+  "id": "motion-hits",
+  "name": "Efeitos + música",
+  "description": "Efeitos sonoros nos movimentos da tela (whoosh, clique, revelação) e uma música de fundo baixa, que abaixa sozinha quando você fala.",
+  "sfx": true,
+  "kindToCatalogId": {
+    "snap": "snap/snap_finger",
+    "click": "foley/mixkit_click_1",
+    "whoosh": "whoosh/whoosh_swoosh_01",
+    "riser": "riser/riser_metallic",
+    "reveal": "reveal/reveal_logo_element_01"
+  },
+  "music": {
+    "file": "assets/music/arpmedia-trap-trap-hype-569432.mp3",
+    "gainDb": -25,
+    "duck": true
+  }
+}

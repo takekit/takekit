@@ -1,0 +1,32 @@
+{
+  "id": "b-host-canvas",
+  "name": "B · Host + canvas",
+  "palco": "B",
+  "description": "Canvas creme em cima com o gráfico, host recortado (RVM) num card embaixo, cabeça vazando para o creme.",
+  "layout": "host-canvas",
+  "bRoll": null,
+  "composite": [
+    "video/headless/palco_b.py",
+    "video/resolve/engine/palco_b_composite.py"
+  ],
+  "safeZones": {
+    "graphic": {
+      "x": [
+        80,
+        1000
+      ],
+      "y": [
+        180,
+        620
+      ]
+    },
+    "caption": {
+      "layout": "canvas",
+      "y": 700,
+      "band": [
+        640,
+        800
+      ]
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "so-voz",
+  "name": "Só voz",
+  "description": "Nada por baixo da fala: sem efeitos e sem música.",
+  "sfx": false,
+  "kindToCatalogId": {},
+  "music": null
+}

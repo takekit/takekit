@@ -1,0 +1,11 @@
+{
+  "id": "filmburn",
+  "name": "Corte seco + filmburn",
+  "description": "Corte seco por padrão. Filmburn no gancho sempre e nas trocas de palco marcadas no beat (\"transicao\": \"filmburn\").",
+  "default": "cut",
+  "filmburn": {
+    "preset": "video/resolve/presets/filmburn-hook.json",
+    "hook": true,
+    "onStageChange": "marked"
+  }
+}

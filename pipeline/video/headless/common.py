@@ -59,10 +59,21 @@ def project_dir(arg: str) -> Path:
 
 
 def rel(path: Path, base: Path) -> str:
-    try:
-        return str(path.resolve().relative_to(base.resolve()))
-    except ValueError:
-        return str(path)
+    """Caminho relativo ao projeto quando dá (primeiro sem seguir symlinks, depois resolvido)."""
+    for p, b in ((Path(os.path.abspath(path)), Path(os.path.abspath(base))), (path.resolve(), base.resolve())):
+        try:
+            return str(p.relative_to(b))
+        except ValueError:
+            pass
+    return str(path)
+
+
+def write_atomic(path: Path, text: str) -> None:
+    """Grava num temporário ao lado e troca por rename (nunca escreve através de um symlink)."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    tmp.write_text(text, encoding="utf-8")
+    tmp.replace(path)
 
 
 # ───────── ffprobe ─────────
@@ -145,18 +156,37 @@ def source_path(pdir: Path, cuts: dict, override: str | None) -> Path:
     raise AssertionError
 
 
-def palcos(pdir: Path, units: list[Unit]) -> dict[str, str]:
-    """Palco A/B/C por unidade, do storyboard do plan.json (beat ↔ unidade na ordem, ou campo `unit`)."""
+def beats(pdir: Path, units: list[Unit]) -> dict[str, dict]:
+    """Beat do storyboard do plan.json por unidade (beat ↔ unidade na ordem, ou campo `unit`)."""
     plan = pdir / "edit" / "plan.json"
     if not plan.is_file():
-        return {u.id: "A" for u in units}
+        return {}
     board = json.loads(plan.read_text(encoding="utf-8")).get("storyboard") or []
-    out: dict[str, str] = {}
+    out: dict[str, dict] = {}
     for i, beat in enumerate(board):
         uid = beat.get("unit") or beat.get("unidade") or (units[i].id if i < len(units) else None)
         if uid:
-            out[uid] = str(beat.get("palco") or "A").upper()[:1]
-    return {u.id: out.get(u.id, "A") for u in units}
+            out[uid] = beat
+    return out
+
+
+def palcos(pdir: Path, units: list[Unit]) -> dict[str, str]:
+    """Palco A/B/C/D por unidade (A quando o beat não diz)."""
+    board = beats(pdir, units)
+    return {u.id: (str((board.get(u.id) or {}).get("palco") or "A").strip().upper()[:1] or "A") for u in units}
+
+
+class Progress:
+    """TAKEKIT_PROGRESS=<0..1> no stdout (só com --progress), monotônico, passo mínimo de 1%."""
+
+    def __init__(self, on: bool):
+        self.on, self.last = on, -1.0
+
+    def __call__(self, x: float) -> None:
+        x = max(0.0, min(1.0, x))
+        if self.on and x > self.last and (x >= 1.0 or x - self.last >= 0.01 or self.last < 0):
+            self.last = x
+            print(f"TAKEKIT_PROGRESS={x:.3f}", flush=True)
 
 
 def work(pdir: Path, *parts: str) -> Path:
@@ -165,6 +195,97 @@ def work(pdir: Path, *parts: str) -> Path:
         d = d / p
     d.mkdir(parents=True, exist_ok=True)
     return d
+
+
+# ───────── estilo da thread (edit/style.resolved.json) ─────────
+# O engine grava o arquivo a cada job e antes de cada render. Sem ele (ou sem uma chave),
+# vale o Talking Head + Motions de hoje.
+
+QUALITY = {
+    "preview": {"resolution": "720p", "codec": "h264", "preset": "veryfast", "bitrate": "1.5M",
+                "audio": {"codec": "aac", "bitrate": "128k"}, "container": "mp4"},
+    "export": {"resolution": f"{W}x{H}", "fps": FPS, "codec": "h264", "preset": "medium", "bitrate": "10M",
+               "maxrate": "12M", "bufsize": "20M",
+               "audio": {"codec": "aac", "bitrate": "256k", "loudness": {"I": -14, "TP": -1, "LRA": 11}},
+               "container": "mp4"},
+}
+
+
+def style_resolved(pdir: Path) -> dict:
+    """edit/style.resolved.json do projeto; {} quando não existe."""
+    path = pdir / "edit" / "style.resolved.json"
+    if not path.is_file():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        die(f"{rel(path, pdir)} inválido: {e}")
+        raise AssertionError
+    return data if isinstance(data, dict) else {}
+
+
+def style_module(style: dict, name: str):
+    """Preset do módulo (`caption`, `stage`, `cuts`, `soundEffects`, `transitions`) ou None."""
+    return (style.get("modules") or {}).get(name)
+
+
+def merged(base: dict, over: dict | None) -> dict:
+    """`over` por cima de `base`, recursivo; chave ausente ou null fica com o default."""
+    out = dict(base)
+    for k, v in (over or {}).items():
+        if v is None:
+            continue
+        out[k] = merged(out[k], v) if isinstance(v, dict) and isinstance(out.get(k), dict) else v
+    return out
+
+
+def quality(style: dict, stage: str) -> dict:
+    """Qualidade `preview` ou `export` (alias `final`) do estilo, sobre os defaults."""
+    key = "export" if stage in ("export", "final") else "preview"
+    return merged(QUALITY[key], (style.get("quality") or {}).get(key))
+
+
+def resolution(value, frame: tuple[int, int] = (W, H)) -> tuple[int, int]:
+    """`720p` (lado menor; proporção do quadro, 9:16 → 720x1280), `1080x1920` ou [w, h]. Sempre par."""
+    if value in (None, ""):
+        w, h = frame
+    elif isinstance(value, (list, tuple)) and len(value) == 2:
+        w, h = (int(x) for x in value)
+    else:
+        v = str(value).strip().lower()
+        if m := re.fullmatch(r"(\d+)p", v):
+            short, (fw, fh) = int(m.group(1)), frame
+            w, h = (short, short * fh / fw) if fw <= fh else (short * fw / fh, short)
+        elif m := re.fullmatch(r"(\d+)\s*[x×:]\s*(\d+)", v):
+            w, h = int(m.group(1)), int(m.group(2))
+        else:
+            die(f"resolução inválida: {value} (use 720p ou 1080x1920)")
+            raise AssertionError
+    w, h = (max(2, int(round(float(n) / 2)) * 2) for n in (w, h))
+    return w, h
+
+
+def stage_presets(style: dict) -> dict[str, dict]:
+    """Presets de palco do estilo por letra (A/B/C/D)."""
+    out = {}
+    for p in style_module(style, "stage") or []:
+        if isinstance(p, dict) and p.get("palco"):
+            out[str(p["palco"]).strip().upper()[:1]] = p
+    return out
+
+
+def kit_file(path: str | None) -> Path | None:
+    """Arquivo de um preset: absoluto, relativo a video/resolve/ ou, para assets fora do repo
+    (assets/OMITTED.md), em $TAKEKIT_ASSETS."""
+    if not path:
+        return None
+    p = Path(path).expanduser()
+    if p.is_absolute():
+        return p if p.is_file() else None
+    cands = [KIT / p, ROOT / p]
+    if os.environ.get("TAKEKIT_ASSETS"):
+        cands.append(Path(os.environ["TAKEKIT_ASSETS"]).expanduser() / str(p).removeprefix("assets/"))
+    return next((c.resolve() for c in cands if c.is_file()), None)
 
 
 # ───────── tempo ─────────
@@ -192,21 +313,39 @@ def to_frame(value: str, fps: int = FPS) -> int:
 
 def rvm_model() -> Path:
     """rvm_mobilenetv3_fp32.onnx em cache compartilhado (só leitura; seguro entre jobs)."""
-    env = os.environ.get("TAKEKIT_RVM_MODEL")
-    if env:
-        return Path(env)
-    dest = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "takekit" / "models" / Path(RVM_URL).name
-    if dest.is_file() and _sha256(dest) == RVM_SHA256:
+    try:
+        return model_file(RVM_URL, RVM_SHA256, "TAKEKIT_RVM_MODEL", "modelo RVM")
+    except (OSError, ValueError) as e:
+        die(str(e))
+        raise AssertionError
+
+
+def model_file(url: str, sha256: str, env: str, label: str, timeout: float = 60) -> Path:
+    """Modelo ONNX em ~/.cache/takekit/models (ou $env), baixado uma vez de `url` com sha256
+    fixo. Levanta OSError/ValueError se não der para baixar ou o checksum não conferir."""
+    if os.environ.get(env):
+        return Path(os.environ[env])
+    dest = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "takekit" / "models" / Path(url).name
+    if dest.is_file() and _sha256(dest) == sha256:
         return dest
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_suffix(f".{os.getpid()}.part")
-    print(f"baixando modelo RVM → {dest}", flush=True)
-    urllib.request.urlretrieve(RVM_URL, tmp)
-    if _sha256(tmp) != RVM_SHA256:
+    print(f"baixando {label} → {dest}", flush=True)
+    try:
+        with urllib.request.urlopen(url, timeout=timeout) as resp, tmp.open("wb") as fh:
+            shutil.copyfileobj(resp, fh, 1 << 20)
+        if _sha256(tmp) != sha256:
+            raise ValueError(f"checksum do {label} não confere")
+        tmp.replace(dest)   # rename atômico: jobs paralelos não leem arquivo pela metade
+    finally:
         tmp.unlink(missing_ok=True)
-        die("checksum do modelo RVM não confere")
-    tmp.replace(dest)   # rename atômico: jobs paralelos não leem arquivo pela metade
     return dest
+
+
+def file_key(path: Path) -> dict:
+    """Identidade barata de um arquivo grande (tamanho + mtime) para caches."""
+    st = path.stat()
+    return {"size": st.st_size, "mtime": round(st.st_mtime, 3)}
 
 
 def _sha256(path: Path) -> str:

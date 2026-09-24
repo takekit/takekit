@@ -1,0 +1,37 @@
+{
+  "id": "d-split",
+  "name": "D · Split (B-roll em cima)",
+  "palco": "D",
+  "description": "Tela dividida: B-roll na metade de cima, host na de baixo, emenda branca de 4 px. Legenda na emenda.",
+  "layout": "split",
+  "bRoll": {
+    "band": [
+      0,
+      958
+    ],
+    "fit": "cover",
+    "source": "campo `broll` do beat no plan.json (caminho relativo ao projeto; vídeo ou imagem) ou edit/broll/<unidade>.{mov,mp4,png,jpg}",
+    "startField": "broll_start (segundos no arquivo, opcional)"
+  },
+  "host": {
+    "band": [
+      962,
+      1920
+    ],
+    "cropY": 250
+  },
+  "seam": {
+    "band": [
+      958,
+      962
+    ],
+    "color": "#FFFFFF"
+  },
+  "safeZones": {
+    "graphic": null,
+    "caption": {
+      "layout": "face",
+      "y": 960
+    }
+  }
+}

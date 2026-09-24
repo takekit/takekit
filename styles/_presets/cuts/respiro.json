@@ -1,0 +1,13 @@
+{
+  "id": "respiro",
+  "name": "Com respiro",
+  "description": "Mantém um respiro curto entre as frases (4 frames de pad, limiar mais baixo). Ritmo mais calmo, bom para explicação longa.",
+  "tighten": {
+    "threshDb": -44,
+    "padFrames": 4
+  },
+  "rules": [
+    "Respiro curto entre frases; nunca pausa longa.",
+    "Cortes aprovados em edit/cuts.json são preservados."
+  ]
+}

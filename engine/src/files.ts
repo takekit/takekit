@@ -290,18 +290,25 @@ const MIME: Record<string, string> = {
   ".mkv": "video/x-matroska",
   ".jpg": "image/jpeg",
   ".png": "image/png",
+  ".m4a": "audio/mp4",
 };
 
 /**
  * Send a file with single-range support. WebKit (Safari / Tauri on macOS)
  * refuses to play <video> without Range.
  */
-export function sendFile(req: Request, res: Response, path: string, cache = "no-cache"): void {
+export function sendFile(
+  req: Request,
+  res: Response,
+  path: string,
+  cache = "no-cache",
+  disposition: "inline" | "attachment" = "inline",
+): void {
   const size = statSync(path).size;
   res.setHeader("Content-Type", MIME[extname(path).toLowerCase()] ?? "application/octet-stream");
   res.setHeader("Accept-Ranges", "bytes");
   res.setHeader("Cache-Control", cache);
-  res.setHeader("Content-Disposition", `inline; filename="${encodeURIComponent(basename(path))}"`);
+  res.setHeader("Content-Disposition", `${disposition}; filename="${encodeURIComponent(basename(path))}"`);
 
   const range = parseRange(req.headers.range, size);
   if (range === "invalid") {

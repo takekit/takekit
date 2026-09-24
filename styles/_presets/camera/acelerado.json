@@ -1,0 +1,21 @@
+{
+  "id": "acelerado",
+  "name": "Acelerado",
+  "description": "Punches fortes e zoom out em quase todo corte. Muita energia, para vídeos curtos e opinativos.",
+  "moves": [
+    "punch",
+    "zoomOut"
+  ],
+  "intensity": 1.22,
+  "frequency": "muitos",
+  "punchFrames": 1,
+  "faceTracking": {
+    "enabled": true,
+    "baseScale": 1.0,
+    "smoothing": 0.9
+  },
+  "applyTo": [
+    "A",
+    "D"
+  ]
+}

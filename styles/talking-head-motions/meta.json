@@ -3,6 +3,11 @@
   "name": "Talking Head + Motions",
   "aliases": ["09-jev"],
   "previewVideoPath": "preview.mp4",
+  "derivedFrom": {
+    "kind": "approved-video",
+    "references": ["video/projects/09-jev/exports/09-jev-v3.mp4"],
+    "note": "Travado no vídeo 09-jev em 19/09/2026."
+  },
   "createdAt": "2026-09-23T00:00:00.000Z",
-  "updatedAt": "2026-09-23T00:00:00.000Z"
+  "updatedAt": "2026-09-24T00:00:00.000Z"
 }

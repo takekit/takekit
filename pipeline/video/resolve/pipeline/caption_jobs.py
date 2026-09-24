@@ -6,6 +6,10 @@
 Escreve blocks_face.json, blocks_canvas.json, blocks_hold.json e os job_*.json.
 1–3 palavras no ataque da fala. Hold só onde o storyboard diz `segurar`.
 Ênfase de duas linhas NÃO é inferida: o agente marca depois.
+
+Com edit/style.resolved.json: palavras/caracteres por bloco vêm de `timing` do preset de
+legenda e layout + y de cada palco de `safeZones.caption` dos presets de palco (D = face na
+emenda, y 960). Sem ele, a tabela Y abaixo. Todo bloco leva `"palco"`.
 """
 from __future__ import annotations
 
@@ -16,7 +20,28 @@ REPO = Path(__file__).resolve().parents[3]
 FPS = 30
 MAX_WORDS = 3
 MAX_CHARS = 20
-Y = {'A': 1180, 'B': 700, 'C': 1580, 'hold': 1080}
+Y = {'A': 1180, 'B': 700, 'C': 1580, 'D': 960, 'hold': 1080}
+FACE = {'A', 'D'}      # palcos com o rosto atrás da legenda; o resto é creme
+
+
+def style_resolved(pdir: Path) -> dict:
+    p = pdir / 'edit' / 'style.resolved.json'
+    return json.loads(p.read_text()) if p.is_file() else {}
+
+
+def caption_zones(style: dict) -> dict[str, tuple[str, int]]:
+    """(layout, y) da legenda por palco: safeZones.caption dos presets de palco, senão a tabela."""
+    out = {k: ('face' if k in FACE else 'canvas', y) for k, y in Y.items() if k != 'hold'}
+    for st in (style.get('modules') or {}).get('stage') or []:
+        cap = ((st or {}).get('safeZones') or {}).get('caption') or {}
+        letter = str((st or {}).get('palco') or '').upper()[:1]
+        if letter and cap:
+            y = cap.get('y')
+            if isinstance(y, list):          # faixa [y0, y1] → meio
+                y = sum(y) / len(y)
+            out[letter] = (cap.get('layout') or out.get(letter, ('canvas', 0))[0],
+                           int(round(y)) if y is not None else out.get(letter, ('', Y['A']))[1])
+    return out
 
 
 def words_of(whisper: dict) -> list[dict]:
@@ -35,23 +60,23 @@ def palco_of(plan: dict, uid: str, idx: int) -> tuple[str, str, str]:
     item = None
     for b in sb:
         bid = str(b.get('id') or '')
-        if bid == uid or bid.replace('b', 'u') == uid:
+        if b.get('unit') == uid or bid == uid or bid.replace('b', 'u') == uid:
             item = b
             break
     if item is None and idx < len(sb):
         item = sb[idx]
     if not item:
         return 'A', 'seguir', ''
-    return item.get('palco') or 'A', item.get('caption') or 'seguir', item.get('marca') or ''
+    return str(item.get('palco') or 'A').strip().upper()[:1] or 'A', item.get('caption') or 'seguir', item.get('marca') or ''
 
 
-def group(words: list[dict]) -> list[dict]:
-    """Agrupa 1–3 palavras. Troca no ataque."""
+def group(words: list[dict], max_words: int = MAX_WORDS, max_chars: int = MAX_CHARS) -> list[dict]:
+    """Agrupa 1–3 palavras (ou o que o preset pedir). Troca no ataque."""
     buf, out = [], []
     for w in words:
         nxt = buf + [w]
         text = ' '.join(x['text'] for x in nxt)
-        if buf and (len(nxt) > MAX_WORDS or len(text) > MAX_CHARS):
+        if buf and (len(nxt) > max_words or len(text) > max_chars):
             start_f = round(buf[0]['start'] * FPS)
             end_f = round(buf[-1]['end'] * FPS)
             out.append({'text': ' '.join(x['text'] for x in buf), 'start_src_f': start_f, 'end_src_f': end_f})
@@ -81,6 +106,14 @@ def main() -> None:
         wpath = pdir / 'edit' / 'audio-16k.json'
     whisper = json.loads(wpath.read_text())
     all_words = words_of(whisper)
+    style = style_resolved(pdir)
+    zones = caption_zones(style)
+    cap = (style.get('modules') or {}).get('caption') or {}
+    timing = cap.get('timing') or {}
+    max_words = int(timing.get('maxWords') or MAX_WORDS)
+    max_chars = int(timing.get('maxChars') or MAX_CHARS)
+    print(f"legenda: {cap.get('id') or 'sem preset'} · até {max_words} palavras / {max_chars} caracteres · "
+          + ' '.join(f'{k}={v[0]}@{v[1]}' for k, v in sorted(zones.items())))
 
     face, canvas, hold = [], [], []
     t_tl = 0
@@ -91,12 +124,12 @@ def main() -> None:
         dur = src1 - src0
         palco, cap_mode, marca = palco_of(plan, uid, i)
         take_words = [w for w in all_words if src0 / FPS - 0.05 <= w['start'] < src1 / FPS]
-        layout = 'face' if palco == 'A' else 'canvas'
-        y = Y[palco]
+        layout, y = zones.get(palco) or zones['A']
         if cap_mode == 'segurar':
             keyword = (marca or 'CTA').upper()
             hold.append({
                 'key': uid,
+                'palco': palco,
                 'layout': 'hold',
                 'start_f': t_tl,
                 'end_f': t_tl + dur,
@@ -111,7 +144,7 @@ def main() -> None:
                 },
             })
         else:
-            chunks = group(take_words)
+            chunks = group(take_words, max_words, max_chars)
             if not chunks:
                 chunks = [{'text': c.get('texto') or '', 'start_src_f': src0, 'end_src_f': src1}]
             n = len(chunks)
@@ -128,6 +161,7 @@ def main() -> None:
                     'end_f': t_tl + min(dur, local1 if local1 > local0 else dur),
                     'layout': layout,
                     'y': y,
+                    'palco': palco,
                 }
                 (face if layout == 'face' else canvas).append(block)
         t_tl += dur

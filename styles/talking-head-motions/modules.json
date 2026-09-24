@@ -1,0 +1,13 @@
+{
+  "_doc": "Preset escolhido por módulo (docs/style-kit/SPEC-EXPANSION.md). Ids da biblioteca styles/_presets/<módulo>/ ou de presets/<módulo>/ deste pacote. A thread pode trocar qualquer um sem mexer no pacote.",
+  "caption": "hetrixo-alvito",
+  "stage": [
+    "a-host",
+    "b-host-canvas",
+    "c-canvas"
+  ],
+  "cuts": "justo",
+  "soundEffects": "motion-hits",
+  "transitions": "filmburn",
+  "camera": "punch-na-enfase"
+}

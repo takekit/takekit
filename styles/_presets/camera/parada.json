@@ -1,0 +1,18 @@
+{
+  "id": "parada",
+  "name": "Câmera parada",
+  "description": "Sem zoom nem punch: o enquadramento do vídeo como foi gravado.",
+  "moves": [],
+  "intensity": 1.0,
+  "frequency": "marcado",
+  "punchFrames": 2,
+  "faceTracking": {
+    "enabled": false,
+    "baseScale": 1.0,
+    "smoothing": 0.9
+  },
+  "applyTo": [
+    "A",
+    "D"
+  ]
+}

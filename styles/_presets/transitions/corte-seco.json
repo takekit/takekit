@@ -1,0 +1,7 @@
+{
+  "id": "corte-seco",
+  "name": "Corte seco",
+  "description": "Só corte seco, sem filmburn (nem no gancho).",
+  "default": "cut",
+  "filmburn": null
+}

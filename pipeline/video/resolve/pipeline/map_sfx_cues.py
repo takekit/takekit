@@ -7,7 +7,8 @@
         --voice video/projects/<slug>/edit/audio-16k.wav
 
 Escreve edit/sfx_map.json e, se --prep, gera os wavs em edit/sfx_prep/ via sfx_prep.py.
-kind → id do catálogo (travado; não escolher de ouvido a cada vídeo).
+kind → id do catálogo (travado; não escolher de ouvido a cada vídeo). Com
+edit/style.resolved.json, `modules.soundEffects.kindToCatalogId` troca/estende a tabela.
 """
 from __future__ import annotations
 
@@ -45,6 +46,15 @@ def main() -> None:
         cues_p = REPO / cues_p
     cues = json.loads(cues_p.read_text())
 
+    kind_to_id = dict(KIND_TO_ID)
+    sr = pdir / 'edit' / 'style.resolved.json'
+    se = ((json.loads(sr.read_text()).get('modules') or {}).get('soundEffects') if sr.is_file() else None) or {}
+    if isinstance(se, dict) and se.get('kindToCatalogId'):
+        kind_to_id.update(se['kindToCatalogId'])
+        print(f"kind→catálogo do preset {se.get('id') or 'de SFX'}")
+    if isinstance(se, dict) and se.get('sfx') is False:
+        print(f"aviso: o preset {se.get('id') or 'de SFX'} desliga os SFX; o compose.py ignora o mapa")
+
     # posição na timeline = soma das durações anteriores (cuts em ordem)
     t = 0
     pos = {}
@@ -58,14 +68,14 @@ def main() -> None:
     for cue in cues:
         uid = cue['uid']
         kind = cue['kind']
-        if kind not in KIND_TO_ID:
-            sys.exit(f'kind desconhecido: {kind} (use {sorted(KIND_TO_ID)})')
+        if kind not in kind_to_id:
+            sys.exit(f'kind desconhecido: {kind} (use {sorted(kind_to_id)})')
         if uid not in pos:
             sys.exit(f'cue {uid} sem corte em cuts.json')
         mapped.append({
             'uid': uid,
             'kind': kind,
-            'catalog_id': KIND_TO_ID[kind],
+            'catalog_id': kind_to_id[kind],
             't_local_f': int(cue['t_local_f']),
             't_timeline_f': pos[uid] + int(cue['t_local_f']),
             'why': cue.get('why', ''),
@@ -74,7 +84,7 @@ def main() -> None:
     out = pdir / 'edit' / 'sfx_map.json'
     out.write_text(json.dumps({
         '_doc': 'kind→catálogo travado. t_timeline_f é o frame na fala montada.',
-        'kind_to_id': KIND_TO_ID,
+        'kind_to_id': kind_to_id,
         'cues': mapped,
     }, ensure_ascii=False, indent=2) + '\n')
     print('escrito', out, f'({len(mapped)} cues)')

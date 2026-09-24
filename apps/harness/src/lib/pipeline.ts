@@ -7,7 +7,7 @@ export const PIPELINE_STEPS: Array<{ key: string; label: string }> = [
   { key: "captions", label: "Legendas" },
   { key: "motion", label: "Motion" },
   { key: "palco_b", label: "Palco B" },
-  { key: "compose", label: "Export" },
+  { key: "compose", label: "Preview" },
   { key: "review", label: "Revisão" },
 ];
 

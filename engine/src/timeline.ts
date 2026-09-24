@@ -152,8 +152,20 @@ function fromCompose(c: Json, sourcePath: string): Timeline {
     });
   const music = obj(audio.music);
   const musicClips = music.file ? [{ start: 0, end: s(total), label: fileLabel(music.file), ref: "audio.music" }] : [];
+  // Camera moves (punch / zoom) compose.py applied over the a-roll, from the camera preset.
+  const MOVE_LABEL: Record<string, string> = { punch: "punch", zoomIn: "zoom in", zoom_in: "zoom in", zoomOut: "zoom out", zoom_out: "zoom out" };
+  const camera = arr(c.camera)
+    .map(obj)
+    .filter((m) => str(m.move) && str(m.move) !== "none")
+    .map((m, i) => ({
+      start: s(num(m.startFrame, num(m.start))),
+      end: s(num(m.endFrame, num(m.end))),
+      label: MOVE_LABEL[str(m.move)] ?? str(m.move),
+      ref: `camera[${i}]`,
+    }));
 
   const tracks: TimelineTrack[] = [
+    { id: "V5", slot: "V5", name: "CÂMERA", kind: "fx" as const, clips: camera },
     { id: "V4", slot: "V4", name: "FX", kind: "fx" as const, clips: fx },
     { id: "V3", slot: "V3", name: "LEGENDAS", kind: "caption" as const, clips: captions },
     { id: "V2", slot: "V2", name: "CANVAS", kind: "title" as const, clips: canvas },

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, Film, Folder, Palette as PaletteIcon, X } from "lucide-react";
-import { styleName, threadInputs, type StyleSummary, type Thread } from "../api/client";
+import { styleName, threadInputs, type ModuleSelection, type StyleSummary, type Thread } from "../api/client";
 import { basename } from "../lib/format";
+import { usePresets } from "../lib/usePresets";
+import { DraftPresetsChip } from "./Presets";
 import { ProjectPicker } from "./ProjectPicker";
 import { StylePicker } from "./StyleGallery";
 import { VideoPicker } from "./VideoPicker";
@@ -13,6 +15,8 @@ export interface Draft {
   inputVideoPaths: string[];
   /** Style Kit id; "" = the gallery default. */
   styleId: string;
+  /** Presets swapped from the style's for this thread. */
+  modules: ModuleSelection;
 }
 
 export interface ProjectOption {
@@ -34,6 +38,7 @@ export function DraftTray({
   defaultStyleId,
   onChange,
   onChangeRoot,
+  onCreateCaption,
 }: {
   draft: Draft;
   projects: ProjectOption[];
@@ -45,8 +50,11 @@ export function DraftTray({
   defaultStyleId: string;
   onChange: (draft: Draft) => void;
   onChangeRoot: (path: string) => Promise<void>;
+  onCreateCaption: () => void;
 }) {
   const [picker, setPicker] = useState<"project" | "videos" | null>(null);
+  const styleId = draft.styleId || defaultStyleId;
+  const library = usePresets(styleId, Boolean(styleId));
   const projectPath = draft.projectPath;
   const videos = draft.inputVideoPaths;
   useEffect(() => {
@@ -94,8 +102,18 @@ export function DraftTray({
 
       <StylePicker
         styles={styles}
-        value={draft.styleId || defaultStyleId}
-        onChange={(styleId) => onChange({ ...draft, styleId: styleId === defaultStyleId ? "" : styleId })}
+        value={styleId}
+        // Another style has other presets: swaps don't carry over.
+        onChange={(id) => onChange({ ...draft, styleId: id === defaultStyleId ? "" : id, modules: {} })}
+      />
+
+      <DraftPresetsChip
+        styleModules={styles.find((s) => s.id === styleId)?.modules ?? null}
+        override={draft.modules}
+        library={library}
+        styleId={styleId}
+        onChange={(modules) => onChange({ ...draft, modules })}
+        onCreateCaption={onCreateCaption}
       />
 
       {picker === "project" ? (

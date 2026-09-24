@@ -1,0 +1,22 @@
+{
+  "id": "dinamico",
+  "name": "Dinâmico",
+  "description": "Punches e zooms alternados de tempos em tempos, sempre no rosto. Ritmo de vídeo de explicação rápido.",
+  "moves": [
+    "punch",
+    "zoomIn",
+    "zoomOut"
+  ],
+  "intensity": 1.14,
+  "frequency": "medio",
+  "punchFrames": 2,
+  "faceTracking": {
+    "enabled": true,
+    "baseScale": 1.0,
+    "smoothing": 0.9
+  },
+  "applyTo": [
+    "A",
+    "D"
+  ]
+}

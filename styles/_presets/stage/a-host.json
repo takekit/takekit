@@ -1,0 +1,15 @@
+{
+  "id": "a-host",
+  "name": "A · Host",
+  "palco": "A",
+  "description": "Talking head em tela cheia, crop fechado, câmera estável.",
+  "layout": "host",
+  "bRoll": null,
+  "safeZones": {
+    "graphic": null,
+    "caption": {
+      "layout": "face",
+      "y": 1180
+    }
+  }
+}

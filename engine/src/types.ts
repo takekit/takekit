@@ -1,4 +1,5 @@
 import type { ActivityItem, StepState } from "./activity.js";
+import type { ModuleSelection } from "./styles.js";
 
 export type JobStatus = "queued" | "running" | "succeeded" | "failed";
 
@@ -35,13 +36,45 @@ export interface HarnessSession {
   model?: string;
   /** thread.messages.length when this session last ran: later turns are news to it. */
   seen: number;
+  /** Hash of the style brief the session got; a changed brief is sent again on resume. */
+  styleHash?: string;
+  /** Hash of the thread's presets when the session last ran; swapped presets are sent on resume. */
+  modulesHash?: string;
   updatedAt: string;
 }
 
 export type StageState = "pending" | "running" | "done" | "failed";
 
-/** Free-form stage map; MVP updates `ingest` / `edit` / `export`. */
+/** Free-form stage map: `ingest` / `edit` / `preview` (agent jobs) / `export` (the button). */
 export type StageStatus = Record<string, StageState>;
+
+/**
+ * An engine-side render of a thread, no agent involved: the final export (Exportar
+ * button) or a re-render of the preview after a preset swap.
+ */
+export interface RenderTask {
+  id: string;
+  threadId: string;
+  kind: "export" | "preview";
+  status: "running" | "succeeded" | "failed";
+  /** 0..1 */
+  progress: number;
+  /** What it is doing now ("Legendas 2/3", "Montando"…). */
+  phase: string;
+  startedAt: string;
+  finishedAt?: string | null;
+  /** The mp4 it wrote. */
+  path?: string | null;
+  error?: string | null;
+}
+
+/** A style being created from reference videos (thread kind "style"). */
+export interface StyleDraftInfo {
+  /** Id the style gets in the gallery (= draft folder name). */
+  id: string;
+  /** Set once saved to the gallery. */
+  publishedAt?: string | null;
+}
 
 export interface Thread {
   id: string;
@@ -66,10 +99,21 @@ export interface Thread {
   lastJobMode?: JobMode | null;
   /** Pipeline steps the last job ran (trim, palco_b, compose…), in pipeline order. */
   pipeline?: Record<string, StepState>;
-  /** Hidden from the thread list (kept on disk; can be restored). */
+  /** "Concluída": out of the thread list (kept on disk; can be reopened). */
   archivedAt?: string | null;
+  /** "Adiada": hidden until this moment, then back at the top of its project. */
+  snoozedUntil?: string | null;
   /** CLI session per executor id, so the next message resumes instead of starting over. */
   sessions?: Record<string, HarnessSession>;
+  /** Presets this thread swapped from its style (caption, stage, cuts…); unset = the style's. */
+  modules?: ModuleSelection | null;
+  /** "video" (default): edits a project. "style": creates a style from reference videos. */
+  kind?: "video" | "style";
+  styleDraft?: StyleDraftInfo | null;
+  /** Last final export (the Exportar button); the preview stays in previewPath. */
+  lastExport?: RenderTask | null;
+  /** Last engine re-render of the preview (preset swap). */
+  lastRender?: RenderTask | null;
 }
 
 export interface Job {

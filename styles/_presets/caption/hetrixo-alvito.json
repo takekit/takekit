@@ -1,0 +1,45 @@
+{
+  "id": "hetrixo-alvito",
+  "name": "Hetrixo + Alvito",
+  "description": "Sans pesada e cursiva condensada, 1–3 palavras no ataque da fala, entra subindo. Padrão do Talking Head + Motions.",
+  "font": {
+    "sans": "assets/fonts/hetrixotypeface-extrabold.otf",
+    "accent": "assets/fonts/fontspring-demo-alvitonovacomp-bolditalic.otf",
+    "case": "sentence",
+    "tracking": -2
+  },
+  "size": {
+    "sans": 72,
+    "accent": 84,
+    "canvasSans": 76,
+    "canvasAccent": 88
+  },
+  "position": {
+    "y": 1180
+  },
+  "color": {
+    "fill": "#FFFFFF",
+    "accent": "#F4EFE6",
+    "canvasFill": "#171512",
+    "canvasAccent": "#8C5400"
+  },
+  "outline": null,
+  "shadow": {
+    "dx": 0,
+    "dy": 3,
+    "blur": 5,
+    "alpha": 158
+  },
+  "box": null,
+  "animation": {
+    "in": "rise",
+    "out": "fade",
+    "inFrames": 4,
+    "outFrames": 3
+  },
+  "timing": {
+    "maxWords": 3,
+    "maxChars": 18,
+    "leadFrames": 2
+  }
+}

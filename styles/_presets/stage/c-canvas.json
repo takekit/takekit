@@ -1,0 +1,28 @@
+{
+  "id": "c-canvas",
+  "name": "C · Canvas cheio",
+  "palco": "C",
+  "description": "Creme opaco em tela cheia; o gráfico ocupa o quadro e a legenda fica embaixo.",
+  "layout": "canvas",
+  "bRoll": null,
+  "safeZones": {
+    "graphic": {
+      "x": [
+        80,
+        1000
+      ],
+      "y": [
+        200,
+        1400
+      ]
+    },
+    "caption": {
+      "layout": "canvas",
+      "y": 1580,
+      "band": [
+        1500,
+        1750
+      ]
+    }
+  }
+}

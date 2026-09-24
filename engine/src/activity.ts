@@ -62,7 +62,7 @@ export const PIPELINE_STEPS: Array<{ key: string; label: string; doing: string; 
   { key: "captions", label: "Legendas", doing: "renderizando as legendas", match: /captions_palco\.py|render_overlays\.py/ },
   { key: "motion", label: "Motion", doing: "renderizando os canvases", match: /motion\/render\.py|remotion\s+render/i },
   { key: "palco_b", label: "Palco B", doing: "recortando o fundo (RVM)", match: /palco_b\.py|matte\.py/ },
-  { key: "compose", label: "Export", doing: "montando o vídeo final", match: /compose\.py|batch\.py/ },
+  { key: "compose", label: "Preview", doing: "montando o preview", match: /compose\.py|batch\.py/ },
   { key: "review", label: "Revisão", doing: "capturando frames", match: /headless\/frame\.py|\bframe\.py/ },
 ];
 

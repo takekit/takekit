@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Pipeline headless: venv com numpy/pillow/onnxruntime + modelo RVM em cache.
+# Pipeline headless: venv com numpy/pillow/onnxruntime + modelos (RVM, rosto) em cache.
 # Uso (da raiz do pipeline):  bash video/headless/setup.sh
 # Depois: pipeline/.venv/bin/python video/headless/<script>.py ...
 set -euo pipefail
@@ -17,6 +17,8 @@ else
   "$VENV/bin/pip" install -q -r "$HERE/requirements.txt"
 fi
 
-# baixa e confere o modelo uma vez (cache compartilhado entre jobs)
+# baixa e confere os modelos uma vez (cache compartilhado entre jobs)
 (cd "$HERE" && "$VENV/bin/python" -c "from common import rvm_model; print('modelo RVM:', rvm_model())")
+# detector de rosto da câmera (camera.py); sem ele a câmera cai para a máscara do RVM
+(cd "$HERE" && "$VENV/bin/python" -c "import camera; d = camera.face_detector(); print('detector de rosto:', 'ok' if d else 'indisponível')") || true
 echo "ok: $VENV"

@@ -7,7 +7,10 @@ na cabeça — o 'buraco' de dentro do clipe.
 
   python3 video/resolve/pipeline/tighten_cuts.py \
       --audio video/projects/09-jev/edit/audio-16k.wav \
-      --cuts  video/projects/09-jev/edit/cuts.json
+      --cuts  video/projects/09-jev/edit/cuts.json [--thresh -40] [--pad 1]
+
+Limiar e pad: --thresh/--pad > `modules.cuts.tighten {threshDb, padFrames}` do
+style.resolved.json ao lado do cuts.json (edit/) > -40 dB / 1 frame.
 """
 from __future__ import annotations
 
@@ -41,7 +44,7 @@ def rms_frames(wav: Path) -> list[float]:
     return out
 
 
-def snap(src: list[int], db: list[float], thresh: float) -> tuple[list[int], int, int]:
+def snap(src: list[int], db: list[float], thresh: float, pad: int = PAD_FRAMES) -> tuple[list[int], int, int]:
     a, b = src
     a = max(0, min(a, len(db) - 1))
     b = max(a + 1, min(b, len(db)))
@@ -49,27 +52,48 @@ def snap(src: list[int], db: list[float], thresh: float) -> tuple[list[int], int
     if not voiced:
         return [a, b], 0, 0
     head, tail = voiced[0], voiced[-1] + 1
-    head = max(a, head - PAD_FRAMES)
-    tail = min(b, tail + PAD_FRAMES)
+    head = max(a, head - pad)
+    tail = min(b, tail + pad)
     if head >= tail:
         return [a, b], 0, 0
     return [head, tail], head - a, b - tail
+
+
+def cuts_preset(cuts: Path) -> dict:
+    """modules.cuts do style.resolved.json ao lado do cuts.json ({} sem ele)."""
+    sr = cuts.parent / "style.resolved.json"
+    if not sr.is_file():
+        return {}
+    preset = (json.loads(sr.read_text(encoding="utf-8")).get("modules") or {}).get("cuts")
+    return preset if isinstance(preset, dict) else {}
 
 
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--audio", required=True)
     ap.add_argument("--cuts", required=True)
-    ap.add_argument("--thresh", type=float, default=THRESH_DB)
+    ap.add_argument("--thresh", type=float, help=f"limiar em dB (default: preset de cortes, senão {THRESH_DB:g})")
+    ap.add_argument("--pad", type=int, help=f"frames de pad (default: preset de cortes, senão {PAD_FRAMES})")
     args = ap.parse_args()
 
     path = Path(args.cuts)
     data = json.loads(path.read_text(encoding="utf-8"))
+    preset = cuts_preset(path)
+    tighten = preset.get("tighten") or {}
+    def pick(cli, key, default):
+        if cli is not None:
+            return cli, "argumento"
+        if tighten.get(key) is not None:
+            return tighten[key], f"preset {preset.get('id') or 'de cortes'}"
+        return default, "default"
+    (thresh, t_from), (pad, p_from) = pick(args.thresh, "threshDb", THRESH_DB), pick(args.pad, "padFrames", PAD_FRAMES)
+    thresh, pad = float(thresh), int(pad)
+    print(f"limiar {thresh:g} dB ({t_from}) · pad {pad}f ({p_from})")
     db = rms_frames(Path(args.audio))
     total_h = total_t = 0
     for c in data["cuts"]:
         src = c.get("src_asr") or c["src"]
-        tight, dh, dt = snap(src, db, args.thresh)
+        tight, dh, dt = snap(src, db, thresh, pad)
         c["src_asr"] = list(src)
         c["src"] = tight
         c["drop_head_f"] = dh
@@ -81,8 +105,8 @@ def main() -> None:
     data["criterion"] = {
         "index": "whisper",
         "border": "rms",
-        "thresh_db": args.thresh,
-        "pad_frames": PAD_FRAMES,
+        "thresh_db": thresh,
+        "pad_frames": pad,
         "drop_head_total_f": total_h,
         "drop_tail_total_f": total_t,
     }

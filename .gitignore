@@ -23,3 +23,6 @@ pipeline/**/edit/.work/
 
 # Tauri / Rust
 **/src-tauri/target/
+
+# Style Kit drafts (new styles being decomposed by the agent; saved ones move to styles/<id>/)
+styles/_drafts/

@@ -1,0 +1,43 @@
+{
+  "id": "minimal",
+  "name": "Minimal",
+  "description": "Gotham Medium pequena com sombra suave, até 5 palavras, embaixo. Some sem chamar atenção: bom para falas longas.",
+  "font": {
+    "sans": "assets/fonts/brainstorm-academy/GothamMedium.ttf",
+    "accent": "assets/fonts/brainstorm-academy/GothamBold.ttf",
+    "case": "sentence",
+    "tracking": 0
+  },
+  "size": {
+    "sans": 50,
+    "accent": 52
+  },
+  "position": {
+    "y": 1560
+  },
+  "color": {
+    "fill": "#FFFFFF",
+    "accent": "#FFFFFF",
+    "canvasFill": "#1C1A18",
+    "canvasAccent": "#1C1A18"
+  },
+  "outline": null,
+  "shadow": {
+    "dx": 0,
+    "dy": 2,
+    "blur": 6,
+    "alpha": 150
+  },
+  "box": null,
+  "animation": {
+    "in": "fade",
+    "out": "fade",
+    "inFrames": 6,
+    "outFrames": 4
+  },
+  "timing": {
+    "maxWords": 5,
+    "maxChars": 30,
+    "leadFrames": 2
+  }
+}

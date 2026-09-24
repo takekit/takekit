@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { Check, ChevronDown, Palette as PaletteIcon } from "lucide-react";
-import { stylePreviewUrl, styleThumbUrl, type StyleSummary } from "../api/client";
+import { Captions, Check, ChevronDown, LayoutGrid, LoaderCircle, Palette as PaletteIcon, Plus, Sparkles } from "lucide-react";
+import { isThreadBusy, stylePreviewUrl, styleThumbUrl, type StyleSummary, type Thread } from "../api/client";
 import { usePersistentState } from "../lib/hooks";
-import { Popover } from "./ui";
+import { IconButton, Popover } from "./ui";
 
 /** Portrait frame of the style's preview loop (or its initial when it has none). */
 function StyleThumb({ style, className = "" }: { style: StyleSummary; className?: string }) {
@@ -27,17 +27,34 @@ export function StyleGallery({
   styles,
   defaultStyleId,
   onPick,
+  drafts,
+  activeId,
+  onSelectThread,
+  onNewStyle,
+  onNewCaption,
+  onOpenStudio,
+  studioOpen,
+  canCreate,
 }: {
   styles: StyleSummary[];
   defaultStyleId: string | null;
   onPick: (styleId: string) => void;
+  /** Threads creating a style from references (kind "style"). */
+  drafts: Thread[];
+  activeId: string | null;
+  onSelectThread: (id: string) => void;
+  onNewStyle: () => void;
+  onNewCaption: () => void;
+  onOpenStudio: () => void;
+  studioOpen: boolean;
+  canCreate: boolean;
 }) {
   const [open, setOpen] = usePersistentState("takekit.stylesOpen", true);
   const [peek, setPeek] = useState<{ style: StyleSummary; rect: DOMRect } | null>(null);
   const dwell = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => () => clearTimeout(dwell.current), []);
 
-  if (!styles.length) return null;
+  if (!styles.length && !drafts.length) return null;
 
   const enter = (style: StyleSummary, el: HTMLElement) => {
     clearTimeout(dwell.current);
@@ -58,6 +75,61 @@ export function StyleGallery({
           <span className="group-count">{styles.length}</span>
           <ChevronDown size={13} strokeWidth={2} className={`group-chevron${open ? "" : " is-collapsed"}`} />
         </button>
+        {canCreate ? (
+          <Popover
+            side="bottom"
+            align="end"
+            className="menu group-menu"
+            trigger={({ open: menuOpen, toggle }) => (
+              <IconButton
+                label="Criar estilo ou legenda"
+                className={`group-add is-visible${menuOpen ? " is-open" : ""}`}
+                onClick={toggle}
+                aria-haspopup="menu"
+                aria-expanded={menuOpen}
+              >
+                <Plus size={14} strokeWidth={1.75} />
+              </IconButton>
+            )}
+          >
+            {(close) => (
+              <>
+                <button
+                  type="button"
+                  className="menu-item"
+                  onClick={() => {
+                    close();
+                    onNewStyle();
+                  }}
+                >
+                  <span className="menu-item-icon">
+                    <Sparkles size={14} strokeWidth={1.75} />
+                  </span>
+                  <span className="menu-item-text">
+                    Novo estilo
+                    <small>A partir de vídeos de referência</small>
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  className="menu-item"
+                  onClick={() => {
+                    close();
+                    onNewCaption();
+                  }}
+                >
+                  <span className="menu-item-icon">
+                    <Captions size={14} strokeWidth={1.75} />
+                  </span>
+                  <span className="menu-item-text">
+                    Nova legenda
+                    <small>Monte um preset no builder</small>
+                  </span>
+                </button>
+              </>
+            )}
+          </Popover>
+        ) : null}
       </div>
       {open ? (
         <ul className="thread-list">
@@ -80,6 +152,38 @@ export function StyleGallery({
               </button>
             </li>
           ))}
+          {drafts.map((thread) => (
+            <li key={thread.id}>
+              <button
+                type="button"
+                className={`thread-row style-row${thread.id === activeId ? " is-active" : ""}`}
+                onClick={() => onSelectThread(thread.id)}
+                title={thread.styleDraft?.publishedAt ? "Conversa de criação do estilo" : "Estilo em criação"}
+              >
+                <span className="style-thumb is-draft" aria-hidden="true">
+                  {isThreadBusy(thread) ? (
+                    <LoaderCircle size={13} strokeWidth={2.25} className="spin" />
+                  ) : (
+                    <Sparkles size={13} strokeWidth={1.75} />
+                  )}
+                </span>
+                <span className="thread-title">{thread.title.replace(/^Estilo:\s*/, "")}</span>
+                <span className="thread-age">{thread.styleDraft?.publishedAt ? "criação" : "rascunho"}</span>
+              </button>
+            </li>
+          ))}
+          <li>
+            <button
+              type="button"
+              className={`thread-row style-row studio-row${studioOpen ? " is-active" : ""}`}
+              onClick={onOpenStudio}
+            >
+              <span className="style-thumb is-draft" aria-hidden="true">
+                <LayoutGrid size={13} strokeWidth={1.75} />
+              </span>
+              <span className="thread-title">Ver estilos e criar</span>
+            </button>
+          </li>
         </ul>
       ) : null}
       {peek ? <StylePeek style={peek.style} rect={peek.rect} /> : null}
@@ -103,7 +207,7 @@ function StylePeek({ style, rect }: { style: StyleSummary; rect: DOMRect }) {
   );
 }
 
-/** Style chip of the new-thread tray: lists the gallery, the pick goes to the thread. */
+/** Style chip of the new-thread tray: the gallery as videos, the pick goes to the thread. */
 export function StylePicker({
   styles,
   value,
@@ -124,9 +228,9 @@ export function StylePicker({
           type="button"
           className={`chip${open ? " is-open" : ""}`}
           onClick={toggle}
-          aria-haspopup="menu"
+          aria-haspopup="dialog"
           aria-expanded={open}
-          title="Estilo da edição"
+          title="Estilo do vídeo"
           disabled={!styles.length}
         >
           <PaletteIcon size={13} strokeWidth={1.75} />
@@ -137,24 +241,47 @@ export function StylePicker({
     >
       {(close) => (
         <>
-          <div className="menu-label">Estilo</div>
-          {styles.map((style) => (
-            <button
-              key={style.id}
-              type="button"
-              role="menuitemradio"
-              aria-checked={style.id === value}
-              className={`menu-item style-menu-item${style.id === value ? " is-selected" : ""}`}
-              onClick={() => {
-                onChange(style.id);
-                close();
-              }}
-            >
-              <StyleThumb style={style} className="is-menu" />
-              <span className="menu-item-text">{style.name}</span>
-              <Check size={14} strokeWidth={2} className="menu-check" />
-            </button>
-          ))}
+          <div className="menu-label">Estilo do vídeo · passe o mouse para ver</div>
+          <div className="style-pick-grid">
+            {styles.map((style) => (
+              <button
+                key={style.id}
+                type="button"
+                aria-pressed={style.id === value}
+                className={`style-pick${style.id === value ? " is-selected" : ""}`}
+                onClick={() => {
+                  onChange(style.id);
+                  close();
+                }}
+              >
+                <span className="style-pick-video">
+                  {style.hasPreview ? (
+                    <video
+                      src={stylePreviewUrl(style)}
+                      poster={styleThumbUrl(style)}
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      onPointerEnter={(e) => void e.currentTarget.play().catch(() => undefined)}
+                      onPointerLeave={(e) => {
+                        e.currentTarget.pause();
+                        e.currentTarget.currentTime = 0;
+                      }}
+                    />
+                  ) : (
+                    <span className="style-thumb-initial">{style.name.slice(0, 1).toUpperCase()}</span>
+                  )}
+                  {style.id === value ? (
+                    <span className="pv-card-check" aria-hidden="true">
+                      <Check size={12} strokeWidth={2.5} />
+                    </span>
+                  ) : null}
+                </span>
+                <span className="style-pick-name">{style.name}</span>
+              </button>
+            ))}
+          </div>
         </>
       )}
     </Popover>

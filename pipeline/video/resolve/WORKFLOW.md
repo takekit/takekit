@@ -138,12 +138,14 @@ arbitrária. Níveis/presets são pontos de partida, medição e audição verif
   e som coerentes. Captions e título não disputam o rosto ou a prova. O formato acordado é reconhecível.
 - **Técnica:** conferir grafo/inputs, início, acomodação, sustentação e saída; abrir capturas reais
   e assistir movimento com som. Medir desempenho no trecho quando um efeito custar demais.
-  Capturar com `video/headless/frame.py` sobre o export (ou um `compose.py --draft`): o compositor
-  é o próprio export, então o que se captura é o que se entrega.
+  Capturar com `video/headless/frame.py` sobre o preview (`compose.py`, default `--quality preview`
+  → `edit/preview.mp4`): o compositor é o mesmo do export, só a resolução e o encode mudam.
 - Rever fala/sincronismo do §3C no resultado final. Um still não valida movimento, áudio ou cortes.
   Comparar os aspectos relevantes com a referência aprovada; mudança intencional não é regressão.
-- Exportar com `video/headless/compose.py`, vertical 1080×1920@30 por padrão, respeitando
-  formato/fps acordados.
+- O agente entrega o **preview** (720p, rápido). O export final é do creator: botão Exportar no
+  Takekit, ou `video/headless/compose.py --quality final --from-preview` (mesmo spec do último
+  preview), vertical 1080×1920@30 por padrão (`quality.json` do estilo), respeitando formato/fps
+  acordados.
   Setup alternativo só com motivo: master 2160×3840 com footage 4K e pedido do cliente; 60 fps
   quando o material de origem (screen recording/animação) for a 60 fps.
   Contrato de entrega: H.264, 8–12 Mbps (vertical) / 16–20 Mbps (horizontal), AAC 256k; máster

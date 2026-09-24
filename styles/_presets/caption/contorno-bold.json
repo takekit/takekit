@@ -1,0 +1,41 @@
+{
+  "id": "contorno-bold",
+  "name": "Contorno bold",
+  "description": "Caixa alta em Poppins ExtraBold com contorno preto grosso, 1–2 palavras, entra com pop. Legível em qualquer fundo.",
+  "font": {
+    "sans": "assets/fonts/Poppins-ExtraBold.ttf",
+    "accent": "assets/fonts/Poppins-ExtraBold.ttf",
+    "case": "upper",
+    "tracking": 0
+  },
+  "size": {
+    "sans": 84,
+    "accent": 92
+  },
+  "position": {
+    "y": 1240
+  },
+  "color": {
+    "fill": "#FFFFFF",
+    "accent": "#F4B400",
+    "canvasFill": "#FFFFFF",
+    "canvasAccent": "#F4B400"
+  },
+  "outline": {
+    "width": 9,
+    "color": "#000000"
+  },
+  "shadow": null,
+  "box": null,
+  "animation": {
+    "in": "pop",
+    "out": "cut",
+    "inFrames": 5,
+    "outFrames": 1
+  },
+  "timing": {
+    "maxWords": 2,
+    "maxChars": 14,
+    "leadFrames": 1
+  }
+}

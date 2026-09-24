@@ -1,0 +1,14 @@
+{
+  "id": "justo",
+  "name": "Justo",
+  "description": "Sem ar na cabeça do clipe: a borda é o primeiro/último frame com voz, 1 frame de pad (fonema).",
+  "tighten": {
+    "threshDb": -40,
+    "padFrames": 1
+  },
+  "rules": [
+    "Sem ar na cabeça do clipe.",
+    "1 frame de pad; 2 recolocam o respiro que o usuário corta.",
+    "Cortes aprovados em edit/cuts.json são preservados."
+  ]
+}

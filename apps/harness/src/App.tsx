@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { CircleAlert, RotateCw, X } from "lucide-react";
+import { CircleAlert, CircleCheck, FolderSearch, RotateCw, X } from "lucide-react";
 import {
+  cancelRender,
   createThread,
   getThread,
   isThreadBusy,
@@ -9,9 +10,17 @@ import {
   listThreads,
   postMessage,
   deleteProject,
+  revealExport,
   setThreadArchived,
+  snoozeState,
+  snoozeThread,
+  setThreadModules,
+  startExport,
+  startPreviewRender,
   styleName,
+  type ModuleSelection,
   type ProjectSummary,
+  type RenderTask,
   type StyleSummary,
   type Thread,
 } from "./api/client";
@@ -20,6 +29,8 @@ import { usePersistentState } from "./lib/hooks";
 import { executorDisplay, useEngineConfig } from "./lib/useEngineConfig";
 import { annotationSummary, serializeAnnotations, type TimelineAnnotation } from "./lib/annotations";
 import { IS_MAC_TAURI } from "./lib/platform";
+import { useRenders } from "./lib/useRenders";
+import { usePresets } from "./lib/usePresets";
 import { Sidebar } from "./components/Sidebar";
 import { TopBar } from "./components/TopBar";
 import { ChatView } from "./components/ChatView";
@@ -29,6 +40,10 @@ import { DraftTray, ThreadTray, type Draft, type ProjectOption } from "./compone
 import { ConfirmDialog } from "./components/ConfirmDialog";
 import { Hero } from "./components/Hero";
 import { PreviewPanel } from "./components/PreviewPanel";
+import { StyleDraftPanel } from "./components/StyleDraftPanel";
+import { CaptionBuilder } from "./components/CaptionBuilder";
+import { StyleCreator } from "./components/StyleCreator";
+import { Studio } from "./components/Studio";
 import { SETTINGS_SECTIONS, SettingsView, type SettingsSection } from "./components/SettingsView";
 import { ResizeHandle } from "./components/ResizeHandle";
 import "./App.css";
@@ -40,7 +55,7 @@ const PANEL_W = { min: 300, initial: 380, max: 4000 };
 /** Chat column never gets squeezed below this by the side panels. */
 const MIN_MAIN_W = 380;
 const OFFLINE_RETRY_MS = 5000;
-const EMPTY_DRAFT: Draft = { projectPath: "", inputVideoPaths: [], styleId: "" };
+const EMPTY_DRAFT: Draft = { projectPath: "", inputVideoPaths: [], styleId: "", modules: {} };
 // The agent tells a question from an edit request on its own; starters show both.
 const SUGGESTIONS = [
   "Edita esse Short do bruto ao export",
@@ -53,7 +68,17 @@ const message = (err: unknown) => (err instanceof Error ? err.message : String(e
 export default function App() {
   const [threads, setThreads] = useState<Thread[]>([]);
   const [activeId, setActiveId] = usePersistentState<string | null>("takekit.activeThread", null);
-  const [view, setView] = useState<"chat" | "settings">("chat");
+  const [view, setView] = useState<"chat" | "settings" | "captions" | "style-new" | "studio">("chat");
+  // Estúdio opens on the gallery, or straight on "Novo estilo".
+  const [studioStart, setStudioStart] = useState<"gallery" | "new">("gallery");
+  // Caption builder: where it was opened from (a thread or the new-thread tray get the pick).
+  const [builder, setBuilder] = useState<{ origin: "thread" | "draft" | "studio"; threadId: string | null; baseId: string }>({
+    origin: "studio",
+    threadId: null,
+    baseId: "",
+  });
+  // Non-error notices (export ready…), with actions.
+  const [notice, setNotice] = useState<{ text: string; threadId: string; reveal: boolean } | null>(null);
   const [settingsSection, setSettingsSection] = useState<SettingsSection>("general");
   const [glass, setGlass] = usePersistentState("takekit.glass", true);
   const [ambient, setAmbient] = usePersistentState("takekit.ambient", true);
@@ -104,6 +129,8 @@ export default function App() {
   const engine = useEngineConfig(engineOnline, reportError);
 
   const active = view === "chat" ? (threads.find((t) => t.id === activeId) ?? null) : null;
+  // Library for the builder's "start from" list (captions).
+  const library = usePresets("", engineOnline);
   // Busy only while the active thread's job is queued/running (or the POST is in flight).
   const busy = sending || isThreadBusy(active);
 
@@ -192,18 +219,115 @@ export default function App() {
     (projectPath?: string, styleId = "") => {
       setView("chat");
       setActiveId(null);
-      setDraft({ projectPath: projectPath ?? lastProject, inputVideoPaths: [], styleId });
+      setDraft({ projectPath: projectPath ?? lastProject, inputVideoPaths: [], styleId, modules: {} });
     },
     [lastProject, setActiveId],
   );
 
-  const archive = useCallback(
-    async (id: string, archived: boolean) => {
+  // Notices step aside on their own; an export notice stays longer (it has an action).
+  useEffect(() => {
+    if (!notice) return;
+    const timer = setTimeout(() => setNotice(null), notice.reveal ? 20_000 : 6_000);
+    return () => clearTimeout(timer);
+  }, [notice]);
+
+  const refreshThread = useCallback(
+    (id: string) => {
+      getThread(id)
+        .then(({ thread }) => upsertThread(thread))
+        .catch(() => undefined);
+    },
+    [upsertThread],
+  );
+
+  // Exports and preview re-renders run on the engine; a finished one refreshes its thread.
+  const renders = useRenders(threads, engineOnline, (task: RenderTask) => {
+    refreshThread(task.threadId);
+    const title = threads.find((t) => t.id === task.threadId)?.title ?? "";
+    if (task.status === "succeeded" && task.kind === "export") {
+      setNotice({ text: `Export pronto${title ? ` · ${title}` : ""}: ${basename(task.path)}`, threadId: task.threadId, reveal: true });
+    } else if (task.status === "failed" && task.error !== "Cancelado.") {
+      setError(task.error ?? (task.kind === "export" ? "O export falhou." : "O preview falhou."));
+    }
+  });
+
+  const runRender = useCallback(
+    async (start: () => Promise<{ task: RenderTask }>) => {
       try {
-        const { thread } = await setThreadArchived(id, archived);
+        const { task } = await start();
+        renders.begin(task);
+        refreshThread(task.threadId);
+      } catch (err) {
+        setError(message(err).replace(/^\d+: /, ""));
+      }
+    },
+    [renders, refreshThread],
+  );
+
+  const changeModules = useCallback(
+    async (threadId: string, patch: ModuleSelection): Promise<boolean> => {
+      try {
+        const { thread } = await setThreadModules(threadId, patch);
         upsertThread(thread);
-        // Archiving the open thread leaves a fresh draft in the same project.
-        if (archived && id === activeId) startThread(thread.projectPath);
+        return true;
+      } catch (err) {
+        setError(message(err).replace(/^\d+: /, ""));
+        return false;
+      }
+    },
+    [upsertThread],
+  );
+
+  const openCaptionBuilder = useCallback(
+    (origin: "thread" | "draft" | "studio", threadId: string | null, baseId: string) => {
+      setBuilder({ origin, threadId, baseId });
+      setView("captions");
+    },
+    [],
+  );
+
+  const openStudio = useCallback((start: "gallery" | "new") => {
+    setStudioStart(start);
+    setView("studio");
+  }, []);
+
+  /** A caption picked or made in the builder goes where the builder was opened from. */
+  const takeCaption = useCallback(
+    (preset: { id: string; name: string }) => {
+      if (builder.origin === "thread" && builder.threadId) {
+        setView("chat");
+        setActiveId(builder.threadId);
+        void changeModules(builder.threadId, { caption: preset.id });
+      } else if (builder.origin === "draft") {
+        setView("chat");
+        setDraft((d) => ({ ...d, modules: { ...d.modules, caption: preset.id } }));
+      } else {
+        openStudio("gallery");
+      }
+    },
+    [builder, changeModules, openStudio, setActiveId],
+  );
+
+  const settle = useCallback(
+    async (id: string, settled: boolean) => {
+      try {
+        const { thread } = await setThreadArchived(id, settled);
+        upsertThread(thread);
+        // Concluding the open thread leaves a fresh draft in the same project.
+        if (settled && id === activeId) startThread(thread.projectPath);
+      } catch (err) {
+        setError(message(err));
+      }
+    },
+    [activeId, startThread, upsertThread],
+  );
+
+  const snooze = useCallback(
+    async (id: string, until: string | null) => {
+      try {
+        const { thread } = await snoozeThread(id, until);
+        upsertThread(thread);
+        if (until && id === activeId) startThread(thread.projectPath);
       } catch (err) {
         setError(message(err));
       }
@@ -232,8 +356,11 @@ export default function App() {
     (id: string) => {
       setView("chat");
       setActiveId(id);
+      // Opening a thread back from a snooze is what clears its "voltou".
+      const thread = threads.find((t) => t.id === id);
+      if (thread && snoozeState(thread) === "returned") void snooze(id, null);
     },
-    [setActiveId],
+    [setActiveId, threads, snooze],
   );
 
   useEffect(() => {
@@ -304,6 +431,7 @@ export default function App() {
           projectPath: draft.projectPath,
           inputVideoPaths: draft.inputVideoPaths.length ? draft.inputVideoPaths : undefined,
           styleId: draft.styleId || undefined,
+          modules: Object.keys(draft.modules).length ? draft.modules : undefined,
         });
         target = thread;
         upsertThread(thread);
@@ -399,6 +527,10 @@ export default function App() {
                 setDraft(next);
               }}
               onChangeRoot={changeProjectsRoot}
+              onCreateCaption={() => {
+                const style = styles.list.find((st) => st.id === (draft.styleId || defaultStyle));
+                openCaptionBuilder("draft", null, draft.modules.caption ?? style?.modules?.caption ?? "");
+              }}
             />
           )
         ) : undefined
@@ -407,8 +539,62 @@ export default function App() {
     />
   );
 
+  const captionList = library?.caption ?? [];
   let body;
-  if (view === "settings") {
+  if (view === "captions") {
+    body = (
+      <CaptionBuilder
+        key={`${builder.origin}:${builder.threadId ?? ""}:${builder.baseId}`}
+        captions={captionList}
+        baseId={builder.baseId || captionList[0]?.id || ""}
+        threadId={builder.threadId}
+        onClose={() => (builder.origin === "studio" ? openStudio("gallery") : setView("chat"))}
+        onUse={builder.origin === "studio" ? undefined : takeCaption}
+        onSaved={(preset) => {
+          takeCaption(preset);
+          setNotice({ text: `Legenda ${preset.name} salva.`, threadId: builder.threadId ?? "", reveal: false });
+        }}
+      />
+    );
+  } else if (view === "studio") {
+    body = (
+      <Studio
+        key={studioStart}
+        styles={styles.list}
+        defaultStyleId={styles.defaultId}
+        initial={studioStart}
+        onUseStyle={(styleId) => startThread(undefined, styleId === defaultStyle ? "" : styleId)}
+        onOpenCaption={(baseId) => openCaptionBuilder("studio", null, baseId)}
+        onFromVideos={() => setView("style-new")}
+        onStyleCreated={(style) => {
+          void refresh();
+          setNotice({ text: `Estilo ${style.name} salvo na galeria.`, threadId: "", reveal: false });
+        }}
+        onStyleUpdated={(style, restored) => {
+          void refresh();
+          setNotice({
+            text: restored ? `${style.name} voltou ao original.` : `Estilo ${style.name} atualizado.`,
+            threadId: "",
+            reveal: false,
+          });
+        }}
+      />
+    );
+  } else if (view === "style-new") {
+    body = (
+      <StyleCreator
+        projectsRoot={projects.root}
+        onCancel={() => openStudio("new")}
+        onCreated={(thread) => {
+          upsertThread(thread);
+          setActiveId(thread.id);
+          setView("chat");
+          setPanelOpen(true);
+          refreshThread(thread.id);
+        }}
+      />
+    );
+  } else if (view === "settings") {
     body = (
       <SettingsView
         section={settingsSection}
@@ -434,13 +620,46 @@ export default function App() {
   }
 
   const sectionLabel = SETTINGS_SECTIONS.find((sct) => sct.id === settingsSection)?.label ?? "";
-  const topTitle = view === "settings" ? sectionLabel : active ? active.title : "Nova thread";
-  const topProject = view === "settings" ? "Configurações" : active ? basename(active.projectPath) : null;
+  const topTitle =
+    view === "settings"
+      ? sectionLabel
+      : view === "captions"
+        ? "Legenda"
+        : view === "style-new"
+          ? "Novo estilo"
+          : view === "studio"
+            ? "Estúdio"
+            : active
+            ? active.title
+            : "Nova thread";
+  const topProject =
+    view === "settings"
+      ? "Configurações"
+      : view === "captions" || view === "style-new" || view === "studio"
+        ? "Estilos"
+        : active
+          ? active.kind === "style"
+            ? "Estilos"
+            : basename(active.projectPath)
+          : null;
   const showPanel = panelOpen && Boolean(active);
 
   const sidebarW = widthOr(sidebarWidth, SIDEBAR_W);
   const panelW = widthOr(panelWidth, PANEL_W);
   const layoutStyle = { "--sidebar-w": `${sidebarW}px`, "--panel-w": `${panelW}px` } as CSSProperties;
+  const panelResize = (
+    <ResizeHandle
+      label="Redimensionar painel"
+      edge="left"
+      cssVar="--panel-w"
+      rootRef={appRef}
+      width={panelW}
+      min={PANEL_W.min}
+      max={() => Math.min(PANEL_W.max, window.innerWidth - MIN_MAIN_W - (sidebarOpen ? sidebarW : 0))}
+      defaultWidth={PANEL_W.initial}
+      onCommit={setPanelWidth}
+    />
+  );
 
   return (
     <div ref={appRef} className={`app${IS_MAC_TAURI ? " is-mac-tauri" : ""}`} style={layoutStyle}>
@@ -460,10 +679,15 @@ export default function App() {
           onSelect={selectThread}
           onNewThread={startThread}
           onPickStyle={(styleId) => startThread(draft.projectPath || undefined, styleId === defaultStyle ? "" : styleId)}
+          onNewStyle={() => openStudio("new")}
+          onNewCaption={() => openCaptionBuilder("studio", null, "")}
+          onOpenStudio={() => openStudio("gallery")}
+          studioOpen={view === "studio" || view === "captions" || view === "style-new"}
           onOpenSettings={() => setView((v) => (v === "settings" ? "chat" : "settings"))}
           onRetry={() => void refresh()}
           onCollapse={() => setSidebarOpen(false)}
-          onArchive={(id, archived) => void archive(id, archived)}
+          onSettle={(id, settled) => void settle(id, settled)}
+          onSnooze={(id, until) => void snooze(id, until)}
           onDeleteProject={(project) => setDeleting({ ...project, trash: false, busy: false, error: null })}
           resizeHandle={
             <ResizeHandle
@@ -496,6 +720,27 @@ export default function App() {
         />
         <div className="main-body">
           {connecting ? null : body}
+          {notice && !error ? (
+            <div className="toast is-notice" role="status">
+              <CircleCheck size={15} strokeWidth={1.75} className="toast-icon" />
+              <span className="toast-text" title={notice.text}>
+                {notice.text}
+              </span>
+              {notice.reveal ? (
+                <button
+                  type="button"
+                  className="btn btn-small"
+                  onClick={() => void revealExport(notice.threadId).catch((err) => setError(message(err)))}
+                >
+                  <FolderSearch size={12} strokeWidth={2} />
+                  Mostrar no Finder
+                </button>
+              ) : null}
+              <button type="button" className="icon-btn" aria-label="Fechar" onClick={() => setNotice(null)}>
+                <X size={14} strokeWidth={1.75} />
+              </button>
+            </div>
+          ) : null}
           {error ? (
             <div className="toast" role="alert">
               <CircleAlert size={15} strokeWidth={1.75} className="toast-icon" />
@@ -534,33 +779,42 @@ export default function App() {
         </ConfirmDialog>
       ) : null}
 
-      {showPanel ? (
-        <PreviewPanel
-          thread={active}
-          styleName={active ? styleName(styles.list, active.styleId) : ""}
-          onClose={() => setPanelOpen(false)}
-          annotations={activeAnnotations}
-          onAnnotate={
-            active && engineOnline
-              ? (annotation) => addAnnotation(active.id, annotation)
-              : undefined
-          }
-          resizeHandle={
-            <ResizeHandle
-              label="Redimensionar preview"
-              edge="left"
-              cssVar="--panel-w"
-              rootRef={appRef}
-              width={panelW}
-              min={PANEL_W.min}
-              max={() =>
-                Math.min(PANEL_W.max, window.innerWidth - MIN_MAIN_W - (sidebarOpen ? sidebarW : 0))
-              }
-              defaultWidth={PANEL_W.initial}
-              onCommit={setPanelWidth}
-            />
-          }
-        />
+      {showPanel && active ? (
+        active.kind === "style" ? (
+          <StyleDraftPanel
+            thread={active}
+            onClose={() => setPanelOpen(false)}
+            resizeHandle={panelResize}
+            onPublished={(thread) => {
+              if (thread) upsertThread(thread);
+              void refresh();
+              setNotice({ text: `Estilo salvo na galeria.`, threadId: active.id, reveal: false });
+            }}
+            onNewThread={(styleId) => startThread(undefined, styleId === defaultStyle ? "" : styleId)}
+          />
+        ) : (
+          <PreviewPanel
+            thread={active}
+            style={styles.list.find((st) => st.id === active.styleId) ?? null}
+            styleName={styleName(styles.list, active.styleId)}
+            onClose={() => setPanelOpen(false)}
+            annotations={activeAnnotations}
+            onAnnotate={engineOnline ? (annotation) => addAnnotation(active.id, annotation) : undefined}
+            render={renders.states[active.id] ?? { running: null, lastExport: active.lastExport ?? null, lastRender: active.lastRender ?? null }}
+            engineOnline={engineOnline}
+            onExport={() => void runRender(() => startExport(active.id))}
+            onCancelRender={() => void cancelRender(active.id).catch((err) => setError(message(err)))}
+            onRevealExport={() => void revealExport(active.id).catch((err) => setError(message(err)))}
+            onSettle={() => void settle(active.id, true)}
+            onChangeModules={(patch) => changeModules(active.id, patch)}
+            onRerender={(captions) => void runRender(() => startPreviewRender(active.id, captions))}
+            onCreateCaption={() => {
+              const style = styles.list.find((st) => st.id === active.styleId);
+              openCaptionBuilder("thread", active.id, active.modules?.caption ?? style?.modules?.caption ?? "");
+            }}
+            resizeHandle={panelResize}
+          />
+        )
       ) : null}
     </div>
   );

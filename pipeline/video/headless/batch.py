@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-"""N vídeos em paralelo, sem Resolve: trim → palco B → export por projeto.
+"""N vídeos em paralelo, sem Resolve: trim → palco B → compose por projeto.
 
 Com o Resolve, um job travava a aplicação inteira (um projeto aberto por vez, GUI).
 Aqui cada projeto é um processo independente que só escreve no próprio edit/ e
 exports/; o batch divide os núcleos (TAKEKIT_JOB_THREADS) para N jobs não brigarem.
 
     python3 video/headless/batch.py --jobs 3 video/projects/a video/projects/b video/projects/c
-        [--steps trim,palco_b,compose] [--compose-args "--draft"]
+        [--steps trim,palco_b,compose] [--compose-args "--quality final"]
+
+O compose sai em preview (edit/preview.mp4, 720p) por default; o export final
+(exports/<slug>-vN.mp4) é `--compose-args "--quality final"` (ou `"--quality final --from-preview"`
+para refazer em qualidade cheia exatamente o último preview de cada projeto).
 
 Log de cada projeto: <projeto>/edit/.work/batch.log. Sai com código 1 se algum falhar.
 """
@@ -16,7 +20,7 @@ import argparse, os, re, shlex, subprocess, sys, time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-from common import HERE, die, project_dir, work
+from common import HERE, die, project_dir, rel, work
 
 STEPS = {"trim": "trim.py", "palco_b": "palco_b.py", "compose": "compose.py"}
 
@@ -37,8 +41,12 @@ def run_project(pdir: Path, steps: list[str], extra: dict[str, list[str]], env: 
                 result["ok"] = False
                 result["error"] = f"{step}: " + (proc.stdout.strip().splitlines() or ["falhou"])[-1]
                 break
-            if step == "compose" and (m := re.search(r"escrito (\S+\.mp4)", proc.stdout)):
-                result["export"] = m.group(1)
+            if step == "compose":
+                m = re.findall(r"^TAKEKIT_(?:PREVIEW|EXPORT)=(.+)$", proc.stdout, re.M)
+                if m:
+                    result["export"] = rel(Path(m[-1].strip()), pdir)
+                elif m := re.search(r"escrito (\S+\.(?:mp4|mov))", proc.stdout):
+                    result["export"] = m.group(1)
     return result
 
 

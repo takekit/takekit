@@ -1,0 +1,14 @@
+{
+  "id": "hits-sem-cama",
+  "name": "Só efeitos",
+  "description": "Efeitos sonoros nos movimentos da tela, sem música de fundo.",
+  "sfx": true,
+  "kindToCatalogId": {
+    "snap": "snap/snap_finger",
+    "click": "foley/mixkit_click_1",
+    "whoosh": "whoosh/whoosh_swoosh_01",
+    "riser": "riser/riser_metallic",
+    "reveal": "reveal/reveal_logo_element_01"
+  },
+  "music": null
+}

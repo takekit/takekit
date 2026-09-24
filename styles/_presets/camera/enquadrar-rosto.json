@@ -1,0 +1,18 @@
+{
+  "id": "enquadrar-rosto",
+  "name": "Só enquadrar no rosto",
+  "description": "Sem movimentos: só um leve crop que segue o seu rosto e o mantém no centro quando você se mexe.",
+  "moves": [],
+  "intensity": 1.0,
+  "frequency": "marcado",
+  "punchFrames": 2,
+  "faceTracking": {
+    "enabled": true,
+    "baseScale": 1.08,
+    "smoothing": 0.92
+  },
+  "applyTo": [
+    "A",
+    "D"
+  ]
+}

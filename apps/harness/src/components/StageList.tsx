@@ -6,7 +6,8 @@ type StageState = "pending" | "running" | "done" | "failed";
 const STAGE_LABELS: Record<string, string> = {
   ingest: "Ingestão",
   edit: "Edição",
-  export: "Export",
+  preview: "Preview",
+  export: "Export final",
 };
 
 const STATE_LABELS: Record<StageState, string> = {

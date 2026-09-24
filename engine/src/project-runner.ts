@@ -1,9 +1,9 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { access, readdir, stat } from "node:fs/promises";
 import { constants as fsConstants } from "node:fs";
 import { isAbsolute, join, resolve } from "node:path";
 import { getExecutor } from "./adapters/index.js";
-import { getConfig } from "./config.js";
+import { getConfig, stylesDir } from "./config.js";
 import {
   createJob,
   getJob,
@@ -18,7 +18,8 @@ import {
   upsertActivity,
   appendMessage,
 } from "./store.js";
-import { getStyle, type StyleKit } from "./styles.js";
+import { getStyle, resolveModules, writeResolvedStyle, type ModuleSelection, type StyleKit } from "./styles.js";
+import { waitForRender } from "./renders.js";
 import type { ActivityItem, ActivityUpdate } from "./activity.js";
 import type { ExecutorResult, LiveInput } from "./adapters/types.js";
 import type { HarnessSession, Job, Message, SteerDelivery, Thread } from "./types.js";
@@ -98,6 +99,11 @@ export async function runProjectJob(jobId: string): Promise<void> {
   const run: RunHandle = { controller: new AbortController(), live: { send: null }, interruptTurn: null, session: () => undefined };
   runs.set(jobId, run);
   try {
+    // An export / preview render reads the project's edit/ files: let it finish first.
+    await waitForRender(job.threadId, () =>
+      upsertActivity(jobId, { id: "wait-render", kind: "tool", title: "Esperando o render do preview/export terminar", status: "running" }),
+    );
+    upsertActivity(jobId, { id: "wait-render", status: "done" });
     await runJob(jobId, run);
   } catch (err) {
     failJob(jobId, err instanceof Error ? err.message : String(err));
@@ -228,28 +234,61 @@ async function runJob(jobId: string, run: RunHandle): Promise<void> {
     return;
   }
 
-  const style = getStyle(thread?.styleId);
-  if (!style) {
+  // A "style" thread builds a new Style Kit package from reference videos (no project video).
+  const creatingStyle = thread?.kind === "style";
+  const style = creatingStyle ? null : getStyle(thread?.styleId);
+  if (!creatingStyle && !style) {
     failJob(jobId, `Estilo "${thread?.styleId ?? ""}" não está na galeria (styles/). Crie o pacote ou troque o estilo da thread.`);
     return;
+  }
+  // The scripts read the thread's presets and quality from edit/style.resolved.json.
+  let modulesBrief: string[] = [];
+  let selection: ModuleSelection = {};
+  if (style && thread) {
+    try {
+      const written = writeResolvedStyle(job.projectPath, { style, override: thread.modules, threadId: thread.id });
+      if (written.missing.length) {
+        failJob(jobId, `Preset não encontrado: ${written.missing.join(", ")}. Troque o preset na thread ou corrija styles/${style.id}/modules.json.`);
+        return;
+      }
+      selection = written.selection;
+      modulesBrief = describeModules(style, written.selection, thread.modules ?? null);
+    } catch (err) {
+      failJob(jobId, `Não consegui gravar edit/style.resolved.json: ${err instanceof Error ? err.message : String(err)}`);
+      return;
+    }
   }
 
   const executor = getExecutor(config.executorId);
   const cwd = pipelineRoot;
   const fullPrompt = () =>
-    composeAgentPrompt({
-      pipelineRoot,
-      projectPath: job.projectPath,
-      inputVideoPaths: thread?.inputVideoPaths ?? [],
-      style,
-      userPrompt: job.prompt,
-      history: thread ? conversationSoFar(thread, jobId) : [],
-    });
+    creatingStyle
+      ? composeStylePrompt({
+          pipelineRoot,
+          draftDir: job.projectPath,
+          published: Boolean(thread?.styleDraft?.publishedAt),
+          references: thread?.inputVideoPaths ?? [],
+          userPrompt: job.prompt,
+          history: thread ? conversationSoFar(thread, jobId) : [],
+        })
+      : composeAgentPrompt({
+          pipelineRoot,
+          projectPath: job.projectPath,
+          inputVideoPaths: thread?.inputVideoPaths ?? [],
+          style: style!,
+          modulesBrief,
+          userPrompt: job.prompt,
+          history: thread ? conversationSoFar(thread, jobId) : [],
+        });
 
   // Same harness as before in this thread: resume its CLI session (it already has the skill,
   // the style and what it did), sending only the new request. Otherwise a new session.
   const prior = thread ? (thread.sessions?.[executor.id] ?? loggedSession(thread, executor.id, jobId, cwd)) : undefined;
   const resuming = Boolean(prior && prior.cwd === cwd);
+  // A changed brief or a swapped preset is sent again on resume (each on its own).
+  const hash = (text: string) => createHash("sha1").update(text).digest("hex").slice(0, 16);
+  const styleHash = hash(style?.promptMarkdown ?? "");
+  const modulesHash = hash(JSON.stringify(selection));
   let session: { id?: string; resume: boolean } = resuming
     ? { id: prior!.id, resume: true }
     : { id: newSessionId(executor.id), resume: false };
@@ -258,6 +297,10 @@ async function runJob(jobId: string, run: RunHandle): Promise<void> {
         projectPath: job.projectPath,
         userPrompt: job.prompt,
         missed: thread ? missedTurns(thread, jobId, prior!.seen) : [],
+        // The style package or the presets changed since this session started: it gets them again.
+        style: prior!.styleHash === styleHash || !style ? undefined : style,
+        modulesBrief: prior!.modulesHash === modulesHash ? [] : modulesBrief,
+        creatingStyle,
       })
     : fullPrompt();
   if (resuming) updateJob(jobId, { resumed: true });
@@ -308,7 +351,7 @@ async function runJob(jobId: string, run: RunHandle): Promise<void> {
       steers.delete(jobId);
       const interrupted = turn.signal.aborted;
       if (interrupted) closeRunningRows(jobId, "failed");
-      prompt = composeSteerPrompt({ projectPath: job.projectPath, messages: pending, interrupted });
+      prompt = composeSteerPrompt({ projectPath: job.projectPath, messages: pending, interrupted, creatingStyle });
       continue;
     }
     // The saved session is gone (CLI cleaned it up, other machine…): start over once, full prompt.
@@ -336,6 +379,8 @@ async function runJob(jobId: string, run: RunHandle): Promise<void> {
       cwd,
       model: config.model,
       seen: getThread(job.threadId)?.messages.length ?? 0,
+      styleHash,
+      modulesHash,
       updatedAt: new Date().toISOString(),
     });
   };
@@ -382,11 +427,15 @@ async function runJob(jobId: string, run: RunHandle): Promise<void> {
   // echoed by a command the agent ran.
   const commandOutputs = (getJob(jobId)?.activity ?? []).map((a) => a.output ?? "").join("\n");
   const since = startedAt.getTime() - 2000;
-  const previewPath =
-    (await freshFile(result.previewPath ?? null, job.projectPath, since)) ??
-    (await freshFile(parsePreviewMarker(answer), job.projectPath, since)) ??
-    (await freshFile(parsePreviewMarker(commandOutputs), job.projectPath, since)) ??
-    (await freshFile(await newestMp4(join(job.projectPath, "exports")), job.projectPath, since));
+  // compose.py writes the preview to edit/preview.mp4 (final exports are the button's job);
+  // exports/ still counts for agents on the old contract.
+  const previewPath = creatingStyle
+    ? null
+    : ((await freshFile(result.previewPath ?? null, job.projectPath, since)) ??
+      (await freshFile(parsePreviewMarker(answer), job.projectPath, since)) ??
+      (await freshFile(parsePreviewMarker(commandOutputs), job.projectPath, since)) ??
+      (await freshFile(join(job.projectPath, "edit", "preview.mp4"), job.projectPath, since)) ??
+      (await freshFile(await newestMp4(join(job.projectPath, "exports")), job.projectPath, since)));
   if (previewPath) startEditing();
 
   updateJob(jobId, {
@@ -401,10 +450,10 @@ async function runJob(jobId: string, run: RunHandle): Promise<void> {
 
   if (previewPath) {
     setThreadPreview(job.threadId, previewPath);
-    setThreadStage(job.threadId, { edit: "done", export: "done" });
+    setThreadStage(job.threadId, { edit: "done", preview: "done" });
   } else if (editing) {
-    // Changed files without a new render: keep the last export.
-    setThreadStage(job.threadId, { edit: "done", export: thread?.previewPath ? "done" : "pending" });
+    // Changed files without a new render: keep the last preview.
+    setThreadStage(job.threadId, { edit: "done", preview: thread?.previewPath ? "done" : "pending" });
   } else {
     setJobMode(jobId, "chat"); // answered a question; the edit stays as it was
   }
@@ -486,6 +535,7 @@ function composeAgentPrompt(input: {
   projectPath: string;
   inputVideoPaths: string[];
   style: StyleKit;
+  modulesBrief: string[];
   userPrompt: string;
   history: Array<{ role: "user" | "assistant"; text: string }>;
 }): string {
@@ -502,9 +552,12 @@ function composeAgentPrompt(input: {
       ? ["Vídeos de entrada (na ordem escolhida):", ...input.inputVideoPaths.map((p, i) => `  ${i + 1}) ${p}`)]
       : [`Vídeo de entrada: ${input.inputVideoPaths[0] ?? "(não informado; procure em <projeto>/input/)"}`]),
   ];
-  const styleBrief = input.style.promptMarkdown
-    ? ["", `Briefing do estilo (${input.style.id}/prompt.md):`, "<style-brief>", input.style.promptMarkdown, "</style-brief>"]
-    : [];
+  const styleBrief = [
+    ...(input.style.promptMarkdown
+      ? ["", `Briefing do estilo (${input.style.id}/prompt.md):`, "<style-brief>", input.style.promptMarkdown, "</style-brief>"]
+      : []),
+    ...(input.modulesBrief.length ? ["", ...input.modulesBrief] : []),
+  ];
   const history = input.history.length
     ? [
         "",
@@ -533,9 +586,89 @@ function composeAgentPrompt(input: {
     "- Pedido de mudança no vídeo: aplique pelas skills/scripts (não reescreva a lógica deles; invoque-os)" +
       (annotations.length ? ", aplique todas as notas e diga, item por item, o que mudou." : "."),
     "Quando houver mudança, ao terminar:",
-    `1) Gere o mp4 final em ${join(input.projectPath, "exports")}/ (nome sugerido: final.mp4 ou timestamp).`,
+    `1) Gere o PREVIEW: .venv/bin/python video/headless/compose.py --project ${input.projectPath}`,
+    "   (qualidade de preview, rápida; escreve edit/preview.mp4). NÃO gere o export final (--quality final,",
+    "   exports/): o export final é do creator, pelo botão Exportar do Takekit, a partir deste preview.",
     "2) Imprima na ÚLTIMA linha exatamente: TAKEKIT_PREVIEW=<caminho-absoluto-do-mp4>",
     "Se falhar, explique o erro e saia com código ≠ 0.",
+  ].join("\n");
+}
+
+/**
+ * The thread's presets for the prompt: which one each module uses and what the scripts do
+ * with it on their own (they read edit/style.resolved.json).
+ */
+function describeModules(style: StyleKit, selection: ModuleSelection, override: ModuleSelection | null): string[] {
+  const { modules } = resolveModules(style, selection);
+  const swapped = (key: keyof ModuleSelection) => (override?.[key] ? " (trocado nesta thread)" : "");
+  const name = (p: { name: string; id: string } | null) => (p ? `${p.name} (${p.id})` : "nenhum");
+  const lines = [
+    "Presets desta thread (módulos do estilo). Os scripts leem edit/style.resolved.json, gerado pelo Takekit a",
+    "cada job: não edite esse arquivo; quem troca preset é o creator, na thread. Vale sobre o que o briefing disser",
+    "de legenda, palcos, cortes, SFX e transições:",
+    `- Legenda: ${name(modules.caption)}${swapped("caption")}. caption_jobs.py e captions_palco.py já aplicam fonte, tamanho,` +
+      " cor, contorno, animação e nº de palavras; não force outro --style de fonte/cor.",
+    `- Palcos permitidos no storyboard: ${(modules.stage ?? []).map((p) => p.name).join("; ") || "os do briefing"}${swapped("stage")}.`,
+  ];
+  if (modules.stage?.some((p) => p.palco === "D")) {
+    lines.push(
+      "  Palco D (split): no beat, \"palco\": \"D\" + \"broll\": caminho do B-roll (vídeo ou imagem, relativo ao projeto)" +
+        " e \"broll_start\" opcional; compose.py monta B-roll em cima, host embaixo, legenda na emenda.",
+    );
+  }
+  if (modules.camera) {
+    const cam = modules.camera as { frequency?: string; moves?: unknown };
+    lines.push(
+      `- Câmera: ${name(modules.camera)}${swapped("camera")}. compose.py aplica punch/zoom e face tracking sozinho` +
+        (cam.frequency === "marcado"
+          ? "; os movimentos só entram nos beats que você marcar no storyboard com \"camera\": \"punch\" | \"zoom_in\" | \"zoom_out\" (ênfase)."
+          : '; para forçar ou tirar um movimento num beat, use "camera": "punch" | "zoom_in" | "zoom_out" | "none" no storyboard.'),
+    );
+  }
+  lines.push(
+    `- Cortes: ${name(modules.cuts)}${swapped("cuts")} (tighten_cuts.py lê limiar e pad do preset).`,
+    `- SFX e cama: ${name(modules.soundEffects)}${swapped("soundEffects")} (compose.py aplica).`,
+    `- Transições: ${name(modules.transitions)}${swapped("transitions")} (compose.py aplica o filmburn conforme o preset).`,
+  );
+  return lines;
+}
+
+/**
+ * Prompt of a "style" thread: decompose the reference videos into a Style Kit package in
+ * the draft folder (skill style-creator), then propose it for review.
+ */
+function composeStylePrompt(input: {
+  pipelineRoot: string;
+  draftDir: string;
+  /** Already saved to the gallery: refinements go straight into the live package. */
+  published: boolean;
+  references: string[];
+  userPrompt: string;
+  history: Turn[];
+}): string {
+  const history = input.history.length
+    ? ["", "Conversa até aqui nesta thread (mais antiga primeiro):", ...input.history.map((t) => `[${t.role === "user" ? "usuário" : "você"}] ${t.text}`)]
+    : [];
+  return [
+    "Você é o diretor de estilo do Takekit: cria um estilo novo (pacote Style Kit) a partir de vídeos de referência.",
+    "",
+    `ROOT do pipeline (cwd): ${input.pipelineRoot}`,
+    "Skill: .agents/skills/style-creator/SKILL.md (leia antes de tudo; ela diz como decompor e o formato do pacote).",
+    input.published
+      ? `Pacote (já está na galeria; o id não muda, refine no lugar): ${input.draftDir}/`
+      : `Rascunho do pacote (escreva só aqui): ${input.draftDir}/`,
+    `Biblioteca de presets: ${join(stylesDir(), "_presets")}/ (caption, stage, cuts, sound-effects, transitions)`,
+    `Pacote de exemplo: ${join(stylesDir(), "talking-head-motions")}/ (formato; não copie o look)`,
+    "Vídeos de referência (não edite):",
+    ...input.references.map((p, i) => `  ${i + 1}) ${p}`),
+    ...history,
+    "",
+    "Pedido do usuário:",
+    input.userPrompt,
+    "",
+    "Regras: escreva só dentro do pacote; presets novos vão em presets/<módulo>/ dele (não na biblioteca).",
+    "Ao terminar, responda com a proposta: o que você viu nas referências e o que cada módulo do pacote escolheu,",
+    "em poucas linhas, e o que o creator deve conferir. Não imprima TAKEKIT_PREVIEW.",
   ].join("\n");
 }
 
@@ -543,10 +676,24 @@ function composeAgentPrompt(input: {
  * Next message of a resumed session: the session already has the skill, the style brief and
  * the rules, so only what's new goes in (plus a one-line reminder of the output contract).
  */
-function composeResumePrompt(input: { projectPath: string; userPrompt: string; missed: Turn[] }): string {
+function composeResumePrompt(input: {
+  projectPath: string;
+  userPrompt: string;
+  missed: Turn[];
+  style?: StyleKit;
+  modulesBrief?: string[];
+  creatingStyle?: boolean;
+}): string {
   const annotations = annotationNotes(input.userPrompt);
+  const updated = Boolean(input.style || input.modulesBrief?.length);
   return [
-    "[Nova mensagem nesta thread do Takekit. Projeto, estilo e regras são os do início desta sessão.]",
+    updated
+      ? "[Nova mensagem nesta thread do Takekit. Projeto e regras são os do início desta sessão; o estilo ou os presets mudaram, vale o que está abaixo.]"
+      : "[Nova mensagem nesta thread do Takekit. Projeto, estilo e regras são os do início desta sessão.]",
+    ...(input.style?.promptMarkdown
+      ? ["", `Briefing atual do estilo ${input.style.name} (${input.style.id}/prompt.md):`, "<style-brief>", input.style.promptMarkdown, "</style-brief>"]
+      : []),
+    ...(input.modulesBrief?.length ? ["", ...input.modulesBrief] : []),
     ...(input.missed.length
       ? [
           "",
@@ -559,12 +706,12 @@ function composeResumePrompt(input: { projectPath: string; userPrompt: string; m
     input.userPrompt,
     "",
     ...annotations,
-    reminder(input.projectPath),
+    reminder(input.projectPath, input.creatingStyle),
   ].join("\n");
 }
 
 /** Resume after messages that came in mid-run (the turn may have been cut off). */
-function composeSteerPrompt(input: { projectPath: string; messages: string[]; interrupted: boolean }): string {
+function composeSteerPrompt(input: { projectPath: string; messages: string[]; interrupted: boolean; creatingStyle?: boolean }): string {
   return [
     input.interrupted
       ? "[O usuário mandou mensagem enquanto você trabalhava e eu interrompi seu turno para entregar. Confira o que" +
@@ -573,14 +720,18 @@ function composeSteerPrompt(input: { projectPath: string; messages: string[]; in
     "",
     ...input.messages,
     "",
-    reminder(input.projectPath),
+    reminder(input.projectPath, input.creatingStyle),
   ].join("\n");
 }
 
-function reminder(projectPath: string): string {
+function reminder(projectPath: string, creatingStyle = false): string {
+  if (creatingStyle) {
+    return `Lembrete: escreva só no pacote ${projectPath}/; ao terminar, resuma a proposta para o creator revisar.`;
+  }
   return (
-    "Lembrete: pergunta → só responda (sem editar nem exportar). Mudança → aplique pelos scripts; ao exportar," +
-    ` gere o mp4 em ${join(projectPath, "exports")}/ e imprima na ÚLTIMA linha TAKEKIT_PREVIEW=<caminho-absoluto-do-mp4>.`
+    "Lembrete: pergunta → só responda (sem editar nem renderizar). Mudança → aplique pelos scripts e gere o PREVIEW" +
+    ` (compose.py --project ${projectPath}, sem --quality final; sai em edit/preview.mp4), e imprima na ÚLTIMA linha` +
+    " TAKEKIT_PREVIEW=<caminho-absoluto-do-mp4>. Export final (exports/) só pelo botão Exportar do creator."
   );
 }
 
@@ -595,7 +746,8 @@ function annotationNotes(userPrompt: string): string[] {
         "  listadas são o que está dentro dele.",
         "- Fonte edit/compose.resolved.json é gerada pelo compose.py a cada export: não edite ela. `units[i]` é a",
         "  unidade (cuts.json + beat do storyboard em plan.json), `fx[i]` o filmburn (`transicao` do beat),",
-        "  `audio.sfx[i]` o SFX (sfx_map.json). Mudanças vão na origem; exceção pontual em edit/compose.json + --spec.",
+        "  `audio.sfx[i]` o SFX (sfx_map.json), `camera[i]` um punch/zoom (preset de câmera; num beat, `\"camera\"`",
+        "  no storyboard). Mudanças vão na origem; exceção pontual em edit/compose.json + --spec.",
         "",
       ]
     : [];

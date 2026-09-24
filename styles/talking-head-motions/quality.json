@@ -1,0 +1,33 @@
+{
+  "_doc": "Qualidade do preview (durante a edição) e do export final (botão Exportar). docs/preview-export/SPEC.md.",
+  "preview": {
+    "resolution": "720p",
+    "codec": "h264",
+    "preset": "veryfast",
+    "bitrate": "1.5M",
+    "audio": {
+      "codec": "aac",
+      "bitrate": "128k"
+    },
+    "container": "mp4"
+  },
+  "export": {
+    "resolution": "1080x1920",
+    "fps": 30,
+    "codec": "h264",
+    "preset": "medium",
+    "bitrate": "10M",
+    "maxrate": "12M",
+    "bufsize": "20M",
+    "audio": {
+      "codec": "aac",
+      "bitrate": "256k",
+      "loudness": {
+        "I": -14,
+        "TP": -1,
+        "LRA": 11
+      }
+    },
+    "container": "mp4"
+  }
+}
